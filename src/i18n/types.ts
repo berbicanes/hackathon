@@ -22,8 +22,6 @@ export interface Strings {
   decisionEmptyAction: string
   appName: string
   tagline: string
-  tabBias: string
-  tabSquad: string
   privacy: string
   footerData: string
   privacyLink: string
@@ -49,7 +47,6 @@ export interface Strings {
   groupAll: string
   groupLabel: string
   quarterLabels: string[]
-  quarterShort: string[]
   earlyBorn: string
   lateBorn: string
   monthTitle: string
@@ -108,7 +105,6 @@ export interface Strings {
   ctaSquad: string
   ctaSquadText: string
 
-  squadTitle: string
   squadIntro: string
   upload: string
   loadSample: string
@@ -146,7 +142,6 @@ export interface Strings {
   averageAge: string
 
   selectionTitle: string
-  selectionIntro: string
   topN: string
   placesLess: string
   placesMore: string

@@ -25,8 +25,6 @@ export const en: Strings = {
   decisionEmptyAction: 'Go to Your squad',
   appName: 'Late Bloomers',
   tagline: 'See the hidden talent your selection is missing.',
-  tabBias: 'Bias mirror',
-  tabSquad: 'Your squad',
   privacy: 'Your squad data never leaves this device. No uploads, no accounts, no tracking.',
   footerData: 'Professional data: Transfermarkt via the open transfermarkt-datasets project.',
   privacyLink: 'Privacy',
@@ -75,7 +73,6 @@ export const en: Strings = {
   groupAll: 'All players',
   groupLabel: 'Group',
   quarterLabels: ['Jan–Mar', 'Apr–Jun', 'Jul–Sep', 'Oct–Dec'],
-  quarterShort: ['Q1', 'Q2', 'Q3', 'Q4'],
   earlyBorn: 'early-born',
   lateBorn: 'late-born',
   monthTitle: 'By birth month (observed vs expected)',
@@ -150,7 +147,6 @@ export const en: Strings = {
   ctaSquad: 'Check your own squad',
   ctaSquadText: 'The same bias happens in every U10 trial. See it in your squad in two minutes — free and private.',
 
-  squadTitle: 'Your squad, seen fairly',
   squadIntro:
     'Upload your squad’s assessment scores. Late Bloomers separates what is ability from what is simply being older, so you can take a second look before you cut a child.',
   upload: 'Choose a CSV file',
@@ -182,7 +178,7 @@ export const en: Strings = {
   smallSquad: 'With fewer than 10 players the age trend is rough — treat results as a prompt, not a verdict.',
 
   skewTitle: 'Your squad’s birth months',
-  skewChart: 'Players per birth quarter',
+  skewChart: 'How many players were born in each part of the year',
   skewSummary: (early, n) => `${early} of ${n} players were born in the first half of the year.`,
   skewNote: 'In an unbiased intake you would expect about half.',
 
@@ -195,7 +191,6 @@ export const en: Strings = {
   averageAge: 'About the squad’s average age',
 
   selectionTitle: 'Selection: raw vs fair',
-  selectionIntro: 'Choose how many players you select. Switch views to see exactly who changes.',
   topN: 'Places in the squad',
   placesLess: 'One place fewer',
   placesMore: 'One place more',
@@ -270,14 +265,14 @@ export const en: Strings = {
       text: 'Before releasing a child born October–December, book a second look 6 months later. Late bloomers often catch up.',
     },
     {
-      title: 'Rotate or band selection by birth quarter',
-      text: 'Make sure every birth quarter gets starts and squad places, or run trials in half-year groups so January and December children are not compared directly.',
+      title: 'Rotate or band selection by time of year born',
+      text: 'Make sure children born in every part of the year get starts and squad places, or run trials in half-year groups so January and December children are not compared directly.',
     },
   ],
   printButton: 'Print squad fairness report',
   reportTitle: 'Squad fairness report',
   reportMeta: (date, n) => `Assessment date ${date} · ${n} players`,
-  reportSkew: 'Birth quarters in this squad',
+  reportSkew: 'When the players in this squad were born',
   reportSelection: (n) => `Top ${n} selection: what changes when age is taken into account`,
   reportIn: 'Come in with the fair view',
   reportOut: 'Drop out with the fair view',

@@ -1565,7 +1565,9 @@ tbody th {
   .finish .actions .button {
     width: 100%;
   }
+}
 
+@media (max-width: 860px) {
   /* Ranking becomes a list of cards: every value stays visible, nothing scrolls sideways. */
   .squad-table,
   .squad-table tbody,
@@ -1643,6 +1645,20 @@ tbody th {
   .squad-table .status-cell {
     justify-content: flex-end;
   }
+
+  .squad-table tbody {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 8px;
+  }
+
+  .squad-table tr {
+    margin-bottom: 0;
+  }
+}
+
+.squad-table td {
+  white-space: nowrap;
 }
 
 @media print {
@@ -1650,4 +1666,76 @@ tbody th {
   .finish {
     display: none !important;
   }
+}
+
+/* ---------- Consistency pass: one width, one 8px spacing scale, one heading scale ---------- */
+.container {
+  max-width: 1100px;
+  padding: 0 16px;
+}
+
+.stack {
+  gap: 24px;
+}
+
+.grid-2,
+.two-col {
+  gap: 24px;
+}
+
+.card {
+  padding: clamp(16px, 4vw, 32px);
+}
+
+.card > h2,
+.card > h3,
+.card h2[id],
+.card h3[id] {
+  font-size: 1.25rem;
+  margin: 0 0 8px;
+}
+
+.card > :last-child {
+  margin-bottom: 0;
+}
+
+.segmented--small button {
+  min-height: 44px;
+  padding: 8px 16px;
+}
+
+.button,
+.segmented button {
+  min-height: 44px;
+}
+
+.actions {
+  gap: 8px 16px;
+}
+
+.site-footer {
+  margin-top: 8px;
+  padding-top: 0;
+  padding-bottom: 40px;
+}
+
+.site-footer a {
+  display: inline-block;
+  min-height: 44px;
+}
+
+main {
+  padding-bottom: 24px;
+}
+
+td small {
+  white-space: nowrap;
+}
+
+.cta {
+  gap: 16px 24px;
+}
+
+.chart {
+  margin: 8px 0 16px;
 }

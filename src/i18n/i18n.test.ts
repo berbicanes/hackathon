@@ -32,6 +32,45 @@ describe('dd.mm.yyyy dates', () => {
   })
 })
 
+describe('step and decision wording', () => {
+  it('names the three steps and counts them in both languages', () => {
+    expect(strings.bs.stepOf(2, 3)).toBe('Korak 2 od 3')
+    expect(strings.en.stepOf(2, 3)).toBe('Step 2 of 3')
+    expect(Object.keys(strings.bs.stepNames)).toEqual(['problem', 'squad', 'decision'])
+  })
+  it('explains who comes in and who drops out in plain words, with Bosnian plurals', () => {
+    expect(strings.bs.reasonYounger('6–7', 7)).toBe('mlađi od prosjeka ekipe za 6–7 mjeseci')
+    expect(strings.bs.reasonOlder('2–4', 4)).toBe('stariji od prosjeka ekipe za 2–4 mjeseca')
+    expect(strings.en.reasonYounger('1', 1)).toBe('1 month younger than the squad average')
+    expect(strings.en.reasonOlder('2–4', 4)).toBe('2–4 months older than the squad average')
+    expect(strings.bs.changes(3, 10)).toContain('3 od 10')
+    expect(strings.en.changes(0, 10)).toContain('same 10')
+  })
+  it('keeps statistics jargon out of the coach-facing headline', () => {
+    for (const t of [strings.bs, strings.en]) {
+      const text = [t.biasPlain, t.problemLead, t.biasSub('25%', '18%', '1,8'), t.japanLine('2,4')].join(' ')
+      expect(text).not.toMatch(/K1|K4|Q1|Q4|hi-kvadrat|chi-square|rezidual|residual/i)
+      expect(t.japanLine('2,4')).toContain('2,4×')
+    }
+  })
+  it('formats the remaining coach-facing messages', () => {
+    for (const t of [strings.bs, strings.en]) {
+      expect(t.skewSummary(14, 20)).toContain('14')
+      expect(t.talentRank(16, 7)).toContain('16')
+      expect(t.missingColumns('score')).toContain('score')
+      expect(t.issues(2)).toContain('2')
+      expect(t.issueLine(3, t.issueReason.date)).toContain('3')
+      expect(t.truncated(300)).toContain('300')
+      expect(t.monthsYounger(6)).toContain('6')
+      expect(t.monthsOlder(2)).toContain('2')
+      expect(t.ageYM(11, 8)).toContain('11')
+      expect(t.openCard('Ena')).toContain('Ena')
+      expect(t.biasKicker('50')).toContain('50')
+      expect(t.pct(0.323, 1)).toMatch(/32[.,]3%/)
+    }
+  })
+})
+
 describe('bsPluralShown', () => {
   it('agrees with the last digit shown, including decimals', () => {
     const b = (s: string) => bsPluralShown(s, 'bod', 'boda', 'bodova')

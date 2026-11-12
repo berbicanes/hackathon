@@ -16,7 +16,7 @@ interface Props {
 export function PrintReport({ t, reference, players, quarterCounts, diff, talents, slope, synthetic }: Props) {
   const n = players.length
   const names = (list: AnalysedPlayer[]) =>
-    list.length ? list.map((p) => `${p.name} (${t.quarterShort[p.quarter - 1]})`).join(', ') : t.reportNone
+    list.length ? list.map((p) => `${p.name} (${t.quarterLabels[p.quarter - 1]})`).join(', ') : t.reportNone
 
   return (
     <section className="print-report" aria-hidden="true">

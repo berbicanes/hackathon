@@ -15,7 +15,7 @@ export default defineConfig({
       exclude: ['src/**/*.test.ts'],
       reporter: ['text-summary'],
       // Floor just under the current level, so coverage cannot silently decay.
-      thresholds: { statements: 80, branches: 78, functions: 50, lines: 78 },
+      thresholds: { statements: 88, branches: 78, functions: 78, lines: 87 },
     },
   },
 })

@@ -25,8 +25,6 @@ export const bs: Strings = {
   decisionEmptyAction: 'Idi na Vaša ekipa',
   appName: 'Late Bloomers',
   tagline: 'Pronađite skriveni talenat koji vaša selekcija propušta.',
-  tabBias: 'Ogledalo pristrasnosti',
-  tabSquad: 'Vaša ekipa',
   privacy: 'Podaci o vašoj ekipi nikad ne napuštaju ovaj uređaj. Bez slanja, bez naloga, bez praćenja.',
   footerData: 'Profesionalni podaci: Transfermarkt, preko otvorenog projekta transfermarkt-datasets.',
   privacyLink: 'Privatnost',
@@ -75,7 +73,6 @@ export const bs: Strings = {
   groupAll: 'Svi igrači',
   groupLabel: 'Grupa',
   quarterLabels: ['jan–mar', 'apr–jun', 'jul–sep', 'okt–dec'],
-  quarterShort: ['K1', 'K2', 'K3', 'K4'],
   earlyBorn: 'rano rođeni',
   lateBorn: 'kasno rođeni',
   monthTitle: 'Po mjesecu rođenja (stvarno i očekivano)',
@@ -150,7 +147,6 @@ export const bs: Strings = {
   ctaSquad: 'Provjerite svoju ekipu',
   ctaSquadText: 'Ista pristrasnost se dešava na svakom probnom treningu U10. Pogledajte je u svojoj ekipi za dvije minute — besplatno i privatno.',
 
-  squadTitle: 'Vaša ekipa, pošteno gledano',
   squadIntro:
     'Učitajte ocjene sa testiranja svoje ekipe. Late Bloomers razdvaja ono što je sposobnost od onoga što je samo veća starost, kako biste još jednom pogledali prije nego što odbijete dijete.',
   upload: 'Izaberite CSV fajl',
@@ -182,7 +178,7 @@ export const bs: Strings = {
   smallSquad: 'S manje od 10 igrača trend po starosti je grub — rezultate shvatite kao podsticaj, ne kao presudu.',
 
   skewTitle: 'Mjeseci rođenja u vašoj ekipi',
-  skewChart: 'Igrači po kvartalu rođenja',
+  skewChart: 'Koliko je igrača rođeno u kojem dijelu godine',
   skewSummary: (early, n) =>
     `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u prvoj polovini godine.`,
   skewNote: 'Bez pristrasnosti očekivali biste otprilike pola.',
@@ -196,7 +192,6 @@ export const bs: Strings = {
   averageAge: 'Starost otprilike na prosjeku ekipe',
 
   selectionTitle: 'Selekcija: sirovo i pošteno',
-  selectionIntro: 'Izaberite koliko igrača birate. Promijenite prikaz da vidite tačno ko se mijenja.',
   topN: 'Broj mjesta u ekipi',
   placesLess: 'Jedno mjesto manje',
   placesMore: 'Jedno mjesto više',
@@ -273,14 +268,14 @@ export const bs: Strings = {
       text: 'Prije nego što odbijete dijete rođeno od oktobra do decembra, zakažite drugi pogled za 6 mjeseci. Kasni cvjetovi često sustignu ostale.',
     },
     {
-      title: 'Rotirajte ili grupišite selekciju po kvartalu rođenja',
-      text: 'Osigurajte da svaki kvartal rođenja dobije minute i mjesta u ekipi, ili organizujte probe u polugodišnjim grupama da se djeca iz januara i decembra ne porede direktno.',
+      title: 'Rotirajte ili grupišite selekciju po dijelu godine rođenja',
+      text: 'Osigurajte da djeca rođena u svakom dijelu godine dobiju minute i mjesta u ekipi, ili organizujte probe u polugodišnjim grupama da se djeca iz januara i decembra ne porede direktno.',
     },
   ],
   printButton: 'Odštampaj izvještaj o pravednosti',
   reportTitle: 'Izvještaj o pravednosti selekcije',
   reportMeta: (date, n) => `Datum testiranja ${date} · ${n} ${bsPlural(n, 'igrač', 'igrača', 'igrača')}`,
-  reportSkew: 'Kvartali rođenja u ovoj ekipi',
+  reportSkew: 'Kada su rođeni igrači u ovoj ekipi',
   reportSelection: (n) => `Izbor najboljih ${n}: šta se mijenja kad se uzme u obzir starost`,
   reportIn: 'Ulaze u poštenom prikazu',
   reportOut: 'Izlaze u poštenom prikazu',

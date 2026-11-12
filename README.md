@@ -11,9 +11,13 @@ before they have caught up. This is the **relative age effect (RAE)**.
 
 Late Bloomers does two things:
 
-1. **Bias mirror** — proves the effect on real data: 50,100 professional players from
+The app is a guided 3-step flow (stepper in the header, one link per step: `#problem`,
+`#squad`, `#decision`): **1 Problem → 2 Your squad → 3 Decision**. Plain language comes
+first; the statistics sit in a collapsed "For analysts" section.
+
+1. **Bias mirror** (step 1) — proves the effect on real data: 50,100 professional players from
    the public Transfermarkt dataset.
-2. **Your squad** — a free tool for grassroots coaches. Upload your squad's assessment
+2. **Your squad** (steps 2 and 3) — a free tool for grassroots coaches. Upload your squad's assessment
    scores and see which children are being judged on age rather than ability, before you
    cut anyone.
 

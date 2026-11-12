@@ -2,8 +2,10 @@
 
 Live: https://berbicanes.github.io/hackathon/ (opens in Bosnian; switch top right)
 
-Before going on stage: open the site, stay on **Ogledalo pristrasnosti**, zoom the browser
-to ~125%. Have a second tab with the squad tab and sample already loaded as backup.
+Before going on stage: open the site on step 1 (**Problem**), zoom the browser
+to ~125%. The app is a 3-step flow: **1 Problem → 2 Vaša ekipa → 3 Odluka** (stepper in the
+header; each step has its own link: `#problem`, `#squad`, `#decision`). Have a second
+browser tab with the sample already loaded on step 3 as backup.
 
 ## Script
 
@@ -13,7 +15,7 @@ to ~125%. Have a second tab with the squad tab and sample already loaded as back
 > Same "age group", but one of them is almost a year older. Guess who gets picked.
 > Coaches aren't doing it on purpose. They just can't see it. We built something so they can.
 
-**0:20 – 1:00 · Bias mirror (for the data person)**
+**0:20 – 1:00 · Step 1, Problem (for the data person)**
 
 - Point at the big number: **32% of active under-21 pros are born January–March.**
   By days in the calendar it should be about 25%. Only **18%** are born October–December.
@@ -21,7 +23,7 @@ to ~125%. Have a second tab with the squad tab and sample already loaded as back
   (Say "as common", not "as likely to make it": we count who is in the pro pool, we don't
   follow children over time.)
 - Toggle *All players*: same picture across **50,100** players.
-- Stats row: n = 5,538, chi-square, **p ≈ 10⁻⁵⁰**. Expected line is weighted by days per
+- Small grey stats line under the chart: n = 5,538, chi-square, **p ≈ 10⁻⁵⁰**. Expected line is weighted by days per
   month, not a flat 25%.
 - Open **Za analitičare: detaljna provjera** (collapsed by default) and point at the
   underdog table: "We also checked whether the late-born players who survive
@@ -30,14 +32,16 @@ to ~125%. Have a second tab with the squad tab and sample already loaded as back
   p = 0.0007. We tested three age bands, so the bar is 0.017, not 0.05: 22–25 clears it,
   26–29 (p = 0.03) does not, so we don't claim it. Small effect. A clue, not proof."
 
-**1:00 – 2:10 · Your squad (for the coach)**
+**1:00 – 2:10 · Steps 2 and 3, Vaša ekipa → Odluka (for the coach)**
 
 - Click **Provjerite svoju ekipu** → **Probajte s primjerom**. Point at the orange
   banner: synthetic, invented kids.
 - "**14 of 20** born in the first half of the year. That's the bias, inside one squad."
 - "In this squad every month of age is worth about **2.2 points** on the test. That's not
   talent, that's birthdays."
-- Selection card: 10 places. Toggle **Sirova ocjena ↔ Prilagođeno starosti**.
+- Click **Pogledajte odluku →**. Step 3 opens on the answer: 10 places, and a card that
+  says who comes in (**Ulaze**) and who drops out (**Izlaze**). Toggle
+  **Sirova ocjena ↔ Prilagođeno starosti** to show the ranking change.
   "Three kids change. Ena and Benjamin, born October–December, and Hana, born in summer,
   come in. Three January–March kids drop out." Point at the badges and the coloured row edges.
   Text and arrows too, not only colour.
@@ -93,7 +97,7 @@ We checked. Without England the under-21 ratio goes from 1.79× to 1.81×; witho
 Wales and Japan (April cut-off) it is 1.84×. So the mixing hid a little of the effect, it
 didn't create it. England measured from 1 September points the same way (1.5×), but with
 only 175 under-21 players that is not significant on its own (p = 0.065), and we say so.
-Across all 1,762 English players it is clear (2.1×). The table is in the Bias mirror.
+Across all 1,762 English players it is clear (2.1×). The table is on step 1 under “Za analitičare”.
 
 **How does the age adjustment work?**
 Straight-line fit of score on age in months, across the squad. The fair score is how far
