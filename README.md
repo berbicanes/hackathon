@@ -97,8 +97,11 @@ Requirements: Node 20+ and Python 3.10+.
 npm ci
 npm run dev        # http://localhost:5173/hackathon/
 npm test           # unit tests (Vitest)
+npm run test:coverage   # unit tests with a coverage floor
 npm run lint
 npm run build      # static site in dist/
+npx playwright install chromium   # once
+npm run test:e2e   # end-to-end journey against the built site (Playwright)
 ```
 
 Regenerate the analysis:
@@ -136,8 +139,9 @@ PITCH.md                  3-minute demo script and jury Q&A
 
 ## Deploy
 
-Every push to `main` runs `.github/workflows/deploy.yml`: lint → test → build → deploy to
-GitHub Pages (Settings → Pages → Source: GitHub Actions). The site is fully static and is
+Every push to `main` runs `.github/workflows/deploy.yml`: lint → unit tests with a
+coverage floor → build → end-to-end journey → deploy to GitHub Pages (Settings → Pages →
+Source: GitHub Actions) → the same journey again as a smoke check against the live site. The site is fully static and is
 served under `/hackathon/` (see `vite.config.ts`).
 
 ## Privacy and security
