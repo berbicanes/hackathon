@@ -870,3 +870,57 @@ tbody th {
 .site-footer a {
   color: inherit;
 }
+
+/* Collapsible "for analysts" section */
+.analysts > summary {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+  position: relative;
+  padding-right: 36px;
+}
+
+.analysts > summary::-webkit-details-marker {
+  display: none;
+}
+
+.analysts > summary::after {
+  content: '+';
+  position: absolute;
+  right: 4px;
+  top: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.analysts[open] > summary::after {
+  content: '−';
+}
+
+.analysts > summary:focus-visible {
+  outline: 3px solid var(--early);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.analysts__title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+
+.analysts__hint {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.analysts__part {
+  margin-top: 28px;
+}
+
+.analysts__part h3 {
+  margin: 0 0 8px;
+}

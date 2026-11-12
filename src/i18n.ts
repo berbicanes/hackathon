@@ -87,6 +87,8 @@ export interface Strings {
   underdogBonfNull: string
   underdogBonfNote: (tests: number, threshold: string) => string
   underdogSummary: string
+  analystsTitle: string
+  analystsHint: string
   cutoffTitle: string
   cutoffIntro: string
   cutoffColGroup: string
@@ -292,6 +294,8 @@ const en: Strings = {
     `${tests} age bands were tested, so one of them could pass 0.05 by luck. The Bonferroni-corrected threshold is ${threshold} (0.05 ÷ ${tests}).`,
   underdogSummary:
     'Honest reading: at 18–21 there is no difference. At 22–25 the late-born players who made it are worth slightly more, and that result holds after correcting for the three tests — consistent with the idea that they had to be better to survive selection. At 26–29 the small edge does not hold after correction, so we do not claim it. The effect is small; it is a clue, not proof.',
+  analystsTitle: 'For analysts: robustness checks',
+  analystsHint: 'Cut-off dates by country, and whether late-born players who survive are worth more.',
   cutoffTitle: 'Does the cut-off date change the picture?',
   cutoffIntro:
     'Not every country groups children by calendar year. England and Wales use 1 September and Japan 2 April (counted here from 1 April), so January–December quarters are the wrong ruler for them. We re-ran the under-21 test without those countries, and measured England and Japan against their own cut-off. “Oldest quarter” is the three months right after the cut-off, “youngest quarter” the three months before it. Country means citizenship in Transfermarkt.',
@@ -538,6 +542,8 @@ const bs: Strings = {
     `Testirane su ${tests} starosne grupe, pa bi jedna od njih mogla proći prag 0,05 pukom srećom. Prag s Bonferroni korekcijom je ${threshold} (0,05 ÷ ${tests}).`,
   underdogSummary:
     'Iskreno tumačenje: sa 18–21 godina nema razlike. U grupi 22–25 kasno rođeni koji su uspjeli vrijede malo više i taj rezultat vrijedi i nakon korekcije za tri testa — što se slaže s idejom da su morali biti bolji da prežive selekciju. U grupi 26–29 mala prednost ne vrijedi nakon korekcije, pa je ne tvrdimo. Efekat je mali; to je trag, ne dokaz.',
+  analystsTitle: 'Za analitičare: detaljna provjera',
+  analystsHint: 'Datumi granice po zemljama i vrijede li više kasno rođeni koji opstanu.',
   cutoffTitle: 'Mijenja li datum granice sliku?',
   cutoffIntro:
     'Ne grupišu sve zemlje djecu po kalendarskoj godini. Engleska i Vels koriste 1. septembar, a Japan 2. april (ovdje računato od 1. aprila), pa su kvartali januar–decembar za njih pogrešno mjerilo. Ponovili smo test za mlađe od 21 bez tih zemalja, a Englesku i Japan izmjerili prema njihovoj vlastitoj granici. „Najstariji kvartal“ su tri mjeseca odmah nakon granice, a „najmlađi kvartal“ tri mjeseca prije nje. Zemlja znači državljanstvo na Transfermarktu.',

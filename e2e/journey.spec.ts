@@ -13,6 +13,13 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
 
   await page.getByRole('button', { name: 'English' }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  // Robustness checks are collapsed by default and open from the summary.
+  const analysts = page.locator('details.analysts')
+  await expect(analysts).not.toHaveAttribute('open', '')
+  await expect(page.locator('#cutoff-title')).toBeHidden()
+  await analysts.locator('summary').click()
+  await expect(page.locator('#cutoff-title')).toBeVisible()
+
   const underdog = page.locator('section[aria-labelledby="underdog-title"]')
   await expect(underdog.getByRole('row', { name: /22-25/ })).toContainText('Yes, still holds')
   await expect(underdog.getByRole('row', { name: /26-29/ })).toContainText('No, does not hold')

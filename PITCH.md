@@ -23,7 +23,8 @@ to ~125%. Have a second tab with the squad tab and sample already loaded as back
 - Toggle *All players*: same picture across **50,100** players.
 - Stats row: n = 5,538, chi-square, **p ≈ 10⁻⁵⁰**. Expected line is weighted by days per
   month, not a flat 25%.
-- Scroll to the underdog table: "We also checked whether the late-born players who survive
+- Open **Za analitičare: detaljna provjera** (collapsed by default) and point at the
+  underdog table: "We also checked whether the late-born players who survive
   are better. Within the same age band, never pooled. At 18–21: **no difference**, and we
   show that. At 22–25 the late-born are worth more: **€700k vs €600k median**,
   p = 0.0007. We tested three age bands, so the bar is 0.017, not 0.05: 22–25 clears it,

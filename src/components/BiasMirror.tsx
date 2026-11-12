@@ -173,8 +173,14 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
         />
       </section>
 
-      <section className="card" aria-labelledby="cutoff-title">
-        <h2 id="cutoff-title">{t.cutoffTitle}</h2>
+      <details className="card analysts">
+        <summary>
+          <span className="analysts__title">{t.analystsTitle}</span>
+          <span className="analysts__hint">{t.analystsHint}</span>
+        </summary>
+
+      <section className="analysts__part" aria-labelledby="cutoff-title">
+        <h3 id="cutoff-title">{t.cutoffTitle}</h3>
         <p>{t.cutoffIntro}</p>
         <div className="table-wrap">
           <table>
@@ -227,8 +233,8 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
         )}
       </section>
 
-      <section className="card" aria-labelledby="underdog-title">
-        <h2 id="underdog-title">{t.underdogTitle}</h2>
+      <section className="analysts__part" aria-labelledby="underdog-title">
+        <h3 id="underdog-title">{t.underdogTitle}</h3>
         <p>{t.underdogIntro}</p>
         <div className="table-wrap">
           <table>
@@ -274,6 +280,7 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
         <p className="help">{t.underdogBonfNote(data.underdog_tests.n_tests, bonferroni)}</p>
         <p className="note">{t.underdogSummary}</p>
       </section>
+      </details>
 
       <section className="card cta">
         <p>{t.ctaSquadText}</p>
