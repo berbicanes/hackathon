@@ -96,6 +96,27 @@ export function DecisionStep({ t, squad, onBack }: Props) {
   }
 
 
+  const monthsYounger = (p: AnalysedPlayer) => Math.round(meanAgeMonths - p.ageMonths)
+  /** "6–7" when every child in the list is younger (sign 1) or older (sign -1) than average; otherwise null. */
+  const ageRange = (list: AnalysedPlayer[], sign: 1 | -1) => {
+    const gaps = list.map((p) => monthsYounger(p) * sign)
+    if (!gaps.length || gaps.some((g) => g <= 0)) return null
+    const [min, max] = [Math.min(...gaps), Math.max(...gaps)]
+    return { text: min === max ? `${min}` : `${min}–${max}`, max }
+  }
+  const youngerRange = ageRange(diff.gained, 1)
+  const olderRange = ageRange(diff.lost, -1)
+  const chips = (list: AnalysedPlayer[]) => (
+    <ul className="chips">
+      {list.map((p) => (
+        <li key={p.id}>
+          {nameButton(p)} <QuarterBadge q={p.quarter} t={t} />
+        </li>
+      ))}
+    </ul>
+  )
+  const changePlaces = (delta: number) => setTopN(Math.max(1, Math.min(n, topN + delta)))
+
   return (
     <div className="stack">
       <StepHeading t={t} step={3} title={t.stepNames.decision} lead={t.decisionLead} />
@@ -106,60 +127,99 @@ export function DecisionStep({ t, squad, onBack }: Props) {
       )}
       {n < 10 && <p className="alert alert--soft">{n < 4 ? t.tooFew : t.smallSquad}</p>}
 
-      <div className="grid-2">
-        <section className="card" aria-labelledby="talent-title">
-          <h2 id="talent-title">{t.talentTitle}</h2>
-          <p>{t.talentIntro}</p>
-          {talents.length === 0 ? (
-            <p className="help">{t.talentNone}</p>
-          ) : (
-            <ol className="talents">
+      {n >= 4 && (
+        <>
+          <section className="card decision-controls" aria-label={t.selectionTitle}>
+            <div className="field field--places">
+              <label htmlFor="top-n">{t.topN}</label>
+              <div className="places">
+                <button type="button" className="places__btn" onClick={() => changePlaces(-1)} disabled={topN <= 1} aria-label={t.placesLess}>
+                  −
+                </button>
+                <input
+                  id="top-n"
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={n}
+                  value={topN}
+                  onChange={(e) => {
+                    const v = Number(e.target.value)
+                    if (Number.isFinite(v)) setTopN(Math.max(1, Math.min(n, Math.round(v))))
+                  }}
+                />
+                <button type="button" className="places__btn" onClick={() => changePlaces(1)} disabled={topN >= n} aria-label={t.placesMore}>
+                  +
+                </button>
+              </div>
+            </div>
+            <div className="field field--view">
+              <span className="field__label" id="view-label">
+                {t.viewLabel}
+              </span>
+              <div className="segmented segmented--row" role="group" aria-labelledby="view-label">
+                {(['raw', 'fair'] as const).map((v) => (
+                  <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+                    {v === 'raw' ? t.viewRaw : t.viewFair}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="card outcome" aria-labelledby="outcome-title">
+            <h3 id="outcome-title" className="outcome__title" aria-live="polite">
+              {t.changes(diff.gained.length, diff.raw.length)}
+            </h3>
+            {diff.gained.length > 0 && (
+              <div className="outcome__grid">
+                <div className="outcome__col outcome__col--in">
+                  <p className="outcome__label">▲ {t.inTitle}</p>
+                  {chips(diff.gained)}
+                  {youngerRange && <p className="outcome__reason">{t.reasonYounger(youngerRange.text, youngerRange.max)}</p>}
+                </div>
+                <div className="outcome__arrow" aria-hidden="true">
+                  ⇄
+                </div>
+                <div className="outcome__col outcome__col--out">
+                  <p className="outcome__label">▼ {t.outTitle}</p>
+                  {chips(diff.lost)}
+                  {olderRange && <p className="outcome__reason">{t.reasonOlder(olderRange.text, olderRange.max)}</p>}
+                </div>
+              </div>
+            )}
+            <p className="help">{fit.slope > 0.05 ? t.trend(t.num(fit.slope, 1)) : t.trendNone}</p>
+          </section>
+        </>
+      )}
+
+      <section className="card" aria-labelledby="talent-title">
+        <h3 id="talent-title">{t.talentTitle}</h3>
+        {talents.length === 0 ? (
+          <p className="help">{t.talentNone}</p>
+        ) : (
+          <>
+            <p className="help">{t.talentIntro}</p>
+            <ul className="talent-cards">
               {talents.map((p) => (
                 <li key={p.id}>
-                  <div className="talents__head">
-                    <strong>{nameButton(p)}</strong> <QuarterBadge q={p.quarter} t={t} />
-                  </div>
-                  <span className="talents__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
-                  <span className="help">{relAge(p)}</span>
+                  <button type="button" className="talent-card" onClick={() => setCardId(p.id)} aria-label={t.openCard(p.name)}>
+                    <span className="talent-card__name">{p.name}</span>
+                    <QuarterBadge q={p.quarter} t={t} />
+                    <span className="talent-card__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
+                    <span className="talent-card__age">{relAge(p)}</span>
+                  </button>
                 </li>
               ))}
-            </ol>
-          )}
-          <p className="help">{fit.slope > 0.05 ? t.trend(t.num(fit.slope, 1)) : t.trendNone}</p>
-        </section>
-      </div>
+            </ul>
+          </>
+        )}
+      </section>
 
       {n >= 4 && (
-        <section className="card" aria-labelledby="selection-title">
-          <h2 id="selection-title">{t.selectionTitle}</h2>
-          <p>{t.selectionIntro}</p>
-          <div className="controls">
-            <div className="field">
-              <label htmlFor="top-n">{t.topN}</label>
-              <input
-                id="top-n"
-                type="number"
-                min={1}
-                max={n}
-                value={topN}
-                onChange={(e) => {
-                  const v = Number(e.target.value)
-                  if (Number.isFinite(v)) setTopN(Math.max(1, Math.min(n, Math.round(v))))
-                }}
-              />
-            </div>
-            <div className="segmented" role="group" aria-label={t.selectionTitle}>
-              {(['raw', 'fair'] as const).map((v) => (
-                <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
-                  {v === 'raw' ? t.viewRaw : t.viewFair}
-                </button>
-              ))}
-            </div>
-          </div>
-          <p className="big-line" aria-live="polite">
-            {t.changes(diff.gained.length, diff.raw.length)}
-          </p>
-
+        <section className="card" aria-labelledby="ranking-title">
+          <h3 id="ranking-title">{t.rankingTitle}</h3>
+          <p className="help">{view === 'raw' ? t.rankingRaw : t.rankingFair}</p>
           <div className="table-wrap">
             <table className="squad-table">
               <thead>
@@ -179,17 +239,21 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                   const lost = lostIds.has(p.id)
                   return (
                     <tr key={p.id} className={`${selected ? 'is-selected' : ''} ${gained ? 'is-gained' : ''} ${lost ? 'is-lost' : ''}`}>
-                      <td>{view === 'raw' ? p.rawRank : p.fairRank}</td>
+                      <td className="squad-table__rank" data-label={t.colRank}>
+                        {view === 'raw' ? p.rawRank : p.fairRank}
+                      </td>
                       <th scope="row">
                         {nameButton(p)} <QuarterBadge q={p.quarter} t={t} />
                       </th>
-                      <td>{ageText(p)}</td>
-                      <td>{t.num(p.score, Number.isInteger(p.score) ? 0 : 1)}</td>
-                      <td>{t.num(p.fairScore, 1)}</td>
-                      <td>
-                        <span className="status">{selected ? `✓ ${t.selected}` : t.notSelected}</span>
-                        {gained && <span className="pill pill--late">▲ {t.badgeIn}</span>}
-                        {lost && <span className="pill pill--early">▼ {t.badgeOut}</span>}
+                      <td data-label={t.colAge}>{ageText(p)}</td>
+                      <td data-label={t.colRaw}>{t.num(p.score, Number.isInteger(p.score) ? 0 : 1)}</td>
+                      <td data-label={t.colFair}>{t.num(p.fairScore, 1)}</td>
+                      <td data-label={t.colStatus}>
+                        <span className="status-cell">
+                          <span className="status">{selected ? `✓ ${t.selected}` : t.notSelected}</span>
+                          {gained && <span className="pill pill--late">▲ {t.badgeIn}</span>}
+                          {lost && <span className="pill pill--early">▼ {t.badgeOut}</span>}
+                        </span>
                       </td>
                     </tr>
                   )
@@ -197,17 +261,27 @@ export function DecisionStep({ t, squad, onBack }: Props) {
               </tbody>
             </table>
           </div>
-          <p className="help">{t.fairExplain}</p>
-          <div className="actions">
-            <button type="button" className="button button--ghost" onClick={onDownloadResults}>
-              {t.downloadResults}
-            </button>
-            <button type="button" className="button button--ghost" onClick={() => window.print()}>
-              {t.printButton}
-            </button>
-          </div>
         </section>
       )}
+
+      <MondayPanel t={t} />
+
+      <section className="card finish" aria-label={t.printButton}>
+        <p className="big-line">{t.finishLine}</p>
+        <div className="actions">
+          <button type="button" className="button button--primary button--next" onClick={() => window.print()}>
+            {t.printButton}
+          </button>
+          <button type="button" className="button" onClick={onDownloadResults}>
+            {t.downloadResults}
+          </button>
+        </div>
+      </section>
+
+      <details className="card how">
+        <summary>{t.howTitle}</summary>
+        <p>{t.fairExplain}</p>
+      </details>
 
       <PrintReport
         t={t}
@@ -220,14 +294,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
         synthetic={synthetic}
       />
 
-      <PlayerCard
-        t={t}
-        player={cardPlayer}
-        meanAgeMonths={meanAgeMonths}
-        squadSize={n}
-        onClose={() => setCardId(null)}
-      />
-          <MondayPanel t={t} />
+      <PlayerCard t={t} player={cardPlayer} meanAgeMonths={meanAgeMonths} squadSize={n} onClose={() => setCardId(null)} />
     </div>
   )
 }

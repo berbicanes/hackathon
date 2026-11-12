@@ -148,6 +148,18 @@ export interface Strings {
   selectionTitle: string
   selectionIntro: string
   topN: string
+  placesLess: string
+  placesMore: string
+  viewLabel: string
+  inTitle: string
+  outTitle: string
+  reasonYounger: (range: string, max: number) => string
+  reasonOlder: (range: string, max: number) => string
+  rankingTitle: string
+  rankingRaw: string
+  rankingFair: string
+  finishLine: string
+  howTitle: string
   viewRaw: string
   viewFair: string
   changes: (k: number, n: number) => string
