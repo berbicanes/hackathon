@@ -153,7 +153,8 @@ export interface Strings {
   viewLabel: string
   viewExpanded: string
   recommendKicker: string
-  expandHeadline: (places: number) => string
+  /** `entrants` would be selected once age is taken into account; `borderline` are too close to call. */
+  expandHeadline: (entrants: number, borderline: number) => string
   expandNone: string
   keepTitle: (n: number) => string
   keepText: string

@@ -238,21 +238,34 @@ export interface GroupRecommendation {
   size: number
 }
 
+/** At most this many children are called borderline. */
+const MAX_BORDERLINE = 3
+
 /**
- * Children just below the last age-adjusted place whose gap to it is within the
- * uncertainty of the age trend. Two children's adjusted scores differ by
+ * Children immediately below the last age-adjusted place, where the uncertainty of the
+ * age trend could swap the order. Two children's adjusted scores differ by
  * Δscore − slope × Δage, so the slope's 95% half-width times their age difference is how
- * far that comparison could move. Without an interval nobody is called borderline.
+ * far that comparison could move.
+ *
+ * The rule is monotonic: walk down the age-adjusted ranking from just below the last
+ * place, take each child while their gap is within that uncertainty, and stop at the
+ * first child who does not qualify (or after MAX_BORDERLINE). A lower-ranked child is
+ * never borderline while a higher-ranked one is not. Children already in the group on
+ * raw score are skipped: they are staying anyway. Without an interval nobody qualifies.
  */
 function borderlineChildren(players: AnalysedPlayer[], diff: SelectionDiff, fit: LinearFit | undefined): AnalysedPlayer[] {
   const last = diff.fair[diff.fair.length - 1]
   if (!last || !fit || fit.slopeLow === null || fit.slopeHigh === null) return []
   const halfWidth = (fit.slopeHigh - fit.slopeLow) / 2
   const taken = new Set([...diff.raw, ...diff.fair].map((p) => p.id))
-  return players
-    .filter((p) => !taken.has(p.id))
-    .filter((p) => last.residual - p.residual <= halfWidth * Math.abs(p.ageMonths - last.ageMonths))
-    .sort((a, b) => a.fairRank - b.fairRank)
+  const below = players.filter((p) => !taken.has(p.id)).sort((a, b) => a.fairRank - b.fairRank)
+  const borderline: AnalysedPlayer[] = []
+  for (const p of below) {
+    const withinUncertainty = last.residual - p.residual <= halfWidth * Math.abs(p.ageMonths - last.ageMonths)
+    if (!withinUncertainty || borderline.length >= MAX_BORDERLINE) break
+    borderline.push(p)
+  }
+  return borderline
 }
 
 /**

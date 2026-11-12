@@ -110,10 +110,15 @@ is 0.05 ÷ 3 = 0.017. Only the 22–25 result passes it.
   truth: the recommendation, the names on the scatter plot, the "take a second look"
   player cards and the printed report show exactly the same children in the same order.
   A child who merely gains rank is not highlighted.
-- **Borderline ("Na granici")**: a child just below the last age-adjusted place joins the
-  second-look list when their gap to that place is at most the slope's 95% half-width
-  times their age difference to the last selected child (two adjusted scores differ by
-  Δscore − slope × Δage, so that is how far the comparison could move).
+- **Borderline ("Na granici")**: the children right below the line, where the uncertainty
+  of the estimate could swap the order. Walk down the age-adjusted ranking from just
+  below the last place; a child qualifies while their gap to that place is at most the
+  slope's 95% half-width times their age difference to the last selected child (two
+  adjusted scores differ by Δscore − slope × Δage). Stop at the first child who does not
+  qualify, and take at most three. The rule is monotonic: a lower-ranked child is never
+  borderline while a higher-ranked one is not. Children already in the group on raw score
+  are skipped. The headline counts both parts: "Widen the group by X places: Y late-born
+  talents + Z borderline".
 - **Player card** (`src/lib/playerCard.ts`): months younger/older than the squad
   average, standing for their age, raw vs fair rank, and one of four next steps: *take a
   second look*, *keep*, *look past size and speed*, *keep developing*. No negative

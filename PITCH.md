@@ -37,16 +37,15 @@ browser tab with the sample already loaded on step 3 as backup.
 1. **Step 2:** click **Provjerite svoju ekipu** → **Probajte s primjerom** (orange banner:
    synthetic, invented kids). "**14 of 20** born in the first half of the year. That's the
    bias, inside one squad." Click **Pogledajte odluku →**.
-2. **The recommendation:** *"Proširite grupu za 4 mjesta da ne izgubite kasno rođene
-   talente."* "We don't cut anyone. The 10 he picked stay. We ask him to add four for a
-   second look in six months: Ena, Benjamin, Hana, and Adnan, who is *Na granici*: too
-   close to the last place for this test to call."
+2. **The recommendation:** *"Proširite grupu za 3 mjesta: 3 kasno rođena talenta."* "We
+   don't cut anyone. The 10 he picked stay. We ask him to add three for a second look in
+   six months: Ena, Benjamin and Hana."
 3. **How sure we are:** "≈ 2,2 boda po mjesecu, raspon 1,1–3,3. Every month of age is
    worth about two points here. In a small or noisy squad the app says the adjustment is
    only a rough guide."
 4. **Kako radi (scatter plot):** "Every dot is a child: age across, score up. The dashed
-   line is what's expected for that age. The four named children are exactly the four in
-   the recommendation, the same four on the printed report."
+   line is what's expected for that age. The three named children are exactly the three in
+   the recommendation, the same three on the printed report."
 5. **Tap Ena:** "6 months younger than the squad average, rank 16 on raw score, rank 7 for
    age. *Take a second look.* The tool never says a child is bad; worst case it says
    *keep developing*."
@@ -102,12 +101,13 @@ didn't create it. England measured from 1 September points the same way (1.5×),
 only 175 under-21 players that is not significant on its own (p = 0.065), and we say so.
 Across all 1,762 English players it is clear (2.1×). The table is on step 1 under “Za analitičare”.
 
-**Why is Adnan on the list but Asja isn't?**
-One rule, one list. A child is added if they would be selected once age is taken into
-account, or if their gap to the last place is smaller than the uncertainty of the age
-adjustment ("Na granici"). Adnan's gap is inside that uncertainty; Asja's is not. The
-recommendation, the chart labels, the player cards and the printed report all use that
-same list.
+**What does "Na granici" mean, and why is nobody borderline in the demo?**
+"Na granici" are the children right below the line, where the uncertainty of the
+estimate could swap the order (djeca odmah ispod granice, gdje nesigurnost procjene može
+zamijeniti redoslijed). We walk down the age-adjusted ranking from the last place, take
+each child while their gap is inside that uncertainty, stop at the first who is not, and
+never take more than three. In the demo with 10 places the next child, Asja, is too far,
+so the list stops there. Set 8 places and you get "1 kasno rođeni talenat + 3 na granici".
 
 **Why widen the group instead of swapping children?**
 Because a swap means telling three early-born kids they are out on the basis of a

@@ -172,7 +172,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
           <section className="card recommend" aria-labelledby="recommend-title">
             <p className="kicker">{t.recommendKicker}</p>
             <h3 id="recommend-title" className="outcome__title" aria-live="polite">
-              {group.secondLook.length > 0 ? t.expandHeadline(group.secondLook.length) : t.expandNone}
+              {group.secondLook.length > 0 ? t.expandHeadline(group.secondLook.length - group.borderline.length, group.borderline.length) : t.expandNone}
             </h3>
             <div className="recommend__grid">
               <div className="outcome__col recommend__keep">

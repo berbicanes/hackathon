@@ -54,9 +54,13 @@ describe('step and decision wording', () => {
     }
   })
   it('recommends widening the group, with Bosnian plurals', () => {
-    expect(strings.bs.expandHeadline(3)).toBe('Proširite grupu za 3 mjesta da ne izgubite kasno rođene talente.')
-    expect(strings.bs.expandHeadline(1)).toContain('za 1 mjesto')
-    expect(strings.en.expandHeadline(1)).toContain('by 1 place ')
+    expect(strings.bs.expandHeadline(3, 0)).toBe('Proširite grupu za 3 mjesta: 3 kasno rođena talenta')
+    expect(strings.bs.expandHeadline(1, 3)).toBe('Proširite grupu za 4 mjesta: 1 kasno rođeni talenat + 3 na granici')
+    expect(strings.bs.expandHeadline(5, 1)).toBe('Proširite grupu za 6 mjesta: 5 kasno rođenih talenata + 1 na granici')
+    expect(strings.bs.expandHeadline(0, 1)).toBe('Proširite grupu za 1 mjesto: 1 na granici')
+    expect(strings.bs.expandHeadline(21, 0)).toBe('Proširite grupu za 21 mjesto: 21 kasno rođeni talenat')
+    expect(strings.en.expandHeadline(1, 0)).toBe('Widen the group by 1 place: 1 late-born talent')
+    expect(strings.en.expandHeadline(1, 3)).toBe('Widen the group by 4 places: 1 late-born talent + 3 borderline')
     expect(strings.bs.keepTitle(10)).toBe('10 djece ostaje u grupi')
     expect(strings.bs.keepTitle(3)).toBe('3 djeteta ostaju u grupi')
     expect(strings.en.keepTitle(1)).toBe('1 child stays in the group')

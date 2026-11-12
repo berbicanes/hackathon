@@ -171,35 +171,53 @@ describe('selection-year cut-off (1 January, 1 September, 1 April)', () => {
 
 describe('borderline children ("Na granici")', () => {
   const sample = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)
-  const group = recommendGroup(sample.players, 10, sample.fit)
+  const halfWidth = ((sample.fit.slopeHigh as number) - (sample.fit.slopeLow as number)) / 2
+  const qualifies = (p: (typeof sample.players)[number], last: (typeof sample.players)[number]) =>
+    last.residual - p.residual <= halfWidth * Math.abs(p.ageMonths - last.ageMonths)
 
-  it('adds children whose gap to the last place is within the uncertainty of the age trend', () => {
-    expect(group.borderline.map((p) => p.name)).toEqual(['Adnan'])
+  it('takes the children directly below the last place while the gap is within the uncertainty', () => {
+    expect(recommendGroup(sample.players, 9, sample.fit).borderline.map((p) => p.name)).toEqual(['Hana'])
+    expect(recommendGroup(sample.players, 8, sample.fit).borderline.map((p) => p.name)).toEqual(['Benjamin', 'Hana', 'Asja'])
+  })
+  it('stops at the first child who does not qualify: nobody at 10 places, where Asja is next and too far', () => {
     const last = compareSelections(sample.players, 10).fair[9]
-    const halfWidth = ((sample.fit.slopeHigh as number) - (sample.fit.slopeLow as number)) / 2
-    for (const p of group.borderline) {
-      expect(last.residual - p.residual).toBeGreaterThan(0)
-      expect(last.residual - p.residual).toBeLessThanOrEqual(halfWidth * Math.abs(p.ageMonths - last.ageMonths))
+    const asja = sample.players.find((p) => p.name === 'Asja') as (typeof sample.players)[number]
+    expect(asja.fairRank).toBe(11)
+    expect(qualifies(asja, last)).toBe(false)
+    // Adnan (rank 12) would qualify on his own, but he is below a child who does not.
+    const adnan = sample.players.find((p) => p.name === 'Adnan') as (typeof sample.players)[number]
+    expect(qualifies(adnan, last)).toBe(true)
+    expect(recommendGroup(sample.players, 10, sample.fit).borderline).toEqual([])
+  })
+  it('is monotonic for every group size: never a borderline child below a non-borderline one, at most 3', () => {
+    for (let n = 1; n < sample.players.length; n++) {
+      const diff = compareSelections(sample.players, n)
+      const group = recommendGroup(sample.players, n, sample.fit)
+      const inGroup = new Set([...diff.raw, ...diff.fair].map((p) => p.id))
+      const below = sample.players.filter((p) => !inGroup.has(p.id)).sort((a, b) => a.fairRank - b.fairRank)
+      // The borderline children are exactly the first k children below the line.
+      expect(group.borderline.map((p) => p.id)).toEqual(below.slice(0, group.borderline.length).map((p) => p.id))
+      expect(group.borderline.length).toBeLessThanOrEqual(3)
+      const last = diff.fair[diff.fair.length - 1]
+      group.borderline.forEach((p) => expect(qualifies(p, last)).toBe(true))
+      // The walk stopped because of the cap or because the next child does not qualify.
+      const next = below[group.borderline.length]
+      if (next && group.borderline.length < 3) expect(qualifies(next, last)).toBe(false)
     }
   })
-  it('leaves out a child whose gap is larger than the uncertainty (Asja)', () => {
-    const asja = sample.players.find((p) => p.name === 'Asja') as (typeof sample.players)[number]
-    const last = compareSelections(sample.players, 10).fair[9]
-    const halfWidth = ((sample.fit.slopeHigh as number) - (sample.fit.slopeLow as number)) / 2
-    expect(last.residual - asja.residual).toBeGreaterThan(halfWidth * Math.abs(asja.ageMonths - last.ageMonths))
-    expect(group.borderline.some((p) => p.name === 'Asja')).toBe(false)
-  })
   it('keeps one list: age-adjusted entrants first, then borderline, nobody twice, nobody already selected', () => {
-    expect(group.secondLook.map((p) => p.name)).toEqual(['Ena', 'Benjamin', 'Hana', 'Adnan'])
+    const group = recommendGroup(sample.players, 8, sample.fit)
+    expect(group.secondLook.map((p) => p.name)).toEqual(['Ena', 'Benjamin', 'Hana', 'Asja'])
     expect(new Set(group.secondLook.map((p) => p.id)).size).toBe(group.secondLook.length)
     const kept = new Set(group.keep.map((p) => p.id))
     expect(group.secondLook.some((p) => kept.has(p.id))).toBe(false)
-    expect(group.size).toBe(14)
+    expect(group.size).toBe(12)
+    expect(recommendGroup(sample.players, 10, sample.fit).secondLook.map((p) => p.name)).toEqual(['Ena', 'Benjamin', 'Hana'])
   })
   it('calls nobody borderline when the trend has no interval', () => {
     const tiny = analyseSquad(squadOf('2014-01-01', '2014-06-01'), REF)
     expect(recommendGroup(tiny.players, 1, tiny.fit).borderline).toEqual([])
-    expect(recommendGroup(sample.players, 10).borderline).toEqual([])
+    expect(recommendGroup(sample.players, 8).borderline).toEqual([])
   })
 })
 

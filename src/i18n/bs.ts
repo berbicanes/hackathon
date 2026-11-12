@@ -204,15 +204,23 @@ export const bs: Strings = {
   viewLabel: 'Uporedite',
   viewExpanded: 'Preporuka',
   recommendKicker: 'Naša preporuka',
-  expandHeadline: (places) =>
-    `Proširite grupu za ${places} ${bsPlural(places, 'mjesto', 'mjesta', 'mjesta')} da ne izgubite kasno rođene talente.`,
+  expandHeadline: (entrants, borderline) => {
+    const parts = [
+      entrants > 0
+        ? `${entrants} ${bsPlural(entrants, 'kasno rođeni talenat', 'kasno rođena talenta', 'kasno rođenih talenata')}`
+        : '',
+      borderline > 0 ? `${borderline} na granici` : '',
+    ].filter(Boolean)
+    const places = entrants + borderline
+    return `Proširite grupu za ${places} ${bsPlural(places, 'mjesto', 'mjesta', 'mjesta')}: ${parts.join(' + ')}`
+  },
   expandNone: 'Grupu ne treba širiti: sirova ocjena i ocjena za uzrast biraju istu djecu.',
   keepTitle: (n) => `${n} ${bsPlural(n, 'dijete ostaje', 'djeteta ostaju', 'djece ostaje')} u grupi`,
   keepText: 'Ostaju svi izabrani po sirovoj ocjeni. Niko ne ispada.',
   secondLookTitle: 'Drugi pogled — ponovna procjena za 6 mjeseci',
   secondLookBadge: 'Drugi pogled',
   borderlineBadge: 'Na granici',
-  borderlineWhy: 'Na granici: razlika do posljednjeg mjesta manja je od nesigurnosti procjene, pa test ne može reći ko je bolji.',
+  borderlineWhy: 'Na granici: djeca odmah ispod granice, gdje nesigurnost procjene može zamijeniti redoslijed.',
   showAll: (n) => `Prikaži sve igrače (${n})`,
   compareNote: 'Ovo je samo poređenje dva načina izbora. Naša preporuka je proširiti grupu, a ne mijenjati djecu.',
   inTitle: 'Ulaze',

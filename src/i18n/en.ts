@@ -204,15 +204,21 @@ export const en: Strings = {
   viewLabel: 'Compare',
   viewExpanded: 'Recommendation',
   recommendKicker: 'Our recommendation',
-  expandHeadline: (places) =>
-    `Widen the group by ${places} ${enPlural(places, 'place')} so you do not lose late-born talent.`,
+  expandHeadline: (entrants, borderline) => {
+    const parts = [
+      entrants > 0 ? `${entrants} late-born ${enPlural(entrants, 'talent')}` : '',
+      borderline > 0 ? `${borderline} borderline` : '',
+    ].filter(Boolean)
+    const places = entrants + borderline
+    return `Widen the group by ${places} ${enPlural(places, 'place')}: ${parts.join(' + ')}`
+  },
   expandNone: 'No need to widen the group: raw score and score for age pick the same children.',
   keepTitle: (n) => `${n} ${n === 1 ? 'child stays' : 'children stay'} in the group`,
   keepText: 'Everyone selected on the raw score stays. Nobody is dropped.',
   secondLookTitle: 'Second look — reassess in 6 months',
   secondLookBadge: 'Second look',
   borderlineBadge: 'Borderline',
-  borderlineWhy: 'Borderline: the gap to the last place is smaller than the uncertainty of the estimate, so the test cannot say who is better.',
+  borderlineWhy: 'Borderline: the children right below the line, where the uncertainty of the estimate could swap the order.',
   showAll: (n) => `Show all players (${n})`,
   compareNote: 'This is only a comparison of two ways of choosing. Our recommendation is to widen the group, not to swap children.',
   inTitle: 'Come in',
