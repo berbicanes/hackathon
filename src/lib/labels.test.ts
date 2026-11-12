@@ -34,6 +34,26 @@ describe('placeLabels', () => {
     expect(label.box.y).toBeGreaterThanOrEqual(bounds.top)
     for (const d of dots) expect(overlaps(label.box, { x: d.x - 6, y: d.y - 6, w: 12, h: 12 })).toBe(false)
   })
+  it('keeps names off the trend line and never lets leader lines cross', () => {
+    const targets = [
+      { id: 1, name: 'Ena', x: 80, y: 150 },
+      { id: 2, name: 'Benjamin', x: 84, y: 156 },
+      { id: 3, name: 'Hana', x: 90, y: 148 },
+    ]
+    const line = Array.from({ length: 41 }, (_, i) => ({ x: 40 + i * 7.5, y: 170 - i * 3 }))
+    const labels = placeLabels(targets, targets, bounds, 6, line)
+    for (const l of labels) {
+      for (const p of line) expect(overlaps(l.box, { x: p.x - 3, y: p.y - 3, w: 6, h: 6 })).toBe(false)
+    }
+    const cross = (a: (typeof labels)[number], b: (typeof labels)[number]) => {
+      const side = (px: number, py: number, qx: number, qy: number, rx: number, ry: number) => Math.sign((qx - px) * (ry - py) - (qy - py) * (rx - px))
+      return (
+        side(a.dotX, a.dotY, a.anchorX, a.anchorY, b.dotX, b.dotY) * side(a.dotX, a.dotY, a.anchorX, a.anchorY, b.anchorX, b.anchorY) < 0 &&
+        side(b.dotX, b.dotY, b.anchorX, b.anchorY, a.dotX, a.dotY) * side(b.dotX, b.dotY, b.anchorX, b.anchorY, a.anchorX, a.anchorY) < 0
+      )
+    }
+    for (let i = 0; i < labels.length; i++) for (let j = i + 1; j < labels.length; j++) expect(cross(labels[i], labels[j])).toBe(false)
+  })
   it('draws a leader line only when the name had to move away from its dot', () => {
     const [near] = placeLabels([{ id: 1, name: 'Ena', x: 100, y: 100 }], [{ x: 100, y: 100 }], bounds, 6)
     expect(near.leader).toBe(false)

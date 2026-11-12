@@ -2256,3 +2256,13 @@ td small {
   outline: 3px solid var(--early);
   outline-offset: 2px;
 }
+
+.scatter__outlier {
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--late-ink);
+  font-family: var(--font-body);
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-width: 4px;
+}

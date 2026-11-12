@@ -389,3 +389,52 @@ test('file picker: same file twice, Excel-style MIME type, and no silent failure
   await input.setInputFiles({ name: 'nesto.csv', mimeType: 'text/csv', buffer: Buffer.from('a,b\n1,2\n') })
   await expect(page.getByRole('alert')).toContainText('CSV nema ove kolone')
 })
+
+for (const width of [390, 1366]) {
+  test(`scatter stays readable with outliers and large numbers at ${width}px`, async ({ page }) => {
+    const { readFileSync } = await import('node:fs')
+    const fixture = JSON.parse(readFileSync('tests/fixtures/edge-cases/13-extreme-outlier.json', 'utf-8')) as { csv: string }
+    // A Nordsjaelland-like squad: market values in thousands, two far above the rest.
+    const big = ['name,birth_date,score']
+    const values = [25, 50, 50, 100, 150, 200, 250, 300, 300, 400, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 12000, 17500]
+    values.forEach((v, i) => big.push(`Igrač Prezimenović ${i + 1},${String((i % 27) + 1).padStart(2, '0')}.${String((i % 12) + 1).padStart(2, '0')}.2006,${v}`))
+
+    await page.setViewportSize({ width, height: 900 })
+    for (const [name, csv, arrow] of [
+      ['outlier.csv', fixture.csv, /^↑ 9\.999$/],
+      ['velike-vrijednosti.csv', big.join('\n'), /^↑ 17\.500 · 12\.000$/],
+    ] as const) {
+      await page.goto('./#squad')
+      await page.locator('input[type="file"]').setInputFiles({ name, mimeType: 'text/csv', buffer: Buffer.from(csv) })
+      await page.getByRole('button', { name: /Pogledajte odluku/ }).click()
+      const svg = page.locator('figure.scatter svg[role="img"]')
+      await expect(svg).toBeVisible()
+      const frame = await svg.evaluate((e) => e.getBoundingClientRect().toJSON())
+      const boxes = (selector: string) => page.locator(selector).evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()))
+
+      // Tick labels and outlier arrows are fully inside the chart: nothing is cut off.
+      for (const selector of ['.scatter__tick', '.scatter__outlier', '.scatter__name']) {
+        for (const box of await boxes(`figure.scatter ${selector}`)) {
+          expect(box.left, `${selector} cut on the left in ${name}`).toBeGreaterThanOrEqual(frame.left)
+          expect(box.right, `${selector} cut on the right in ${name}`).toBeLessThanOrEqual(frame.right + 0.5)
+          expect(box.top).toBeGreaterThanOrEqual(frame.top)
+        }
+      }
+      // The flagged outliers are arrows at the edge, with their value, not dots that squash the rest.
+      await expect(page.locator('figure.scatter .scatter__outlier').first()).toHaveText(arrow)
+      // With the outliers off the scale, the other children spread over most of the chart height.
+      const dots = await boxes('figure.scatter svg[role="img"] .scatter__dot')
+      const spread = Math.max(...dots.map((d) => d.top)) - Math.min(...dots.map((d) => d.top))
+      expect(spread).toBeGreaterThan(frame.height * 0.4)
+      // Names never overlap each other.
+      const names = await boxes('figure.scatter .scatter__name')
+      for (let i = 0; i < names.length; i++) {
+        for (let j = i + 1; j < names.length; j++) {
+          const apart = names[i].right <= names[j].left || names[j].right <= names[i].left || names[i].bottom <= names[j].top || names[j].bottom <= names[i].top
+          expect(apart, `names ${i} and ${j} overlap in ${name}`).toBe(true)
+        }
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+    }
+  })
+}

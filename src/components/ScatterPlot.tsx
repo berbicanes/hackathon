@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Strings } from '../i18n'
 import { LABEL_HEIGHT, placeLabels } from '../lib/labels'
 import type { AnalysedPlayer, LinearFit } from '../lib/squad'
+import { scoreOutlierFlags } from '../lib/warnings'
 
 interface Props {
   t: Strings
@@ -58,14 +59,26 @@ export function ScatterPlot({ t, players, fit, highlighted, quarterLabels, highe
   if (players.length < 2) return null
 
   const height = Math.round(Math.min(420, Math.max(270, width * 0.55)))
-  const pad = { left: 44, right: 16, top: 28, bottom: 44 }
   const ages = players.map((p) => p.ageMonths)
-  const scores = players.map((p) => p.score)
   const [minAge, maxAge] = [Math.min(...ages) - 0.5, Math.max(...ages) + 0.5]
   const lineAt = (age: number) => fit.intercept + fit.slope * age
-  const allY = [...scores, lineAt(minAge), lineAt(maxAge)]
+
+  // Scores the app already flags as outliers do not set the scale: the axis covers the
+  // rest of the squad, and each outlier is drawn as an arrow at the edge with its value.
+  const flags = scoreOutlierFlags(players.map((p) => p.score))
+  const inRange = players.filter((_, i) => !flags[i])
+  const outliers = players.filter((_, i) => flags[i])
+  const scaleScores = (inRange.length >= 2 ? inRange : players).map((p) => p.score)
+  const [lowScore, highScore] = [Math.min(...scaleScores), Math.max(...scaleScores)]
+  const clamp = (v: number) => (outliers.length ? Math.min(highScore, Math.max(lowScore, v)) : v)
+  const allY = [...scaleScores, clamp(lineAt(minAge)), clamp(lineAt(maxAge))]
   const spread = Math.max(...allY) - Math.min(...allY) || 1
   const [minScore, maxScore] = [Math.min(...allY) - spread * 0.08, Math.max(...allY) + spread * 0.12]
+  const scoreTicks = niceTicks(minScore, maxScore, 4)
+  const tickText = (v: number) => t.num(v, Number.isInteger(v) ? 0 : Math.abs(v) < 10 ? 2 : 1)
+  // Room for the widest tick label, so large numbers are never cut off on the left.
+  const widestTick = Math.max(...scoreTicks.map((v) => tickText(v).length), 2)
+  const pad = { left: Math.max(40, Math.round(widestTick * 7.4 + 16)), right: 16, top: 30, bottom: 44 }
 
   const x = (age: number) => pad.left + ((age - minAge) / (maxAge - minAge)) * (width - pad.left - pad.right)
   const y = (score: number) => {
@@ -78,17 +91,33 @@ export function ScatterPlot({ t, players, fit, highlighted, quarterLabels, highe
   const isAbove = (p: AnalysedPlayer) => p.residual > 0
   const above = players.filter(isAbove).length
   const yearTicks = niceTicks(minAge, maxAge, width < 480 ? 3 : 6)
-  const scoreTicks = niceTicks(minScore, maxScore, 4)
   const quartersPresent = [1, 2, 3, 4].filter((q) => players.some((p) => p.quarter === q))
   // The trend label sits at the right end of the line, on the side with more room.
   const labelY = y(lineAt(maxAge))
   const labelBelow = labelY < pad.top + 24
   const wide = width >= 480
+  const tight = width < 480 || highlighted.length > 4
+  /** First name when space is tight; initials if even that is long. */
+  const shortName = (name: string) => {
+    if (!tight || name.length <= 10) return name
+    const first = name.split(/\s+/)[0]
+    return first.length <= 10 ? first : name.split(/[\s-]+/).map((part) => `${part[0]}.`).join('')
+  }
+  const outlierIds = new Set(outliers.map((p) => p.id))
+  const lineSamples = Array.from({ length: 41 }, (_, i) => {
+    const age = minAge + ((maxAge - minAge) * i) / 40
+    return { x: x(age), y: y(lineAt(age)) }
+  })
   const nameLabels = placeLabels(
-    highlighted.map((p) => ({ id: p.id, name: p.name, x: x(p.ageMonths), y: y(p.score) })),
-    players.map((p) => ({ x: x(p.ageMonths), y: y(p.score) })),
+    highlighted
+      .filter((p) => !outlierIds.has(p.id))
+      // On a phone only the first few are named; the full list is in the recommendation above.
+      .slice(0, width < 480 ? 4 : highlighted.length)
+      .map((p) => ({ id: p.id, name: shortName(p.name), x: x(p.ageMonths), y: y(p.score) })),
+    inRange.map((p) => ({ x: x(p.ageMonths), y: y(p.score) })),
     { left: pad.left + 2, right: width - pad.right, top: 2, bottom: height - pad.bottom - 2 },
     r,
+    lineSamples,
   )
 
   return (
@@ -103,7 +132,7 @@ export function ScatterPlot({ t, players, fit, highlighted, quarterLabels, highe
             <g key={`y${v}`}>
               <line className="scatter__grid" x1={pad.left} x2={width - pad.right} y1={y(v)} y2={y(v)} />
               <text className="scatter__tick" x={pad.left - 8} y={y(v)} textAnchor="end" dominantBaseline="middle">
-                {t.num(v, Number.isInteger(v) ? 0 : 1)}
+                {tickText(v)}
               </text>
             </g>
           ))}
@@ -116,20 +145,37 @@ export function ScatterPlot({ t, players, fit, highlighted, quarterLabels, highe
           <text className="scatter__label" x={(pad.left + width - pad.right) / 2} y={height - 6} textAnchor="middle">
             {t.scatterX}
           </text>
-          <text className="scatter__label" x={pad.left - 36} y={pad.top - 12}>
+          <text className="scatter__label" x={4} y={pad.top - 14}>
             {higherIsBetter ? t.scatterY : t.scatterYLower}
           </text>
 
-          <line className="scatter__line" x1={x(minAge)} y1={y(lineAt(minAge))} x2={x(maxAge)} y2={y(lineAt(maxAge))} />
+          <clipPath id="scatter-plot-area">
+            <rect x={pad.left} y={pad.top - 6} width={width - pad.left - pad.right} height={height - pad.top - pad.bottom + 6} />
+          </clipPath>
+          <line className="scatter__line" clipPath="url(#scatter-plot-area)" x1={x(minAge)} y1={y(lineAt(minAge))} x2={x(maxAge)} y2={y(lineAt(maxAge))} />
           {wide && (
             <text className="scatter__line-label" x={x(maxAge) - 4} y={labelY + (labelBelow ? 18 : -10)} textAnchor="end">
               {t.scatterLine}
             </text>
           )}
 
-          {players.map((p) => (
+          {inRange.map((p) => (
             <Marker key={p.id} q={p.quarter} x={x(p.ageMonths)} y={y(p.score)} r={highlightedIds.has(p.id) ? r + 1.5 : r} />
           ))}
+          {([true, false] as const).map((atTop) => {
+            // One label per edge: several outliers on the same side share it instead of overlapping.
+            const drawnAtTop = (p: AnalysedPlayer) => (p.score > highScore ? higherIsBetter : !higherIsBetter)
+            const group = outliers.filter((p) => drawnAtTop(p) === atTop).sort((p, q) => q.score - p.score)
+            if (!group.length) return null
+            const meanX = group.reduce((sum, p) => sum + x(p.ageMonths), 0) / group.length
+            const half = group.length * 34 + 10
+            const px = Math.min(width - pad.right - half, Math.max(pad.left + half, meanX))
+            return (
+              <text key={String(atTop)} className="scatter__outlier" x={px} y={atTop ? pad.top - 10 : height - pad.bottom - 6} textAnchor="middle">
+                {atTop ? '↑' : '↓'} {group.map((p) => t.num(p.score, Number.isInteger(p.score) ? 0 : 1)).join(' · ')}
+              </text>
+            )
+          })}
           {nameLabels.map((l) => (
             <g key={l.id}>
               {l.leader && <line className="scatter__leader" x1={l.dotX} y1={l.dotY} x2={l.anchorX} y2={l.anchorY} />}

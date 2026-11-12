@@ -33,6 +33,14 @@ function median(values: number[]): number {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
 }
 
+/** For each score, whether it is far from all the others (robust z-score). Needs at least 5 scores. */
+export function scoreOutlierFlags(scores: number[]): boolean[] {
+  if (scores.length < 5) return scores.map(() => false)
+  const mid = median(scores)
+  const mad = median(scores.map((s) => Math.abs(s - mid))) * 1.4826
+  return scores.map((s) => mad > 0 && Math.abs(s - mid) / mad > SCORE_OUTLIER_Z)
+}
+
 export function squadWarnings(analysis: SquadAnalysis, topN: number): SquadWarning[] {
   const { players, fit, higherIsBetter } = analysis
   const warnings: SquadWarning[] = []
@@ -45,13 +53,8 @@ export function squadWarnings(analysis: SquadAnalysis, topN: number): SquadWarni
   const ageOutliers = players.filter((p) => p.ageMonths > 0 && Math.abs(p.ageMonths - medianAge) > AGE_OUTLIER_MONTHS).length
   if (ageOutliers) warnings.push({ kind: 'ageOutlier', count: ageOutliers })
 
-  if (players.length >= 5) {
-    const scores = players.map((p) => p.score)
-    const mid = median(scores)
-    const mad = median(scores.map((s) => Math.abs(s - mid))) * 1.4826
-    const scoreOutliers = mad > 0 ? scores.filter((s) => Math.abs(s - mid) / mad > SCORE_OUTLIER_Z).length : 0
-    if (scoreOutliers) warnings.push({ kind: 'scoreOutlier', count: scoreOutliers })
-  }
+  const scoreOutliers = scoreOutlierFlags(players.map((p) => p.score)).filter(Boolean).length
+  if (scoreOutliers) warnings.push({ kind: 'scoreOutlier', count: scoreOutliers })
 
   const places = Math.max(0, Math.min(Math.floor(topN), players.length))
   if (places > 0 && places < players.length) {
