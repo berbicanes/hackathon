@@ -183,3 +183,9 @@ served under `/hackathon/` (see `vite.config.ts`).
   browser console.
 - Uploaded files are size- and row-limited and parsed defensively; exported CSV cells are
   protected against spreadsheet formula injection.
+
+## License
+
+Code: [MIT](LICENSE) © 2026 Anes Berbić. The Transfermarkt-derived data comes from the
+[transfermarkt-datasets](https://github.com/dcaribou/transfermarkt-datasets) project and
+keeps its own terms.
