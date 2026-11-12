@@ -1739,3 +1739,104 @@ td small {
 .chart {
   margin: 8px 0 16px;
 }
+
+/* ---------- Scatter plot: how the age adjustment works ---------- */
+.scatter {
+  margin: 8px 0 0;
+}
+
+.scatter__wrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.scatter svg {
+  display: block;
+}
+
+.scatter__grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.scatter__axis {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.scatter__tick,
+.scatter__label {
+  font-size: 12px;
+  fill: var(--muted);
+  font-family: var(--font-body);
+}
+
+.scatter__label {
+  font-weight: 600;
+}
+
+.scatter__line {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-dasharray: 7 5;
+}
+
+.scatter__line-label {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--ink);
+  font-family: var(--font-body);
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-width: 4px;
+}
+
+.scatter__dot {
+  stroke: var(--card);
+  stroke-width: 1.5;
+}
+
+.scatter__dot--early {
+  fill: var(--early);
+}
+
+.scatter__dot--late {
+  fill: var(--late);
+}
+
+.scatter__dot--neutral {
+  fill: var(--neutral);
+}
+
+.scatter__name {
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--ink);
+  font-family: var(--font-body);
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-width: 4px;
+}
+
+.scatter__legend {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.scatter__legend li {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scatter__caption {
+  font-weight: 600;
+  font-size: 1.05rem;
+}

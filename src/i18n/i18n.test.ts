@@ -53,6 +53,12 @@ describe('step and decision wording', () => {
       expect(t.japanLine('2,4')).toContain('2,4×')
     }
   })
+  it('describes the scatter plot in words for screen readers', () => {
+    expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
+    expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')
+    expect(strings.en.scatterSummary(20, 9, '')).not.toContain('Labelled')
+    expect(strings.bs.scatterCaption).toBe('Djeca iznad linije su bolja nego što je uobičajeno za njihovu starost.')
+  })
   it('formats the remaining coach-facing messages', () => {
     for (const t of [strings.bs, strings.en]) {
       expect(t.skewSummary(14, 20)).toContain('14')

@@ -204,6 +204,15 @@ export const en: Strings = {
   rankingFair: 'Ordered by score for their age.',
   finishLine: 'Take it to the coaching meeting.',
   howTitle: 'How we calculate this',
+  scatterHeading: 'How it works',
+  scatterTitle: 'Each child: age on the test date and score',
+  scatterSummary: (n, above, names) =>
+    `Chart of ${n} children by age in months and score, with a line showing the score that is typical for each age in this squad. ${above} of ${n} are above the line, which means better than usual for their age.${names ? ` Labelled above the line: ${names}.` : ''}`,
+  scatterX: 'Age on the test date (months)',
+  scatterY: 'Score',
+  scatterYLower: 'Score (lower is better, drawn higher)',
+  scatterLine: 'expected for this age',
+  scatterCaption: 'Children above the line are better than is usual for their age.',
   viewRaw: 'Raw score',
   viewFair: 'Age-adjusted',
   changes: (k, n) =>

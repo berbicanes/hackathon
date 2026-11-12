@@ -7,6 +7,7 @@ import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
 import { PrintReport } from './PrintReport'
 import { QuarterBadge } from './QuarterBadge'
+import { ScatterPlot } from './ScatterPlot'
 import { StepHeading } from './StepHeading'
 
 function downloadText(filename: string, text: string) {
@@ -192,6 +193,11 @@ export function DecisionStep({ t, squad, onBack }: Props) {
           </section>
         </>
       )}
+
+      <section className="card" aria-labelledby="scatter-heading">
+        <h3 id="scatter-heading">{t.scatterHeading}</h3>
+        <ScatterPlot t={t} players={players} fit={fit} highlighted={talents} quarterLabels={t.quarterLabels} />
+      </section>
 
       <section className="card" aria-labelledby="talent-title">
         <h3 id="talent-title">{t.talentTitle}</h3>

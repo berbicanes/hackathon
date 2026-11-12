@@ -76,6 +76,13 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page).toHaveURL(/#decision$/)
   await expect(page.locator('.squad-table tbody tr')).toHaveCount(20)
 
+  // "How it works": one dot per child, the trend line, hidden talents named.
+  const scatter = page.locator('figure.scatter')
+  await expect(scatter.locator('.scatter__dot')).toHaveCount(20 + 4)
+  await expect(scatter.locator('.scatter__legend')).toContainText('expected for this age')
+  await expect(scatter.locator('.scatter__name').first()).toHaveText('Ena')
+  await expect(scatter.getByRole('img')).toHaveAccessibleDescription(/are above the line/)
+
   // Switching to the age-adjusted view changes who is selected.
   await page.getByRole('button', { name: 'Age-adjusted' }).click()
   await expect(page.getByRole('button', { name: 'Age-adjusted' })).toHaveAttribute('aria-pressed', 'true')

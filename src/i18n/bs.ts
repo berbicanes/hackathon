@@ -205,6 +205,15 @@ export const bs: Strings = {
   rankingFair: 'Poredano po ocjeni za uzrast.',
   finishLine: 'Ponesite ovo na sastanak trenera.',
   howTitle: 'Kako računamo',
+  scatterHeading: 'Kako radi',
+  scatterTitle: 'Svako dijete: starost na dan testiranja i ocjena',
+  scatterSummary: (n, above, names) =>
+    `Grafikon: ${n} djece prema starosti u mjesecima i ocjeni, s linijom koja pokazuje ocjenu uobičajenu za svaku starost u ovoj ekipi. Iznad linije je ${above} od ${n} djece, što znači bolje nego što je uobičajeno za njihovu starost.${names ? ` Imenom označeni iznad linije: ${names}.` : ''}`,
+  scatterX: 'Starost na dan testiranja (mjeseci)',
+  scatterY: 'Ocjena',
+  scatterYLower: 'Ocjena (manje je bolje, crtano više)',
+  scatterLine: 'očekivano za ovu starost',
+  scatterCaption: 'Djeca iznad linije su bolja nego što je uobičajeno za njihovu starost.',
   viewRaw: 'Sirova ocjena',
   viewFair: 'Prilagođeno starosti',
   changes: (k, n) =>

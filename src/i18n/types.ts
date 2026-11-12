@@ -155,6 +155,14 @@ export interface Strings {
   rankingFair: string
   finishLine: string
   howTitle: string
+  scatterHeading: string
+  scatterTitle: string
+  scatterSummary: (n: number, above: number, names: string) => string
+  scatterX: string
+  scatterY: string
+  scatterYLower: string
+  scatterLine: string
+  scatterCaption: string
   viewRaw: string
   viewFair: string
   changes: (k: number, n: number) => string
