@@ -61,10 +61,15 @@ export const en: Strings = {
 
   biasKicker: (n) => `The evidence · ${n} professional players`,
   biasHeadline: 'of active under-21 professionals were born January–March.',
+  biasPlain: 'Children born in January are almost a year older than children born in December, yet they are in the same age group.',
+  problemTitle: 'Older children get picked',
+  problemLead: 'Not because they are more talented. Because they are a few months older on the day of the trial.',
+  japanLine: (ratio) =>
+    `The same holds in Japan, where the age group starts on 1 April: there the early-born (April–June) are ${ratio}× as common as the late-born.`,
   biasSub: (expected, q4, ratio) =>
-    `By days in the calendar you would expect ${expected} for January–March (Q1). Only ${q4} were born October–December (Q4). Q1-born players are ${ratio}× as common as Q4-born among under-21 pros.`,
-  chartTitle: 'Share of players by birth quarter',
-  expectedLine: 'Expected 25% (share of days in the quarter)',
+    `By the calendar it should be about ${expected}. Only ${q4} were born October–December. Early-born players (January–March) are ${ratio}× as common as late-born players (October–December) among under-21 pros.`,
+  chartTitle: 'When the players were born',
+  expectedLine: 'If birth month did not matter: about 25% each',
   expectedMonth: 'Expected (share of days in the month)',
   groupU21: 'Under 21 (active)',
   groupAll: 'All players',
@@ -78,7 +83,7 @@ export const en: Strings = {
   statSample: 'Sample size',
   statChi: 'Chi-square (df 3)',
   statP: 'p-value',
-  statRatio: 'Q1 : Q4 ratio',
+  statRatio: 'Early-born : late-born',
   underdogTitle: 'Do late-born players who survive turn out better?',
   underdogIntro:
     'The "underdog" check compares current market value of Q1- and Q4-born active players within the same age band, so older players never inflate one side.',

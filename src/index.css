@@ -1215,3 +1215,53 @@ tbody th {
     display: none !important;
   }
 }
+
+/* Step 1 */
+.hero__plain {
+  font-size: clamp(1.1rem, 2.6vw, 1.35rem);
+  font-weight: 600;
+  max-width: 46ch;
+  margin: 0 0 8px;
+}
+
+.also {
+  background: var(--early-soft);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 0 0 16px;
+}
+
+.stats--muted {
+  font-size: 0.82rem;
+  color: var(--muted);
+  gap: 4px 24px;
+  margin: 0;
+}
+
+.stats--muted dt,
+.stats--muted dd {
+  display: inline;
+  font-size: inherit;
+  font-weight: 400;
+  color: inherit;
+  margin: 0;
+}
+
+.stats--muted dt::after {
+  content: ': ';
+}
+
+.stats--muted {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.stats--muted div {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.stats--muted dd {
+  font-family: inherit;
+}

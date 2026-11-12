@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { CutoffRowId, Strings } from '../i18n'
 import { formatP } from '../lib/format'
 import { BarChart, type Bar } from './BarChart'
+import { StepHeading } from './StepHeading'
 
 interface ChiSquare {
   chi2: number
@@ -95,6 +96,7 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
   }))
   const cutoffRows = data.cutoff_robustness.rows.filter((r) => r.id in t.cutoffRows)
   const cutoff = (id: CutoffRowId) => cutoffRows.find((r) => r.id === id)
+  const japan = cutoff('japan_u21')
   const [cBase, cExclEng, cExclAll, cEng, cEngAll] = [
     cutoff('u21_all'),
     cutoff('u21_excl_england'),
@@ -114,12 +116,14 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
 
   return (
     <div className="stack">
+      <StepHeading t={t} step={1} title={t.problemTitle} lead={t.problemLead} />
       <section className="card hero" aria-labelledby="bias-headline">
         <p className="kicker">{t.biasKicker(t.num(data.all_players.n))}</p>
         <h2 id="bias-headline" className="hero__stat">
           <span className="hero__number">{t.pct(u21.quarter_share[0])}</span>
           <span className="hero__text">{t.biasHeadline}</span>
         </h2>
+        <p className="hero__plain">{t.biasPlain}</p>
         <p className="hero__sub">
           {t.biasSub(
             t.pct(u21.expected_quarter_share[0]),
@@ -145,7 +149,8 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
           maxValue={0.4}
           formatShare={(v) => t.pct(v, 1)}
         />
-        <dl className="stats">
+        {japan && <p className="also">{t.japanLine(t.num(japan.ratio, 1))}</p>}
+        <dl className="stats stats--muted">
           <div>
             <dt>{t.statSample}</dt>
             <dd>{t.num(dist.n)}</dd>
@@ -163,6 +168,15 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
             <dd>{t.num(dist.q1_q4_ratio, 2)}×</dd>
           </div>
         </dl>
+      </section>
+
+      <details className="card analysts">
+        <summary>
+          <span className="analysts__title">{t.analystsTitle}</span>
+          <span className="analysts__hint">{t.analystsHint}</span>
+        </summary>
+
+      <section className="analysts__part" aria-label={t.monthTitle}>
         <BarChart
           title={t.monthTitle}
           bars={monthBars}
@@ -172,12 +186,6 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
           compact
         />
       </section>
-
-      <details className="card analysts">
-        <summary>
-          <span className="analysts__title">{t.analystsTitle}</span>
-          <span className="analysts__hint">{t.analystsHint}</span>
-        </summary>
 
       <section className="analysts__part" aria-labelledby="cutoff-title">
         <h3 id="cutoff-title">{t.cutoffTitle}</h3>
@@ -280,18 +288,9 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
         <p className="help">{t.underdogBonfNote(data.underdog_tests.n_tests, bonferroni)}</p>
         <p className="note">{t.underdogSummary}</p>
       </section>
-      </details>
-
-      <section className="card cta">
-        <p>{t.ctaSquadText}</p>
-        <button type="button" className="button button--primary" onClick={onGoToSquad}>
-          {t.ctaSquad} →
-        </button>
-      </section>
-
-      <section className="card two-col">
+      <section className="analysts__part two-col">
         <div>
-          <h2>{t.methodTitle}</h2>
+          <h3>{t.methodTitle}</h3>
           <ul>
             {t.method.map((m) => (
               <li key={m}>{m}</li>
@@ -299,7 +298,7 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
           </ul>
         </div>
         <div>
-          <h2>{t.limitsTitle}</h2>
+          <h3>{t.limitsTitle}</h3>
           <ul>
             {t.limits.map((m) => (
               <li key={m}>{m}</li>
@@ -307,6 +306,15 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
           </ul>
         </div>
       </section>
+      </details>
+
+      <section className="card cta">
+        <p>{t.ctaSquadText}</p>
+        <button type="button" className="button button--primary button--next" onClick={onGoToSquad}>
+          {t.ctaSquad} →
+        </button>
+      </section>
+
     </div>
   )
 }

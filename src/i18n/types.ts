@@ -37,6 +37,10 @@ export interface Strings {
 
   biasKicker: (n: string) => string
   biasHeadline: string
+  biasPlain: string
+  problemTitle: string
+  problemLead: string
+  japanLine: (ratio: string) => string
   biasSub: (expected: string, q4: string, ratio: string) => string
   chartTitle: string
   expectedLine: string

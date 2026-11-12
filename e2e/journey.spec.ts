@@ -33,7 +33,8 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   const underdog = page.locator('section[aria-labelledby="underdog-title"]')
   await expect(underdog.getByRole('row', { name: /22-25/ })).toContainText('Yes, still holds')
   await expect(underdog.getByRole('row', { name: /26-29/ })).toContainText('No, does not hold')
-  await expect(page.locator('.hero__sub')).toContainText('as common as Q4-born among under-21 pros')
+  await expect(page.locator('.hero__sub')).toContainText('1.8× as common as late-born players (October–December) among under-21 pros')
+  await expect(page.locator('.also')).toContainText('Japan')
 
   // Cut-off robustness check is shown with England measured from 1 September.
   const cutoff = page.locator('section[aria-labelledby="cutoff-title"]')

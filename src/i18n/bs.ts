@@ -61,10 +61,15 @@ export const bs: Strings = {
 
   biasKicker: (n) => `Dokazi · ${n} profesionalnih igrača`,
   biasHeadline: 'aktivnih profesionalaca mlađih od 21 godine rođeno je u januaru, februaru ili martu.',
+  biasPlain: 'Djeca rođena u januaru su skoro godinu starija od djece rođene u decembru, a ista su generacija.',
+  problemTitle: 'Biramo stariju djecu',
+  problemLead: 'Ne zato što su talentovanija, nego zato što su na dan testiranja nekoliko mjeseci starija.',
+  japanLine: (ratio) =>
+    `Isto vrijedi i u Japanu, gdje generacija počinje 1. aprila: tamo su rano rođeni (april–juni) ${ratio}× brojniji od kasno rođenih.`,
   biasSub: (expected, q4, ratio) =>
-    `Prema broju dana u godini očekivali biste ${expected} za januar–mart (K1). Samo ${q4} rođeno je od oktobra do decembra (K4). Među profesionalcima mlađim od 21 godine igrači rođeni u K1 su ${ratio}× brojniji od rođenih u K4.`,
-  chartTitle: 'Udio igrača po kvartalu rođenja',
-  expectedLine: 'Očekivano 25% (udio dana u kvartalu)',
+    `Po kalendaru bi ih trebalo biti oko ${expected}. Od oktobra do decembra rođeno je samo ${q4}. Među profesionalcima mlađim od 21 godine rano rođeni (januar–mart) su ${ratio}× brojniji od kasno rođenih (oktobar–decembar).`,
+  chartTitle: 'Kada su igrači rođeni',
+  expectedLine: 'Da mjesec rođenja ne igra ulogu: oko 25% u svakom dijelu godine',
   expectedMonth: 'Očekivano (udio dana u mjesecu)',
   groupU21: 'Mlađi od 21 (aktivni)',
   groupAll: 'Svi igrači',
@@ -78,7 +83,7 @@ export const bs: Strings = {
   statSample: 'Veličina uzorka',
   statChi: 'Hi-kvadrat (df 3)',
   statP: 'p-vrijednost',
-  statRatio: 'Omjer K1 : K4',
+  statRatio: 'Rano : kasno rođeni',
   underdogTitle: 'Jesu li kasno rođeni koji opstanu na kraju bolji?',
   underdogIntro:
     'Provjera „autsajdera“ poredi trenutnu tržišnu vrijednost aktivnih igrača rođenih u K1 i K4 unutar iste starosne grupe, tako da stariji igrači nikad ne naduvaju jednu stranu.',
