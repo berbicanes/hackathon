@@ -3,7 +3,8 @@ import { MAX_FILE_BYTES, parseSquadCsv, type ParseIssue } from './lib/csv'
 import { SAMPLE_REFERENCE_DATE, sampleSquad } from './lib/sample'
 import { analyseSquad, type Player, type SquadAnalysis } from './lib/squad'
 
-export type View = 'raw' | 'fair'
+/** 'expanded' is the default recommendation; 'raw' and 'fair' are the side-by-side comparison. */
+export type View = 'expanded' | 'raw' | 'fair'
 
 export type LoadError = { kind: 'tooLarge' } | { kind: 'unreadable' } | { kind: 'missing'; columns: string[] }
 
@@ -39,7 +40,7 @@ export function useSquad(): SquadState {
   const [error, setError] = useState<LoadError | null>(null)
   const [truncated, setTruncated] = useState(false)
   const [topN, setTopN] = useState(11)
-  const [view, setView] = useState<View>('fair')
+  const [view, setView] = useState<View>('expanded')
 
   const reference = useMemo(() => {
     const d = new Date(`${refDate}T00:00:00Z`)

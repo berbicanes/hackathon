@@ -76,6 +76,13 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page).toHaveURL(/#decision$/)
   await expect(page.locator('.squad-table tbody tr')).toHaveCount(20)
 
+  // Default view is a wider group, not a swap: nobody is shown as dropped.
+  await expect(page.locator('#recommend-title')).toHaveText('Widen the group by 3 places so you do not lose late-born talent.')
+  await expect(page.locator('.recommend')).toContainText('Second look — reassess in 6 months')
+  await expect(page.locator('.squad-table tr.is-second')).toHaveCount(3)
+  await expect(page.locator('.squad-table tr.is-lost')).toHaveCount(0)
+  await expect(page.locator('.squad-table')).not.toContainText('Drops out')
+
   // "How it works": one dot per child, the trend line, hidden talents named.
   const scatter = page.locator('figure.scatter')
   await expect(scatter.locator('.scatter__dot')).toHaveCount(20 + 4)

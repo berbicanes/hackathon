@@ -146,6 +146,15 @@ export interface Strings {
   placesLess: string
   placesMore: string
   viewLabel: string
+  viewExpanded: string
+  recommendKicker: string
+  expandHeadline: (places: number) => string
+  expandNone: string
+  keepTitle: (n: number) => string
+  keepText: string
+  secondLookTitle: string
+  secondLookBadge: string
+  compareNote: string
   inTitle: string
   outTitle: string
   reasonYounger: (range: string, max: number) => string
@@ -202,8 +211,6 @@ export interface Strings {
   reportMeta: (date: string, n: number) => string
   reportSkew: string
   reportSelection: (n: number) => string
-  reportIn: string
-  reportOut: string
   reportNone: string
   reportTalents: string
   reportSynthetic: string

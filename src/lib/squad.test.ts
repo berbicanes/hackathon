@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyseSquad, compareSelections, hiddenTalents, type Player } from './squad'
+import { analyseSquad, compareSelections, hiddenTalents, recommendGroup, type Player } from './squad'
 import { csvCell, parseSquadCsv } from './csv'
 import { sampleSquad, SAMPLE_REFERENCE_DATE } from './sample'
 
@@ -123,6 +123,37 @@ describe('compareSelections', () => {
     expect(compareSelections(result.players, 99).raw).toHaveLength(6)
     expect(compareSelections(result.players, 99).gained).toHaveLength(0)
     expect(compareSelections(result.players, -3).raw).toHaveLength(0)
+  })
+})
+
+describe('recommendGroup (second look, not swap)', () => {
+  const { players } = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)
+  it('keeps everyone from the raw top N and adds the age-adjusted entrants', () => {
+    const diff = compareSelections(players, 10)
+    const group = recommendGroup(players, 10)
+    expect(group.keep.map((p) => p.id)).toEqual(diff.raw.map((p) => p.id))
+    expect(group.secondLook.map((p) => p.id)).toEqual(diff.gained.map((p) => p.id))
+    expect(group.size).toBe(10 + diff.gained.length)
+    // Nobody who is in on raw score is dropped, including those the swap view would drop.
+    const kept = new Set(group.keep.map((p) => p.id))
+    for (const p of diff.lost) expect(kept.has(p.id)).toBe(true)
+  })
+  it('never lists a child in both parts', () => {
+    const group = recommendGroup(players, 10)
+    const kept = new Set(group.keep.map((p) => p.id))
+    expect(group.secondLook.some((p) => kept.has(p.id))).toBe(false)
+  })
+  it('adds nobody when scores do not depend on age', () => {
+    const flat = analyseSquad(
+      [
+        { name: 'A', birthDate: d('2014-01-01'), score: 5 },
+        { name: 'B', birthDate: d('2014-01-01'), score: 4 },
+        { name: 'C', birthDate: d('2014-01-01'), score: 3 },
+        { name: 'D', birthDate: d('2014-01-01'), score: 2 },
+      ],
+      REF,
+    )
+    expect(recommendGroup(flat.players, 2)).toMatchObject({ secondLook: [], size: 2 })
   })
 })
 

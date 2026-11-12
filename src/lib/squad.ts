@@ -138,6 +138,24 @@ export function compareSelections(players: AnalysedPlayer[], topN: number): Sele
   }
 }
 
+export interface GroupRecommendation {
+  /** Everyone in the top N on raw score. Nobody is removed. */
+  keep: AnalysedPlayer[]
+  /** Children who would be selected once age is taken into account: add them, reassess later. */
+  secondLook: AnalysedPlayer[]
+  /** Size of the expanded group. */
+  size: number
+}
+
+/**
+ * Default recommendation: a second look, not a swap. Keep the raw top N and widen the
+ * group by the children the age-adjusted ranking would have selected.
+ */
+export function recommendGroup(players: AnalysedPlayer[], topN: number): GroupRecommendation {
+  const diff = compareSelections(players, topN)
+  return { keep: diff.raw, secondLook: diff.gained, size: diff.raw.length + diff.gained.length }
+}
+
 /** Players who climb the most once age is accounted for (only real gains). */
 export function hiddenTalents(players: AnalysedPlayer[], limit = 3): AnalysedPlayer[] {
   return players

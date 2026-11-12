@@ -1840,3 +1840,45 @@ td small {
   font-weight: 600;
   font-size: 1.05rem;
 }
+
+/* ---------- Recommendation: widen the group ---------- */
+.recommend .kicker {
+  margin-bottom: 4px;
+}
+
+.recommend__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.recommend__keep {
+  background: var(--neutral-soft);
+}
+
+.squad-table tr.is-second {
+  box-shadow: inset 4px 0 0 var(--late);
+  background: var(--late-soft);
+}
+
+.segmented--three {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 560px;
+  border-radius: 24px;
+}
+
+.segmented--three button {
+  white-space: normal;
+  line-height: 1.2;
+  border-radius: 20px;
+}
+
+.field--view {
+  max-width: none;
+  margin-bottom: 16px;
+}
+
+.compare {
+  margin-bottom: 8px;
+}

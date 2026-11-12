@@ -53,6 +53,16 @@ describe('step and decision wording', () => {
       expect(t.japanLine('2,4')).toContain('2,4×')
     }
   })
+  it('recommends widening the group, with Bosnian plurals', () => {
+    expect(strings.bs.expandHeadline(3)).toBe('Proširite grupu za 3 mjesta da ne izgubite kasno rođene talente.')
+    expect(strings.bs.expandHeadline(1)).toContain('za 1 mjesto')
+    expect(strings.en.expandHeadline(1)).toContain('by 1 place ')
+    expect(strings.bs.keepTitle(10)).toBe('10 djece ostaje u grupi')
+    expect(strings.bs.keepTitle(3)).toBe('3 djeteta ostaju u grupi')
+    expect(strings.en.keepTitle(1)).toBe('1 child stays in the group')
+    expect(strings.bs.secondLookTitle).toBe('Drugi pogled — ponovna procjena za 6 mjeseci')
+    expect(strings.bs.reportSelection(10)).toContain('10')
+  })
   it('describes the scatter plot in words for screen readers', () => {
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')

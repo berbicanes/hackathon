@@ -40,10 +40,10 @@ export function PrintReport({ t, reference, players, quarterCounts, diff, talent
 
       <h2>{t.reportSelection(diff.raw.length)}</h2>
       <p>
-        <strong>{t.reportIn}:</strong> {names(diff.gained)}
+        <strong>{t.keepTitle(diff.raw.length)}.</strong> {t.keepText}
       </p>
       <p>
-        <strong>{t.reportOut}:</strong> {names(diff.lost)}
+        <strong>{t.secondLookTitle}:</strong> {names(diff.gained)}
       </p>
       <p>
         <strong>{t.reportTalents}:</strong> {names(talents)}

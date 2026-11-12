@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Strings } from '../i18n'
 import { csvCell } from '../lib/csv'
-import { compareSelections, hiddenTalents, type AnalysedPlayer } from '../lib/squad'
+import { compareSelections, hiddenTalents, recommendGroup, type AnalysedPlayer } from '../lib/squad'
 import { isoDay, type SquadState } from '../useSquad'
 import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
@@ -53,8 +53,10 @@ export function DecisionStep({ t, squad, onBack }: Props) {
   const talents = hiddenTalents(players, 3)
   const gainedIds = new Set(diff.gained.map((p) => p.id))
   const lostIds = new Set(diff.lost.map((p) => p.id))
-  const selectedIds = new Set((view === 'raw' ? diff.raw : diff.fair).map((p) => p.id))
-  const ordered = [...players].sort((a, b) => (view === 'raw' ? a.rawRank - b.rawRank : a.fairRank - b.fairRank))
+  const group = recommendGroup(players, topN)
+  const secondLookIds = new Set(group.secondLook.map((p) => p.id))
+  const selectedIds = new Set((view === 'fair' ? diff.fair : diff.raw).map((p) => p.id))
+  const ordered = [...players].sort((a, b) => (view === 'fair' ? a.fairRank - b.fairRank : a.rawRank - b.rawRank))
   const cardPlayer = players.find((p) => p.id === cardId) ?? null
 
   const nameButton = (p: AnalysedPlayer) => (
@@ -154,41 +156,26 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                 </button>
               </div>
             </div>
-            <div className="field field--view">
-              <span className="field__label" id="view-label">
-                {t.viewLabel}
-              </span>
-              <div className="segmented segmented--row" role="group" aria-labelledby="view-label">
-                {(['raw', 'fair'] as const).map((v) => (
-                  <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
-                    {v === 'raw' ? t.viewRaw : t.viewFair}
-                  </button>
-                ))}
-              </div>
-            </div>
           </section>
 
-          <section className="card outcome" aria-labelledby="outcome-title">
-            <h3 id="outcome-title" className="outcome__title" aria-live="polite">
-              {t.changes(diff.gained.length, diff.raw.length)}
+          <section className="card recommend" aria-labelledby="recommend-title">
+            <p className="kicker">{t.recommendKicker}</p>
+            <h3 id="recommend-title" className="outcome__title" aria-live="polite">
+              {group.secondLook.length > 0 ? t.expandHeadline(group.secondLook.length) : t.expandNone}
             </h3>
-            {diff.gained.length > 0 && (
-              <div className="outcome__grid">
+            <div className="recommend__grid">
+              <div className="outcome__col recommend__keep">
+                <p className="outcome__label">✓ {t.keepTitle(group.keep.length)}</p>
+                <p className="outcome__reason">{t.keepText}</p>
+              </div>
+              {group.secondLook.length > 0 && (
                 <div className="outcome__col outcome__col--in">
-                  <p className="outcome__label">▲ {t.inTitle}</p>
-                  {chips(diff.gained)}
+                  <p className="outcome__label">＋ {t.secondLookTitle}</p>
+                  {chips(group.secondLook)}
                   {youngerRange && <p className="outcome__reason">{t.reasonYounger(youngerRange.text, youngerRange.max)}</p>}
                 </div>
-                <div className="outcome__arrow" aria-hidden="true">
-                  ⇄
-                </div>
-                <div className="outcome__col outcome__col--out">
-                  <p className="outcome__label">▼ {t.outTitle}</p>
-                  {chips(diff.lost)}
-                  {olderRange && <p className="outcome__reason">{t.reasonOlder(olderRange.text, olderRange.max)}</p>}
-                </div>
-              </div>
-            )}
+              )}
+            </div>
             <p className="help">{fit.slope > 0.05 ? t.trend(t.num(fit.slope, 1)) : t.trendNone}</p>
           </section>
         </>
@@ -225,7 +212,42 @@ export function DecisionStep({ t, squad, onBack }: Props) {
       {n >= 4 && (
         <section className="card" aria-labelledby="ranking-title">
           <h3 id="ranking-title">{t.rankingTitle}</h3>
-          <p className="help">{view === 'raw' ? t.rankingRaw : t.rankingFair}</p>
+          <div className="field field--view">
+            <span className="field__label" id="view-label">
+              {t.viewLabel}
+            </span>
+            <div className="segmented segmented--row segmented--three" role="group" aria-labelledby="view-label">
+              {(['expanded', 'raw', 'fair'] as const).map((v) => (
+                <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+                  {v === 'expanded' ? t.viewExpanded : v === 'raw' ? t.viewRaw : t.viewFair}
+                </button>
+              ))}
+            </div>
+          </div>
+          {view !== 'expanded' && (
+            <div className="compare" aria-live="polite">
+              <p className="big-line">{t.changes(diff.gained.length, diff.raw.length)}</p>
+              {diff.gained.length > 0 && (
+                <div className="outcome__grid">
+                  <div className="outcome__col outcome__col--in">
+                    <p className="outcome__label">▲ {t.inTitle}</p>
+                    {chips(diff.gained)}
+                    {youngerRange && <p className="outcome__reason">{t.reasonYounger(youngerRange.text, youngerRange.max)}</p>}
+                  </div>
+                  <div className="outcome__arrow" aria-hidden="true">
+                    ⇄
+                  </div>
+                  <div className="outcome__col outcome__col--out">
+                    <p className="outcome__label">▼ {t.outTitle}</p>
+                    {chips(diff.lost)}
+                    {olderRange && <p className="outcome__reason">{t.reasonOlder(olderRange.text, olderRange.max)}</p>}
+                  </div>
+                </div>
+              )}
+              <p className="help">{t.compareNote}</p>
+            </div>
+          )}
+          <p className="help">{view === 'fair' ? t.rankingFair : t.rankingRaw}</p>
           <div className="table-wrap">
             <table className="squad-table">
               <thead>
@@ -241,12 +263,14 @@ export function DecisionStep({ t, squad, onBack }: Props) {
               <tbody>
                 {ordered.map((p) => {
                   const selected = selectedIds.has(p.id)
-                  const gained = gainedIds.has(p.id)
-                  const lost = lostIds.has(p.id)
+                  const compare = view !== 'expanded'
+                  const gained = compare && gainedIds.has(p.id)
+                  const lost = compare && lostIds.has(p.id)
+                  const second = !compare && secondLookIds.has(p.id)
                   return (
-                    <tr key={p.id} className={`${selected ? 'is-selected' : ''} ${gained ? 'is-gained' : ''} ${lost ? 'is-lost' : ''}`}>
+                    <tr key={p.id} className={`${selected ? 'is-selected' : ''} ${gained ? 'is-gained' : ''} ${lost ? 'is-lost' : ''} ${second ? 'is-second' : ''}`}>
                       <td className="squad-table__rank" data-label={t.colRank}>
-                        {view === 'raw' ? p.rawRank : p.fairRank}
+                        {view === 'fair' ? p.fairRank : p.rawRank}
                       </td>
                       <th scope="row">
                         {nameButton(p)} <QuarterBadge q={p.quarter} t={t} />
@@ -256,7 +280,8 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                       <td data-label={t.colFair}>{t.num(p.fairScore, 1)}</td>
                       <td data-label={t.colStatus}>
                         <span className="status-cell">
-                          <span className="status">{selected ? `✓ ${t.selected}` : t.notSelected}</span>
+                          {!second && <span className="status">{selected ? `✓ ${t.selected}` : t.notSelected}</span>}
+                          {second && <span className="pill pill--late">＋ {t.secondLookBadge}</span>}
                           {gained && <span className="pill pill--late">▲ {t.badgeIn}</span>}
                           {lost && <span className="pill pill--early">▼ {t.badgeOut}</span>}
                         </span>
