@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { bsPlural, bsPluralShown, strings } from './i18n'
-import { formatNumber, isoToDmy, parseDmy } from './lib/format'
+import { strings } from './index'
+import { bsPlural, bsPluralShown } from './plural'
+import { formatNumber, isoToDmy, parseDmy } from '../lib/format'
 
 describe('formatNumber', () => {
   it('uses Bosnian and English separators', () => {

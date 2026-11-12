@@ -11,7 +11,8 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # Let a running deploy finish; only the newest waiting run is kept.
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -23,7 +24,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Dependency audit
+        run: npm audit --audit-level=high
       - run: npm run lint
+      - name: Type check
+        run: npm run typecheck
       - run: npm run test:coverage
       - run: npm run build
       - run: npx playwright install --with-deps chromium

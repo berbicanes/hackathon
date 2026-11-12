@@ -1,51 +1,52 @@
 import { describe, expect, it } from 'vitest'
-import {
-  ageInMonths,
-  analyseSquad,
-  birthQuarter,
-  compareSelections,
-  hiddenTalents,
-  linearFit,
-  type Player,
-} from './squad'
-import { csvCell, parseBirthDate, parseScore, parseSquadCsv, splitLine } from './csv'
+import { analyseSquad, compareSelections, hiddenTalents, type Player } from './squad'
+import { csvCell, parseSquadCsv } from './csv'
 import { sampleSquad, SAMPLE_REFERENCE_DATE } from './sample'
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`)
 const REF = d('2026-09-01')
 
-describe('ageInMonths', () => {
+const squadOf = (...births: string[]): Player[] =>
+  births.map((iso, i) => ({ name: `P${i}`, birthDate: d(iso), score: 50 + i }))
+
+describe('age in months (through analyseSquad)', () => {
   it('is ~12 months for a child born exactly a year earlier', () => {
-    expect(ageInMonths(d('2025-09-01'), REF)).toBeCloseTo(12, 1)
+    expect(analyseSquad(squadOf('2025-09-01'), REF).players[0].ageMonths).toBeCloseTo(12, 1)
   })
   it('gives an 11-month gap between 1 Jan and 1 Dec births of the same year', () => {
-    const gap = ageInMonths(d('2014-01-01'), REF) - ageInMonths(d('2014-12-01'), REF)
-    expect(gap).toBeCloseTo(11, 0)
+    const [jan, dec] = analyseSquad(squadOf('2014-01-01', '2014-12-01'), REF).players
+    expect(jan.ageMonths - dec.ageMonths).toBeCloseTo(11, 0)
   })
 })
 
-describe('birthQuarter', () => {
+describe('birth quarter (through analyseSquad)', () => {
   it('maps months to selection-year quarters', () => {
-    expect(birthQuarter(d('2014-01-01'))).toBe(1)
-    expect(birthQuarter(d('2014-03-31'))).toBe(1)
-    expect(birthQuarter(d('2014-04-01'))).toBe(2)
-    expect(birthQuarter(d('2014-12-31'))).toBe(4)
+    const { players } = analyseSquad(squadOf('2014-01-01', '2014-03-31', '2014-04-01', '2014-12-31'), REF)
+    expect(players.map((p) => p.quarter)).toEqual([1, 1, 2, 4])
   })
 })
 
-describe('linearFit', () => {
+describe('age trend (through analyseSquad)', () => {
   it('recovers an exact line', () => {
-    const fit = linearFit([1, 2, 3, 4], [5, 7, 9, 11])
+    // Scores are an exact linear function of age in months: score = 3 + 2 × age.
+    const base = analyseSquad(squadOf('2014-01-10', '2014-04-20', '2014-08-05', '2014-12-01'), REF)
+    const exact = base.players.map((p) => ({ name: p.name, birthDate: p.birthDate, score: 3 + 2 * p.ageMonths }))
+    const { fit, players } = analyseSquad(exact, REF)
     expect(fit.slope).toBeCloseTo(2)
     expect(fit.intercept).toBeCloseTo(3)
+    for (const p of players) expect(p.residual).toBeCloseTo(0)
   })
   it('returns a flat line when there is no age spread', () => {
-    const fit = linearFit([10, 10, 10], [1, 2, 3])
+    const same = [1, 2, 3].map((score, i) => ({ name: `S${i}`, birthDate: d('2014-05-05'), score }))
+    const { fit, players } = analyseSquad(same, REF)
     expect(fit.slope).toBe(0)
     expect(fit.intercept).toBeCloseTo(2)
+    expect(players.map((p) => p.fairScore)).toEqual([1, 2, 3])
   })
   it('handles an empty squad', () => {
-    expect(linearFit([], [])).toEqual({ intercept: 0, slope: 0 })
+    const empty = analyseSquad([], REF)
+    expect(empty.fit).toEqual({ intercept: 0, slope: 0 })
+    expect(empty.players).toEqual([])
   })
 })
 
@@ -165,18 +166,18 @@ describe('CSV parsing', () => {
     expect(parseSquadCsv('name,dob\nA,2014-01-01').missingColumns).toEqual(['birth_date', 'score'])
     expect(parseSquadCsv('').missingColumns).toHaveLength(3)
   })
+  const reasons = (rows: string) => parseSquadCsv(`name,birth_date,score\n${rows}`).issues.map((i) => i.reason)
   it('rejects future and implausible dates', () => {
-    expect(parseBirthDate('2999-01-01')).toBeNull()
-    expect(parseBirthDate('1890-01-01')).toBeNull()
-    expect(parseBirthDate('31/04/2014')).toBeNull()
+    expect(reasons('A,2999-01-01,5\nB,1890-01-01,5\nC,31/04/2014,5\n')).toEqual(['date', 'date', 'date'])
   })
   it('parses scores strictly', () => {
-    expect(parseScore('12')).toBe(12)
-    expect(parseScore('1e9')).toBeNull()
-    expect(parseScore('=1+1')).toBeNull()
+    const r = parseSquadCsv('name,birth_date,score\nA,2014-01-01,12\nB,2014-01-01,1e9\nC,2014-01-01,=1+1\n')
+    expect(r.players.map((p) => p.score)).toEqual([12])
+    expect(r.issues.map((i) => i.reason)).toEqual(['score', 'score'])
   })
   it('splits quoted fields with escaped quotes', () => {
-    expect(splitLine('"a ""b""",c', ',')).toEqual(['a "b"', 'c'])
+    const r = parseSquadCsv('name,birth_date,score\n"a ""b"", c",2014-01-01,5\n')
+    expect(r.players[0].name).toBe('a "b", c')
   })
   it('neutralises formula injection on export', () => {
     expect(csvCell('=HYPERLINK("x")')).toBe(`"'=HYPERLINK(""x"")"`)

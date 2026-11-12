@@ -163,7 +163,7 @@ scripts/analyze.py        RAE analysis (standard library only)
 public/data/rae.json      analysis output used by the Bias mirror
 src/lib/                  pure logic + unit tests (squad, csv, playerCard, format)
 src/components/           screens and UI pieces
-src/i18n.ts               Bosnian and English strings
+src/i18n/                 Bosnian and English strings (one file per language)
 PITCH.md                  3-minute demo script and jury Q&A
 ```
 

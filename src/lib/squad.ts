@@ -51,17 +51,17 @@ const MS_PER_DAY = 86_400_000
 const DAYS_PER_MONTH = 365.25 / 12
 
 /** Age in (fractional) months at the reference date. */
-export function ageInMonths(birthDate: Date, reference: Date): number {
+function ageInMonths(birthDate: Date, reference: Date): number {
   const days = (reference.getTime() - birthDate.getTime()) / MS_PER_DAY
   return days / DAYS_PER_MONTH
 }
 
-export function birthQuarter(birthDate: Date): 1 | 2 | 3 | 4 {
+function birthQuarter(birthDate: Date): 1 | 2 | 3 | 4 {
   return (Math.floor(birthDate.getUTCMonth() / 3) + 1) as 1 | 2 | 3 | 4
 }
 
 /** Ordinary least squares fit y = intercept + slope * x. Flat line if x has no spread. */
-export function linearFit(xs: number[], ys: number[]): LinearFit {
+function linearFit(xs: number[], ys: number[]): LinearFit {
   const n = xs.length
   if (n === 0) return { intercept: 0, slope: 0 }
   const meanX = xs.reduce((a, b) => a + b, 0) / n

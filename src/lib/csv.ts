@@ -31,7 +31,7 @@ function detectDelimiter(headerLine: string): ',' | ';' {
 }
 
 /** Split one CSV line, honouring double-quoted fields. */
-export function splitLine(line: string, delimiter: string): string[] {
+function splitLine(line: string, delimiter: string): string[] {
   const out: string[] = []
   let field = ''
   let quoted = false
@@ -60,7 +60,7 @@ export function splitLine(line: string, delimiter: string): string[] {
 }
 
 /** Parse a date as UTC midnight. Returns null for anything implausible. */
-export function parseBirthDate(raw: string): Date | null {
+function parseBirthDate(raw: string): Date | null {
   const s = raw.trim()
   let y: number, m: number, d: number
   let match = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s)
@@ -77,7 +77,7 @@ export function parseBirthDate(raw: string): Date | null {
   return date
 }
 
-export function parseScore(raw: string): number | null {
+function parseScore(raw: string): number | null {
   const s = raw.trim().replace(',', '.')
   if (!/^-?\d+(\.\d+)?$/.test(s)) return null
   const n = Number(s)

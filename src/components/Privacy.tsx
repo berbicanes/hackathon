@@ -1,6 +1,6 @@
 import type { Strings } from '../i18n'
 
-export const PRIVACY_CONTACT_URL = 'https://github.com/berbicanes/hackathon/issues'
+const PRIVACY_CONTACT_URL = 'https://github.com/berbicanes/hackathon/issues'
 
 export function Privacy({ t, onBack }: { t: Strings; onBack: () => void }) {
   return (
