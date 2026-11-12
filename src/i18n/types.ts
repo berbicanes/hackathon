@@ -175,6 +175,9 @@ export interface Strings {
   dateInvalid: string
   fileTooLarge: string
   fileUnreadable: string
+  fileNoRows: string
+  loadedFile: (count: number, fileName: string) => string
+  loadedSample: (count: number) => string
   missingColumns: (cols: string) => string
   issues: (n: number) => string
   issueReason: Record<'columns' | 'name' | 'date' | 'score', string>

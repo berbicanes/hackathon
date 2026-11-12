@@ -159,6 +159,16 @@ export function parseSquadCsv(text: string): ParseResult {
   return result
 }
 
+/**
+ * Decodes an uploaded file to text. Excel's "Unicode Text" export is UTF-16 with a
+ * byte-order mark; everything else is read as UTF-8 (a UTF-8 BOM is removed by the parser).
+ */
+export function decodeCsvBytes(bytes: Uint8Array): string {
+  if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xfe) return new TextDecoder('utf-16le').decode(bytes)
+  if (bytes.length >= 2 && bytes[0] === 0xfe && bytes[1] === 0xff) return new TextDecoder('utf-16be').decode(bytes)
+  return new TextDecoder('utf-8').decode(bytes)
+}
+
 /** Neutralise spreadsheet formula injection in exported cells. */
 export function csvCell(value: string | number): string {
   let s = String(value)

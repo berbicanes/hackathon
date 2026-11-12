@@ -1,4 +1,4 @@
-import { useId, useState, type ChangeEvent } from 'react'
+import { useEffect, useId, useRef, useState, type ChangeEvent } from 'react'
 import type { Strings } from '../i18n'
 import { CSV_TEMPLATE, MAX_ROWS } from '../lib/csv'
 import { CUTOFF_MONTHS, olderHalfLabel, quarterLabels } from '../lib/squad'
@@ -17,7 +17,16 @@ function downloadText(filename: string, text: string) {
 }
 
 const errorText = (t: Strings, e: LoadError) =>
-  e.kind === 'tooLarge' ? t.fileTooLarge : e.kind === 'unreadable' ? t.fileUnreadable : t.missingColumns(e.columns.join(', '))
+  e.kind === 'tooLarge'
+    ? t.fileTooLarge
+    : e.kind === 'unreadable'
+      ? t.fileUnreadable
+      : e.kind === 'noRows'
+        ? t.fileNoRows
+        : t.missingColumns(e.columns.join(', '))
+
+/** File types offered by the picker. Broad on purpose: macOS, Safari and Windows label CSV files differently, and a narrow list greys them out. */
+const ACCEPT = '.csv,text/csv,application/vnd.ms-excel,text/plain,.txt'
 
 interface Props {
   t: Strings
@@ -31,11 +40,31 @@ export function SquadStep({ t, squad, onNext }: Props) {
   const [dragging, setDragging] = useState(false)
   const { analysis, synthetic, issues, truncated, error } = squad
 
-  const onFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    e.target.value = ''
-    if (file) void squad.loadFile(file)
+  const { loadedInfo } = squad
+  const confirmation = useRef<HTMLParagraphElement>(null)
+
+  const onFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target
+    const file = input.files?.[0]
+    if (!file) return
+    try {
+      await squad.loadFile(file)
+    } finally {
+      // Clear the picker so choosing the same file again fires a new change event.
+      input.value = ''
+    }
   }
+
+  // After every successful load, bring the confirmation and the results into view.
+  const loadId = loadedInfo?.id
+  useEffect(() => {
+    if (loadId === undefined) return
+    const line = confirmation.current
+    if (!line) return
+    // Focus first, then jump: an animated scroll can be cancelled by the focus change.
+    line.focus({ preventScroll: true })
+    line.scrollIntoView({ block: 'start', behavior: 'auto' })
+  }, [loadId])
 
   const n = analysis?.players.length ?? 0
   const quarterCounts = analysis?.quarterCounts ?? [0, 0, 0, 0]
@@ -51,7 +80,7 @@ export function SquadStep({ t, squad, onNext }: Props) {
         <p className="privacy" role="note">
           <span aria-hidden="true">🔒</span> {t.privacy}
         </p>
-        <input id={fileId} className="sr-only" type="file" accept=".csv,text/csv" onChange={onFile} />
+        <input id={fileId} className="sr-only" type="file" accept={ACCEPT} onChange={onFile} />
         <div
           className={`dropzone${dragging ? ' dropzone--over' : ''}`}
           onDragOver={(e) => {
@@ -136,6 +165,13 @@ export function SquadStep({ t, squad, onNext }: Props) {
           </div>
         )}
       </section>
+
+      {analysis && loadedInfo && (
+        <p ref={confirmation} className="loaded" role="status" tabIndex={-1}>
+          <span aria-hidden="true">✓</span>{' '}
+          {loadedInfo.fileName ? t.loadedFile(loadedInfo.count, loadedInfo.fileName) : t.loadedSample(loadedInfo.count)}
+        </p>
+      )}
 
       {analysis && (
         <>

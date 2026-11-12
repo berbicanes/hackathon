@@ -107,6 +107,13 @@ describe('step and decision wording', () => {
     expect(strings.bs.pitch.youthLine('2,8', '1,4')).toBe('SP U-17 2025: dječaci 2,8×, djevojčice 1,4× (slabije).')
     expect(strings.en.youthBarLabel('Boys', ['41%', '27%', '17%', '15%'])).toContain('41% born January–March')
   })
+  it('confirms a load with the right Bosnian plural and the file name', () => {
+    expect(strings.bs.loadedFile(21, 'real-squad-nordsjaelland.csv')).toBe('Učitano: 21 igrač iz real-squad-nordsjaelland.csv')
+    expect(strings.bs.loadedFile(15, 'a.csv')).toBe('Učitano: 15 igrača iz a.csv')
+    expect(strings.bs.loadedFile(3, 'a.csv')).toBe('Učitano: 3 igrača iz a.csv')
+    expect(strings.en.loadedFile(1, 'a.csv')).toBe('Loaded: 1 player from a.csv')
+    expect(strings.bs.loadedSample(20)).toBe('Učitano: 20 igrača (sintetički primjer)')
+  })
   it('describes the scatter plot in words for screen readers', () => {
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')

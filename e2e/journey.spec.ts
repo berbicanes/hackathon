@@ -399,3 +399,51 @@ test('pitch deck: four slides, backup slide, keyboard, exit', async ({ page }) =
   await expect(page).toHaveURL(/#problem$/)
   await expect(page.getByRole('navigation', { name: 'Steps' })).toBeVisible()
 })
+
+test('file picker: same file twice, Excel-style MIME type, and no silent failures', async ({ page }) => {
+  await page.goto('./#squad')
+  const input = page.locator('input[type="file"]')
+  const rows = ['name;birth_date;score']
+  for (let m = 1; m <= 12; m++) rows.push(`Igrač ${m};${String(m + 3).padStart(2, '0')}.${String(m).padStart(2, '0')}.2014;${60 + m}`)
+  const csv = Buffer.from(rows.join('\r\n'))
+  const status = page.locator('.loaded')
+
+  // The picker offers CSV whatever the system calls it.
+  expect(await input.getAttribute('accept')).toBe('.csv,text/csv,application/vnd.ms-excel,text/plain,.txt')
+
+  // First choice: confirmation with the count and the file name, focused and in view.
+  await input.setInputFiles({ name: 'moja-ekipa.csv', mimeType: 'text/csv', buffer: csv })
+  await expect(status).toHaveText('✓ Učitano: 12 igrača iz moja-ekipa.csv')
+  await expect(status).toBeFocused()
+  await expect(status).toBeInViewport()
+  // The picker is cleared after reading, so the same file can be chosen again.
+  await expect(input).toHaveValue('')
+
+  // Something else in between, then the very same file again: it loads again.
+  await page.getByRole('button', { name: 'Probajte s primjerom' }).click()
+  await expect(status).toHaveText('✓ Učitano: 20 igrača (sintetički primjer)')
+  await input.setInputFiles({ name: 'moja-ekipa.csv', mimeType: 'text/csv', buffer: csv })
+  await expect(status).toHaveText('✓ Učitano: 12 igrača iz moja-ekipa.csv')
+  await expect(page.locator('.synthetic')).toHaveCount(0)
+
+  // The same file straight away a second time still gives a fresh confirmation.
+  await status.evaluate((el) => el.setAttribute('data-seen', 'yes'))
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await input.setInputFiles({ name: 'moja-ekipa.csv', mimeType: 'text/csv', buffer: csv })
+  await expect(status).toBeFocused()
+  await expect(status).toBeInViewport()
+
+  // Excel on Windows and some Macs label CSV files as a spreadsheet.
+  await input.setInputFiles({ name: 'iz-excela.csv', mimeType: 'application/vnd.ms-excel', buffer: csv })
+  await expect(status).toHaveText('✓ Učitano: 12 igrača iz iz-excela.csv')
+  // A plain-text file with the same content works too.
+  await input.setInputFiles({ name: 'ekipa.txt', mimeType: 'text/plain', buffer: csv })
+  await expect(status).toHaveText('✓ Učitano: 12 igrača iz ekipa.txt')
+
+  // A file with a header and no usable rows says so instead of doing nothing.
+  await input.setInputFiles({ name: 'prazno.csv', mimeType: 'text/csv', buffer: Buffer.from('name,birth_date,score\n,,\n') })
+  await expect(page.getByRole('alert')).toContainText('nijedan red nije upotrebljiv')
+  // A file that is not a squad at all names what is missing.
+  await input.setInputFiles({ name: 'nesto.csv', mimeType: 'text/csv', buffer: Buffer.from('a,b\n1,2\n') })
+  await expect(page.getByRole('alert')).toContainText('CSV nema ove kolone')
+})

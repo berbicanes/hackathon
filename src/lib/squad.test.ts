@@ -8,7 +8,7 @@ import {
   recommendGroup,
   type Player,
 } from './squad'
-import { csvCell, parseSquadCsv } from './csv'
+import { csvCell, decodeCsvBytes, parseSquadCsv } from './csv'
 import { sampleSquad, SAMPLE_REFERENCE_DATE } from './sample'
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`)
@@ -389,6 +389,18 @@ describe('CSV parsing', () => {
   it('splits quoted fields with escaped quotes', () => {
     const r = parseSquadCsv('name,birth_date,score\n"a ""b"", c",2014-01-01,5\n')
     expect(r.players[0].name).toBe('a "b", c')
+  })
+  it('decodes UTF-8 with or without a byte-order mark, and Excel UTF-16 exports', () => {
+    const text = 'name;birth_date;score\r\nŠejla Đozo;14.02.2014;7,5\r\n'
+    const utf8 = new TextEncoder().encode(text)
+    const utf8Bom = new Uint8Array([0xef, 0xbb, 0xbf, ...utf8])
+    const utf16le = new Uint8Array([0xff, 0xfe, ...[...text].flatMap((c) => [c.charCodeAt(0) & 0xff, c.charCodeAt(0) >> 8])])
+    const utf16be = new Uint8Array([0xfe, 0xff, ...[...text].flatMap((c) => [c.charCodeAt(0) >> 8, c.charCodeAt(0) & 0xff])])
+    for (const bytes of [utf8, utf8Bom, utf16le, utf16be]) {
+      const parsed = parseSquadCsv(decodeCsvBytes(bytes))
+      expect(parsed.missingColumns).toEqual([])
+      expect(parsed.players[0]).toMatchObject({ name: 'Šejla Đozo', score: 7.5 })
+    }
   })
   it('neutralises formula injection on export', () => {
     expect(csvCell('=HYPERLINK("x")')).toBe(`"'=HYPERLINK(""x"")"`)
