@@ -319,7 +319,7 @@ Browser (GitHub Pages, static)                Cloudflare Worker (/worker)       
   English, only the numbers given, never invent, never say a child is bad or should be
   cut, frame it as "take a second look", state uncertainty when the interval is wide or
   the child is borderline.
-- **Failure is safe.** Loading state, 10-second timeout, and on any error, rate limit or
+- **Failure is safe.** Loading state, 22-second timeout (the Worker gives the model 20 seconds), and on any error, rate limit or
   refusal the app shows its own deterministic explanation, labelled as not AI. AI text is
   always marked "AI-generated".
 - **Switched on:** `EXPLAIN_ENDPOINT` in `src/config.ts` points at the deployed Worker and

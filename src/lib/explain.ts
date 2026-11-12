@@ -65,7 +65,8 @@ interface RequestOptions {
   fetchImpl?: typeof fetch
 }
 
-const EXPLAIN_TIMEOUT_MS = 10_000
+/** A careful answer can take 8–10 s; the Worker itself gives up on the model after 20 s. */
+const EXPLAIN_TIMEOUT_MS = 22_000
 const MAX_EXPLANATION_LENGTH = 1_500
 
 /**

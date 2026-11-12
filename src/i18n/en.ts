@@ -14,7 +14,7 @@ export const en: Strings = {
   langName: 'English',
   aiButton: 'Explain (AI)',
   aiNote: 'AI explanation — only anonymous numbers are sent, no names.',
-  aiLoading: 'The AI is writing an explanation…',
+  aiLoading: 'AI is writing…',
   aiBadge: 'AI-generated',
   aiDisclaimer: 'Written by an AI from this squad’s numbers. The calculation makes the decision, not the AI.',
   aiFallbackBadge: 'Explanation without AI',

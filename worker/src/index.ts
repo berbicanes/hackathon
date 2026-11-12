@@ -32,8 +32,8 @@ const MAX_BODY_BYTES = 2_000
 /** A venue or club often shares one public IP, so the limit is per address, not per person. */
 const REQUESTS_PER_HOUR = 60
 const HOUR_SECONDS = 3_600
-/** The web app gives up after 10 s, so the upstream call must fail sooner. */
-const UPSTREAM_TIMEOUT_MS = 8_500
+/** The web app gives up after 22 s, so the upstream call must fail sooner. */
+const UPSTREAM_TIMEOUT_MS = 20_000
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': ALLOWED_ORIGIN,

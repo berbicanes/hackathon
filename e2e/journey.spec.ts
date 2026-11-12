@@ -288,7 +288,7 @@ test('AI explanation (mocked proxy): marked as AI, and only anonymous numbers ar
   // Recommendation card: loading state, then AI text that is visibly marked as AI.
   const ai = page.locator('.recommend .ai')
   await ai.getByRole('button', { name: /Explain \(AI\)/ }).click()
-  await expect(ai.getByRole('status')).toHaveText('The AI is writing an explanation…')
+  await expect(ai.getByRole('status')).toHaveText('AI is writing…')
   await expect(ai.locator('.ai__result--ai')).toContainText('Mocked explanation for a squad request.')
   await expect(ai.locator('.ai__badge')).toHaveText(/AI-generated/)
   await expect(ai).toContainText('The calculation makes the decision, not the AI.')
