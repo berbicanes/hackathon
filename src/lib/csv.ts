@@ -10,6 +10,13 @@ export const MAX_FILE_BYTES = 200_000
 export const MAX_ROWS = 300
 const MAX_NAME_LENGTH = 80
 
+/** Accepted column names, English and Bosnian (lower case, spaces as underscores). */
+const HEADER_ALIASES = {
+  name: ['name', 'ime', 'ime_i_prezime', 'igrač', 'igrac'],
+  birth: ['birth_date', 'birthdate', 'date_of_birth', 'datum_rođenja', 'datum_rodjenja', 'datum_rodenja'],
+  score: ['score', 'ocjena', 'rezultat', 'bodovi'],
+}
+
 export const CSV_TEMPLATE = 'name,birth_date,score\nPlayer A,2014-02-14,72\nPlayer B,2014-11-03,64\n'
 
 export interface ParseIssue {
@@ -103,10 +110,11 @@ export function parseSquadCsv(text: string): ParseResult {
   }
   const delimiter = detectDelimiter(lines[headerIndex])
   const header = splitLine(lines[headerIndex], delimiter).map((h) => h.toLowerCase().replace(/\s+/g, '_'))
+  const find = (aliases: string[]) => header.findIndex((h) => aliases.includes(h))
   const col = {
-    name: header.indexOf('name'),
-    birth: header.indexOf('birth_date'),
-    score: header.indexOf('score'),
+    name: find(HEADER_ALIASES.name),
+    birth: find(HEADER_ALIASES.birth),
+    score: find(HEADER_ALIASES.score),
   }
   result.missingColumns = (
     [

@@ -207,6 +207,9 @@ export interface Strings {
   /** Estimate with its 95% interval; `plain` is true when both ends are positive. */
   trendCi: (slope: string, low: string, high: string, plain: boolean) => string
   unreliable: string
+  warningsLabel: string
+  warning: Record<import('../lib/warnings').WarningKind, (count: number) => string>
+  testedOn: (cases: number) => string
   trendNone: string
   downloadResults: string
   fairExplain: string

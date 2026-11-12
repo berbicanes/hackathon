@@ -2169,3 +2169,13 @@ td small {
 .ai__button {
   gap: 6px;
 }
+
+.warnings {
+  list-style: none;
+  padding-left: 16px;
+  margin: 0;
+}
+
+.warnings li + li {
+  margin-top: 8px;
+}

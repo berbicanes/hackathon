@@ -273,6 +273,15 @@ export const bs: Strings = {
   trendCi: (slope, low, high, plain) =>
     `≈ ${slope} ${bsPluralShown(slope, 'bod', 'boda', 'bodova')} po mjesecu, raspon ${plain ? `${low}–${high}` : `od ${low} do ${high}`}.`,
   unreliable: 'U vašoj ekipi starost ne utiče pouzdano na ocjenu — prilagodba je samo orijentacija.',
+  warningsLabel: 'Provjerite podatke',
+  warning: {
+    bornAfterTest: (n) => `${n} ${bsPlural(n, 'dijete je rođeno', 'djeteta su rođena', 'djece je rođeno')} nakon datuma testiranja. Provjerite datum testiranja i datume rođenja.`,
+    ageOutlier: (n) => `${n} ${bsPlural(n, 'dijete je', 'djeteta su', 'djece je')} više od dvije godine starije ili mlađe od ostalih. Provjerite godinu rođenja ili izostavite djecu iz druge generacije: ona iskrivljuju uticaj starosti.`,
+    scoreOutlier: (n) => `${n} ${bsPlural(n, 'ocjena jako odskače', 'ocjene jako odskaču', 'ocjena jako odskače')} od svih ostalih. Provjerite da nije greška u unosu: jedan pogrešan broj može iskriviti cijelo poređenje.`,
+    tieAtLastPlace: (n) => `${n} ${bsPlural(n, 'dijete ima', 'djeteta imaju', 'djece ima')} istu ocjenu na posljednjem mjestu. Redoslijed među njima je abecedni, a ne procjena: odluku donesite sami.`,
+    noAgeAdvantage: () => 'U ovoj ekipi starija djeca nemaju bolje ocjene, pa nema zaostatka zbog starosti koji bi trebalo ispraviti i ne predlažemo dodavanje djece. Ako je u ovom testu manji rezultat bolji, promijenite smjer testa u koraku 2.',
+  },
+  testedOn: (cases) => `Testirano na ${cases} rubnih slučajeva (male ekipe, izjednačene ocjene, pogrešni datumi, sprint, druge granice generacije, neuredni fajlovi).`,
   trendNone: 'U ovoj ekipi stariji igrači nemaju više ocjene — prilagođavanje malo mijenja.',
   downloadResults: 'Preuzmi rezultate (CSV)',
   fairExplain:

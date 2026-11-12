@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import type { Strings } from '../i18n'
 import { csvCell } from '../lib/csv'
+import { EDGE_CASES_TESTED } from '../lib/edgeCaseCount'
 import { buildChildPayload, buildSquadPayload } from '../lib/explain'
 import { ageAdvantage, compareSelections, quarterLabels, recommendGroup, type AnalysedPlayer } from '../lib/squad'
+import { squadWarnings } from '../lib/warnings'
 import { isoDay, type SquadState } from '../useSquad'
 import { AiExplain } from './AiExplain'
 import { MondayPanel } from './MondayPanel'
@@ -55,7 +57,8 @@ export function DecisionStep({ t, squad, onBack }: Props) {
   const diff = compareSelections(players, topN)
   const gainedIds = new Set(diff.gained.map((p) => p.id))
   const lostIds = new Set(diff.lost.map((p) => p.id))
-  const group = recommendGroup(players, topN, fit)
+  const group = recommendGroup(players, topN, fit, analysis.higherIsBetter)
+  const warnings = squadWarnings(analysis, topN)
   // One list for every view: recommendation, talent cards, chart labels, player cards and the printed report.
   const talents = group.secondLook
   const secondLookIds = new Set(group.secondLook.map((p) => p.id))
@@ -146,6 +149,13 @@ export function DecisionStep({ t, squad, onBack }: Props) {
         </p>
       )}
       {n < 4 && <p className="alert alert--soft">{t.tooFew}</p>}
+      {warnings.length > 0 && (
+        <ul className="alert alert--soft warnings" role="note" aria-label={t.warningsLabel}>
+          {warnings.map((w) => (
+            <li key={w.kind}>{t.warning[w.kind](w.count)}</li>
+          ))}
+        </ul>
+      )}
 
       {n >= 4 && (
         <>
@@ -337,6 +347,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
       <details className="card how">
         <summary>{t.howTitle}</summary>
         <p>{t.fairExplain}</p>
+        <p>{t.testedOn(EDGE_CASES_TESTED)}</p>
       </details>
 
       <PrintReport

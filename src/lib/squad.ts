@@ -272,10 +272,20 @@ function borderlineChildren(players: AnalysedPlayer[], diff: SelectionDiff, fit:
  * Default recommendation: a second look, not a swap. Keep the raw top N and widen the
  * group by the children the age-adjusted ranking would have selected, plus those too
  * close to the last place to call ("borderline"). Pass the squad's fit to enable the
- * borderline rule.
+ * borderline rule and the no-age-advantage guard.
  */
-export function recommendGroup(players: AnalysedPlayer[], topN: number, fit?: LinearFit): GroupRecommendation {
+export function recommendGroup(
+  players: AnalysedPlayer[],
+  topN: number,
+  fit?: LinearFit,
+  higherIsBetter = true,
+): GroupRecommendation {
   const diff = compareSelections(players, topN)
+  // If older children do not score better in this squad, there is no age disadvantage to
+  // correct, so nobody is added on the strength of the adjustment.
+  if (fit && ageAdvantage(fit, higherIsBetter).perMonth <= 0) {
+    return { keep: diff.raw, secondLook: [], borderline: [], size: diff.raw.length }
+  }
   const borderline = borderlineChildren(players, diff, fit)
   const secondLook = [...diff.gained, ...borderline]
   return { keep: diff.raw, secondLook, borderline, size: diff.raw.length + secondLook.length }

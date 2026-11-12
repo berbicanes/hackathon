@@ -269,6 +269,15 @@ export const en: Strings = {
   trendCi: (slope, low, high, plain) =>
     `≈ ${slope} points per month of age, range ${plain ? `${low}–${high}` : `from ${low} to ${high}`}.`,
   unreliable: 'In your squad, age does not reliably affect the score — treat the adjustment as a rough guide only.',
+  warningsLabel: 'Check your data',
+  warning: {
+    bornAfterTest: (n) => `${n} ${n === 1 ? 'child was' : 'children were'} born after the assessment date. Check the date of the test and the birth dates.`,
+    ageOutlier: (n) => `${n} ${n === 1 ? 'child is' : 'children are'} more than two years older or younger than the rest. Check the birth year, or leave out children from another age group: they distort the age trend.`,
+    scoreOutlier: (n) => `${n} ${n === 1 ? 'score is' : 'scores are'} far from all the others. Check for a typing error: one wrong number can bend the whole comparison.`,
+    tieAtLastPlace: (n) => `${n} children have the same score at the last place. The order between them is alphabetical, not a judgement: decide between them yourself.`,
+    noAgeAdvantage: () => 'In this squad older children do not score better, so there is no age disadvantage to correct and we do not suggest adding anyone. If a lower result is better in this test, switch the test direction in step 2.',
+  },
+  testedOn: (cases) => `Tested on ${cases} edge cases (tiny squads, ties, wrong dates, sprint times, other cut-off dates, messy files).`,
   trendNone: 'In this squad, older players do not score higher — the adjustment changes little.',
   downloadResults: 'Download results CSV',
   fairExplain:

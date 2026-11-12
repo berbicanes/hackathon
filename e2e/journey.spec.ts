@@ -318,3 +318,20 @@ test('AI explanation (mocked proxy): marked as AI, and only anonymous numbers ar
     expect(stringValues(body).sort()).toEqual([body.kind, body.language].sort())
   }
 })
+
+test('odd data is explained to the coach, not silently used', async ({ page }) => {
+  await page.goto('./#squad')
+  await page.getByRole('button', { name: 'English' }).click()
+  // Twelve children, younger ones score higher, two tied at the last of 6 places, one typo.
+  const rows = ['name,birth_date,score']
+  for (let m = 1; m <= 12; m++) rows.push(`Kid${m},2014-${String(m).padStart(2, '0')}-10,${m === 6 || m === 7 ? 70 : m === 3 ? 9999 : 50 + m * 3}`)
+  await page.locator('input[type="file"]').setInputFiles({ name: 'odd.csv', mimeType: 'text/csv', buffer: Buffer.from(rows.join('\n')) })
+  await page.getByRole('button', { name: /See the decision/ }).click()
+  const warnings = page.getByRole('note', { name: 'Check your data' })
+  await expect(warnings).toContainText('1 score is far from all the others')
+  // No recommendation to add anyone is made from a trend that is not dependable.
+  await expect(page.locator('.recommend')).toContainText('age does not reliably affect the score')
+  // The method note says how widely the analysis was tested.
+  await page.getByText('How we calculate this').click()
+  await expect(page.locator('details.how')).toContainText('Tested on 43 edge cases')
+})
