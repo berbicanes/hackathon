@@ -39,12 +39,21 @@ browser tab with the sample already loaded on step 3 as backup.
 - "**14 of 20** born in the first half of the year. That's the bias, inside one squad."
 - "In this squad every month of age is worth about **2.2 points** on the test. That's not
   talent, that's birthdays."
-- Click **Pogledajte odluku →**. Step 3 opens on the answer: 10 places, and a card that
-  says who comes in (**Ulaze**) and who drops out (**Izlaze**). Toggle
-  **Sirova ocjena ↔ Prilagođeno starosti** to show the ranking change.
-  "Three kids change. Ena and Benjamin, born October–December, and Hana, born in summer,
-  come in. Three January–March kids drop out." Point at the badges and the coloured row edges.
-  Text and arrows too, not only colour.
+- Click **Pogledajte odluku →**. Step 3 opens on the recommendation:
+  **"Proširite grupu za 3 mjesta da ne izgubite kasno rođene talente."**
+  "We don't tell the coach to cut anyone. The 10 he picked stay. We ask him to add three:
+  Ena and Benjamin, born October–December, and Hana, born in summer. *Drugi pogled —
+  ponovna procjena za 6 mjeseci.*"
+- Point at the line under it: "≈ 2,2 boda po mjesecu, raspon 1,1–3,3. Every month of age
+  is worth about two points here, and we show how sure we are. In a small or noisy squad
+  the app says the adjustment is only a rough guide."
+- Scroll to **Kako radi** (the scatter plot): "Every dot is a child: age across, score up.
+  The dashed line is what's expected for that age. Ena, Benjamin and Asja score low, but
+  they are the youngest; for their age they are at or above the line." Shapes and labels,
+  not only colour.
+- Only if asked: the **Uporedite** toggle (Preporuka / Sirova ocjena / Prilagođeno
+  starosti) shows the strict swap, and step 2 has settings for lower-is-better tests
+  (sprint times) and for a 1 September or 1 April selection year.
 
 **2:10 – 2:35 · Player card (for the youth-work person)**
 
@@ -98,6 +107,19 @@ Wales and Japan (April cut-off) it is 1.84×. So the mixing hid a little of the 
 didn't create it. England measured from 1 September points the same way (1.5×), but with
 only 175 under-21 players that is not significant on its own (p = 0.065), and we say so.
 Across all 1,762 English players it is clear (2.1×). The table is on step 1 under “Za analitičare”.
+
+**Why widen the group instead of swapping children?**
+Because a swap means telling three early-born kids they are out on the basis of a
+statistical adjustment. Widening costs three training places and loses nobody; the
+second-look kids are reassessed in six months.
+
+**How sure are you about the 2.2 points per month?**
+It comes with a 95% interval (1.1 to 3.3 in the sample). If the interval includes zero,
+or the squad has fewer than 10 children, the app says the adjustment is only a guide.
+
+**What about sprint times, or England's September cut-off?**
+Step 2 has both settings: "lower score is better", and the selection year starting
+1 January, 1 September or 1 April. Both are unit-tested.
 
 **How does the age adjustment work?**
 Straight-line fit of score on age in months, across the squad. The fair score is how far

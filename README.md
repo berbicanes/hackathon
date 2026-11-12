@@ -88,8 +88,24 @@ is 0.05 ÷ 3 = 0.017. Only the 22–25 result passes it.
   below what is typical *for their exact age*, shifted back onto the original scale
   (residual + squad mean). If older children don't score higher, the adjustment changes
   almost nothing.
-- **Selection**: top N by raw score vs top N by fair score; the app highlights exactly
-  which children come in and which drop out.
+- **Recommendation: a second look, not a swap** (`recommendGroup`). The default advice
+  keeps everyone in the raw top N and widens the group by the children who would be
+  selected on the fair score, labelled "second look, reassess in 6 months". No child is
+  shown as dropped. The raw vs age-adjusted swap is still available as a comparison.
+- **"How it works" scatter plot**: each child as a dot (age in months on the test date
+  against score), the fitted line labelled "expected for this age", one marker shape per
+  birth quarter, hidden talents named. Children above the line are better than usual for
+  their age. The same message is given as text for screen readers.
+- **Reliability**: the slope comes with a 95% confidence interval (standard error from
+  the residual variance, Student's t with n − 2 degrees of freedom), shown as
+  "≈ 2.2 points per month, range 1.1–3.3". If the interval includes zero or the squad has
+  fewer than 10 children, the app says the adjustment is only a rough guide.
+- **Test direction**: for tests where a lower number is better (a sprint in seconds) the
+  ranking, the adjustment, the chart and the texts all flip. "Better than expected for
+  age" is always positive internally; the fair score stays on the original scale.
+- **Selection-year start**: 1 January (default), 1 September (England, Wales) or 1 April
+  (Japan). Birth quarters, badges, "early/late born" and the squad chart follow it; ages,
+  ranks and fair scores do not depend on it.
 - **Hidden talents**: the biggest rank gains once age is accounted for.
 - **Player card** (`src/lib/playerCard.ts`): months younger/older than the squad
   average, standing for their age, raw vs fair rank, and one of four next steps: *take a
@@ -157,7 +173,8 @@ Player B,2014-11-03,64
 ```
 
 - Comma or semicolon separated. Dates as `2014-02-14` or `14.02.2014`.
-- `score` is any assessment where higher is better; decimal commas are accepted.
+- `score` is any assessment; decimal commas are accepted. Choose in the app whether a
+  higher or a lower score is better.
 - Files are limited to 200 KB and 300 players. Invalid rows are skipped and listed.
 
 ## Project layout
