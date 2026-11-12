@@ -1,8 +1,11 @@
 node_modules/
 dist/
 coverage/
+logs/
 *.log
 .DS_Store
+.vscode/
+.idea/
 .env
 .env.*
 __pycache__/
