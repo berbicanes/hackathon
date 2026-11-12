@@ -63,7 +63,7 @@ interface RequestOptions {
   fetchImpl?: typeof fetch
 }
 
-export const EXPLAIN_TIMEOUT_MS = 10_000
+const EXPLAIN_TIMEOUT_MS = 10_000
 const MAX_EXPLANATION_LENGTH = 1_500
 
 /**
