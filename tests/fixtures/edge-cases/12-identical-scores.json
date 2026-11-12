@@ -1,0 +1,20 @@
+{
+ "id": "12-identical-scores",
+ "description": "12 children, every score identical",
+ "expected": "No trend, tie at the last place is flagged, nobody added",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 12,
+  "reliable": false,
+  "secondLook": 0,
+  "warnings": [
+   "tieAtLastPlace"
+  ]
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,70\nLejla,2014-02-12,70\nTarik,2014-03-19,70\nEmina,2014-04-06,70\nHaris,2014-05-13,70\nSara,2014-06-20,70\nDino,2014-07-07,70\nAjla,2014-08-14,70\nKenan,2014-09-21,70\nNejra,2014-10-08,70\nEdin,2014-11-15,70\nLana,2014-12-22,70\n"
+}

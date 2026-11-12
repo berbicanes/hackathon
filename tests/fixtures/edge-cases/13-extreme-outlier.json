@@ -1,0 +1,18 @@
+{
+ "id": "13-extreme-outlier",
+ "description": "One score is an obvious typing error (9999)",
+ "expected": "The outlier is flagged so the coach can correct it",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 14,
+  "warningsInclude": [
+   "scoreOutlier"
+  ]
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,85.0\nLejla,2014-01-12,80.0\nTarik,2014-02-19,81.0\nEmina,2014-03-06,74.0\nHaris,2014-04-13,78.0\nSara,2014-05-20,74.0\nDino,2014-06-07,71.0\nAjla,2014-07-14,9999\nKenan,2014-07-21,67.0\nNejra,2014-08-08,69.0\nEdin,2014-09-15,68.0\nLana,2014-10-22,62.0\nMirza,2014-11-09,62.0\nHana,2014-12-16,63.0\n"
+}

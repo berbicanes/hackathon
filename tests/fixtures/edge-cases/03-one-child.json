@@ -1,0 +1,17 @@
+{
+ "id": "03-one-child",
+ "description": "A squad of one child",
+ "expected": "Loads without error; too few to compare, nobody added",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 1,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 1,
+  "reliable": false,
+  "secondLook": 0
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,85.0\n"
+}

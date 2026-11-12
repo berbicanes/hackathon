@@ -1,0 +1,17 @@
+{
+ "id": "02-same-day",
+ "description": "All 10 children born on the same day",
+ "expected": "No age spread at all: no interval, nobody added",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 10,
+  "reliable": false,
+  "secondLook": 0
+ },
+ "csv": "name,birth_date,score\nAmar,2014-05-05,60\nLejla,2014-05-05,61\nTarik,2014-05-05,62\nEmina,2014-05-05,63\nHaris,2014-05-05,64\nSara,2014-05-05,65\nDino,2014-05-05,66\nAjla,2014-05-05,67\nKenan,2014-05-05,68\nNejra,2014-05-05,69\n"
+}

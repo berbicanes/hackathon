@@ -1,0 +1,20 @@
+{
+ "id": "38-empty-file",
+ "description": "An empty file",
+ "expected": "Clear message; nothing is analysed",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 0,
+  "missingColumns": [
+   "name",
+   "birth_date",
+   "score"
+  ]
+ },
+ "csv": ""
+}

@@ -1,0 +1,16 @@
+{
+ "id": "31-bom-and-crlf",
+ "description": "Excel export with a byte-order mark and Windows line endings",
+ "expected": "Parsed like the standard format",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 12,
+  "issues": []
+ },
+ "csv": "﻿Name;Birth Date;Score\r\nAmar;05.01.2014;86,5\r\nLejla;12.02.2014;77,0\r\nTarik;19.03.2014;79,5\r\nEmina;06.04.2014;70,0\r\nHaris;13.05.2014;77,0\r\nSara;20.06.2014;72,0\r\nDino;07.07.2014;68,5\r\nAjla;14.08.2014;74,0\r\nKenan;21.09.2014;61,5\r\nNejra;08.10.2014;65,5\r\nEdin;15.11.2014;65,0\r\nLana;22.12.2014;57,0\r\n"
+}

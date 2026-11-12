@@ -1,0 +1,19 @@
+{
+ "id": "29-january-boundary",
+ "description": "1 January cut-off with birthdays on 31.12 and 01.01",
+ "expected": "31 December is the youngest quarter, 1 January the oldest",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 12,
+  "quarters": {
+   "Granica31": 4,
+   "Granica01": 1
+  }
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,85.0\nLejla,2014-02-12,78.0\nTarik,2014-03-19,79.0\nEmina,2014-04-06,72.0\nHaris,2014-05-13,76.0\nSara,2014-07-20,70.0\nDino,2014-08-07,67.0\nAjla,2014-09-14,70.0\nKenan,2014-10-21,61.0\nNejra,2014-11-08,63.0\nGranica31,2014-12-31,70\nGranica01,2014-01-01,70\n"
+}

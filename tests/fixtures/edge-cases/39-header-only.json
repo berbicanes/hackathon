@@ -1,0 +1,15 @@
+{
+ "id": "39-header-only",
+ "description": "A header and no rows",
+ "expected": "Loads with zero players; nothing to analyse",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 0
+ },
+ "csv": "name,birth_date,score\n"
+}

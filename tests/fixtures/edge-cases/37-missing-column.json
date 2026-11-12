@@ -1,0 +1,18 @@
+{
+ "id": "37-missing-column",
+ "description": "No score column",
+ "expected": "Clear message naming the missing column; nothing is analysed",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 0,
+  "missingColumns": [
+   "score"
+  ]
+ },
+ "csv": "name,birth_date\nAmar,2014-01-05\nLejla,2014-02-12\nTarik,2014-03-19\nEmina,2014-04-06\nHaris,2014-05-13\nSara,2014-06-20\nDino,2014-07-07\nAjla,2014-08-14\nKenan,2014-09-21\nNejra,2014-10-08\nEdin,2014-11-15\nLana,2014-12-22\n"
+}

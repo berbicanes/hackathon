@@ -1,0 +1,16 @@
+{
+ "id": "09-n-7",
+ "description": "A small squad of 7 children with a clear age trend",
+ "expected": "Analysed, but marked as a rough guide only (fewer than 10 children)",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 3,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 7,
+  "reliable": false
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,85.0\nLejla,2014-02-12,78.0\nTarik,2014-04-19,77.0\nEmina,2014-06-06,68.0\nHaris,2014-07-13,72.0\nSara,2014-09-20,66.0\nDino,2014-11-07,61.0\n"
+}

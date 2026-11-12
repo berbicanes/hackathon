@@ -1,0 +1,19 @@
+{
+ "id": "14-negative-slope",
+ "description": "Younger children score higher (negative age trend)",
+ "expected": "No age disadvantage to correct: nobody is added, and the coach is told why",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 16,
+  "secondLook": 0,
+  "warningsInclude": [
+   "noAgeAdvantage"
+  ]
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,39.5\nLejla,2014-01-12,37.0\nTarik,2014-02-19,40.5\nEmina,2014-03-06,40.0\nHaris,2014-04-13,45.0\nSara,2014-04-20,44.0\nDino,2014-05-07,45.5\nAjla,2014-06-14,50.0\nKenan,2014-07-21,48.5\nNejra,2014-07-08,50.5\nEdin,2014-08-15,53.0\nLana,2014-09-22,53.0\nMirza,2014-10-09,56.0\nHana,2014-10-16,57.5\nVedad,2014-11-23,57.5\nAsja,2014-12-10,58.5\n"
+}

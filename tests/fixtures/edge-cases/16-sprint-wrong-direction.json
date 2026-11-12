@@ -1,0 +1,19 @@
+{
+ "id": "16-sprint-wrong-direction",
+ "description": "Sprint times loaded with the default 'higher is better' setting",
+ "expected": "Older children appear to score worse: the app says so and points to the direction setting",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 16,
+  "secondLook": 0,
+  "warningsInclude": [
+   "noAgeAdvantage"
+  ]
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,9.79\nLejla,2014-01-12,9.87\nTarik,2014-02-19,9.88\nEmina,2014-03-06,10.02\nHaris,2014-04-13,9.99\nSara,2014-04-20,10.02\nDino,2014-05-07,10.1\nAjla,2014-06-14,10.08\nKenan,2014-07-21,10.24\nNejra,2014-07-08,10.19\nEdin,2014-08-15,10.23\nLana,2014-09-22,10.35\nMirza,2014-10-09,10.38\nHana,2014-10-16,10.34\nVedad,2014-11-23,10.46\nAsja,2014-12-10,10.54\n"
+}

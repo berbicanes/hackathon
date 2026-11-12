@@ -1,0 +1,18 @@
+{
+ "id": "17-tie-at-last-place",
+ "description": "Two children share the score at the last selected place",
+ "expected": "The tie is flagged; the order between them is not presented as a judgement",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 12,
+  "warningsInclude": [
+   "tieAtLastPlace"
+  ]
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,82.0\nLejla,2014-02-12,80.0\nTarik,2014-03-19,78.0\nEmina,2014-04-06,76.0\nHaris,2014-05-13,70\nSara,2014-06-20,70\nDino,2014-07-07,70.0\nAjla,2014-08-14,68.0\nKenan,2014-09-21,66.0\nNejra,2014-10-08,64.0\nEdin,2014-11-15,62.0\nLana,2014-12-22,60.0\n"
+}

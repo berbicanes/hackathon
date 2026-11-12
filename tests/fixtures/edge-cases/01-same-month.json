@@ -1,0 +1,16 @@
+{
+ "id": "01-same-month",
+ "description": "All 12 children born in the same month",
+ "expected": "Almost no age spread: trend not reliable, no misleading recommendation",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 12,
+  "reliable": false
+ },
+ "csv": "name,birth_date,score\nAmar,2014-03-02,69\nLejla,2014-03-04,54\nTarik,2014-03-06,63\nEmina,2014-03-08,48\nHaris,2014-03-10,66\nSara,2014-03-12,60\nDino,2014-03-14,57\nAjla,2014-03-16,72\nKenan,2014-03-18,51\nNejra,2014-03-20,63\nEdin,2014-03-22,66\nLana,2014-03-24,54\n"
+}

@@ -1,0 +1,20 @@
+{
+ "id": "22-missing-values",
+ "description": "A missing birth date, a missing score and a missing name",
+ "expected": "Each row is skipped with its own reason",
+ "options": {
+  "referenceDate": "2026-09-01",
+  "topN": 5,
+  "higherIsBetter": true,
+  "cutoffMonth": 1
+ },
+ "expect": {
+  "players": 10,
+  "issues": [
+   "date",
+   "score",
+   "name"
+  ]
+ },
+ "csv": "name,birth_date,score\nAmar,2014-01-05,85.0\nLejla,2014-02-12,78.0\nTarik,2014-03-19,79.0\nEmina,2014-04-06,72.0\nHaris,2014-05-13,76.0\nSara,2014-07-20,70.0\nDino,2014-08-07,67.0\nAjla,2014-09-14,70.0\nKenan,2014-10-21,61.0\nNejra,2014-11-08,63.0\nZlatan,,70\nMinela,2014-04-04,\n,2014-05-05,66\n"
+}
