@@ -165,9 +165,9 @@ export const en: Strings = {
   loadSample: 'Try with the sample',
   dropTitle: 'Drop your squad file here',
   orSample: 'No file at hand?',
-  directionLabel: 'How is the test scored?',
-  directionHigher: 'Higher score is better',
-  directionLower: 'Lower score is better (e.g. sprint in seconds)',
+  directionLabel: 'What counts as a better result?',
+  directionHigher: 'Higher number (points, jump, goals)',
+  directionLower: 'Lower number (time, e.g. sprint in seconds)',
   lowerNote: '(lower is better here, so this is how much better older children score)',
   dateExplain: 'We calculate each child’s age on the assessment date.',
   downloadTemplate: 'Download a CSV template',
@@ -199,9 +199,9 @@ export const en: Strings = {
     half
       ? `${early} of ${n} players were born in the older half of the age group (${half}).`
       : `${early} of ${n} players were born in the first half of the year.`,
-  cutoffLabel: 'The age group starts on',
+  cutoffLabel: 'When does the age group start in your federation?',
   cutoffOption: (month) => `1 ${en.monthsLong[month - 1]}${month === 1 ? ' (most countries)' : month === 9 ? ' (England, Wales)' : month === 4 ? ' (Japan)' : ''}`,
-  cutoffHelp: 'Children born right after this date are the oldest in their group.',
+  cutoffHelp: 'In most countries it is 1 January.',
   skewNote: 'In an unbiased intake you would expect about half.',
 
   talentRank: (from, to) => `Rank ${from} → ${to}`,
@@ -275,7 +275,7 @@ export const en: Strings = {
     ageOutlier: (n) => `${n} ${n === 1 ? 'child is' : 'children are'} more than two years older or younger than the rest. Check the birth year, or leave out children from another age group: they distort the age trend.`,
     scoreOutlier: (n) => `${n} ${n === 1 ? 'score is' : 'scores are'} far from all the others. Check for a typing error: one wrong number can bend the whole comparison.`,
     tieAtLastPlace: (n) => `${n} children have the same score at the last place. The order between them is alphabetical, not a judgement: decide between them yourself.`,
-    noAgeAdvantage: () => 'In this squad older children do not score better, so there is no age disadvantage to correct and we do not suggest adding anyone. If a lower result is better in this test, switch the test direction in step 2.',
+    noAgeAdvantage: () => 'In this squad older children do not score better, so there is no age disadvantage to correct and we do not suggest adding anyone. If a lower number is the better result in this test, change “What counts as a better result?” in step 2.',
   },
   testedOn: (cases) => `Tested on ${cases} edge ${enPlural(cases, 'case')} (tiny squads, ties, wrong dates, sprint times, other cut-off dates, messy files).`,
   trendNone: 'In this squad, older players do not score higher — the adjustment changes little.',

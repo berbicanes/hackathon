@@ -165,9 +165,9 @@ export const bs: Strings = {
   loadSample: 'Probajte s primjerom',
   dropTitle: 'Prevucite fajl svoje ekipe ovdje',
   orSample: 'Nemate fajl pri ruci?',
-  directionLabel: 'Kako se test ocjenjuje?',
-  directionHigher: 'Veća ocjena je bolja',
-  directionLower: 'Manja ocjena je bolja (npr. sprint u sekundama)',
+  directionLabel: 'Šta je bolji rezultat?',
+  directionHigher: 'Veći broj (bodovi, skok, golovi)',
+  directionLower: 'Manji broj (vrijeme, npr. sprint u sekundama)',
   lowerNote: '(ovdje je manje bolje, pa je to prednost starije djece)',
   dateExplain: 'Starost računamo na dan testiranja.',
   downloadTemplate: 'Preuzmite CSV šablon',
@@ -199,9 +199,9 @@ export const bs: Strings = {
     half
       ? `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u starijoj polovini generacije (${half}).`
       : `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u prvoj polovini godine.`,
-  cutoffLabel: 'Generacija počinje',
+  cutoffLabel: 'Kada počinje godište u vašem savezu?',
   cutoffOption: (month) => `1. ${bs.monthsLong[month - 1]}${month === 1 ? ' (većina zemalja)' : month === 9 ? ' (Engleska, Vels)' : month === 4 ? ' (Japan)' : ''}`,
-  cutoffHelp: 'Djeca rođena odmah nakon tog datuma najstarija su u svojoj generaciji.',
+  cutoffHelp: 'Kod nas je to obično 1. januar.',
   skewNote: 'Bez pristrasnosti očekivali biste otprilike pola.',
 
   talentRank: (from, to) => `Mjesto ${from} → ${to}`,
@@ -279,7 +279,7 @@ export const bs: Strings = {
     ageOutlier: (n) => `${n} ${bsPlural(n, 'dijete je', 'djeteta su', 'djece je')} više od dvije godine starije ili mlađe od ostalih. Provjerite godinu rođenja ili izostavite djecu iz druge generacije: ona iskrivljuju uticaj starosti.`,
     scoreOutlier: (n) => `${n} ${bsPlural(n, 'ocjena jako odskače', 'ocjene jako odskaču', 'ocjena jako odskače')} od svih ostalih. Provjerite da nije greška u unosu: jedan pogrešan broj može iskriviti cijelo poređenje.`,
     tieAtLastPlace: (n) => `${n} ${bsPlural(n, 'dijete ima', 'djeteta imaju', 'djece ima')} istu ocjenu na posljednjem mjestu. Redoslijed među njima je abecedni, a ne procjena: odluku donesite sami.`,
-    noAgeAdvantage: () => 'U ovoj ekipi starija djeca nemaju bolje ocjene, pa nema zaostatka zbog starosti koji bi trebalo ispraviti i ne predlažemo dodavanje djece. Ako je u ovom testu manji rezultat bolji, promijenite smjer testa u koraku 2.',
+    noAgeAdvantage: () => 'U ovoj ekipi starija djeca nemaju bolje ocjene, pa nema zaostatka zbog starosti koji bi trebalo ispraviti i ne predlažemo dodavanje djece. Ako je u ovom testu manji broj bolji rezultat, promijenite „Šta je bolji rezultat?“ u koraku 2.',
   },
   testedOn: (cases) => `Testirano na ${cases} ${bsPlural(cases, 'rubnom slučaju', 'rubna slučaja', 'rubnih slučajeva')} (male ekipe, izjednačene ocjene, pogrešni datumi, sprint, druge granice generacije, neuredni fajlovi).`,
   trendNone: 'U ovoj ekipi stariji igrači nemaju više ocjene — prilagođavanje malo mijenja.',

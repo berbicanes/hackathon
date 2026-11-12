@@ -90,6 +90,15 @@ describe('step and decision wording', () => {
     expect(strings.en.testedOn(43)).toMatch(/^Tested on 43 edge cases \(/)
     expect(strings.en.testedOn(1)).toMatch(/^Tested on 1 edge case \(/)
   })
+  it('asks the two settings in plain words, with higher as the default wording first', () => {
+    expect(strings.bs.directionLabel).toBe('Šta je bolji rezultat?')
+    expect(strings.bs.directionHigher).toBe('Veći broj (bodovi, skok, golovi)')
+    expect(strings.bs.directionLower).toBe('Manji broj (vrijeme, npr. sprint u sekundama)')
+    expect(strings.en.directionLabel).toBe('What counts as a better result?')
+    expect(strings.bs.cutoffLabel).toBe('Kada počinje godište u vašem savezu?')
+    expect(strings.bs.cutoffHelp).toBe('Kod nas je to obično 1. januar.')
+    expect(strings.en.cutoffHelp).toBe('In most countries it is 1 January.')
+  })
   it('describes the scatter plot in words for screen readers', () => {
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')
