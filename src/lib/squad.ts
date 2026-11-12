@@ -41,7 +41,7 @@ export interface LinearFit {
 }
 
 /** Below this squad size the age trend is treated as orientation only. */
-export const MIN_RELIABLE_SQUAD = 10
+const MIN_RELIABLE_SQUAD = 10
 
 /** Two-sided 95% critical values of Student's t for 1–30 degrees of freedom. */
 const T_975 = [
