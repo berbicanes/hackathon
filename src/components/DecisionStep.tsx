@@ -53,10 +53,11 @@ export function DecisionStep({ t, squad, onBack }: Props) {
   const diff = compareSelections(players, topN)
   const gainedIds = new Set(diff.gained.map((p) => p.id))
   const lostIds = new Set(diff.lost.map((p) => p.id))
-  const group = recommendGroup(players, topN)
+  const group = recommendGroup(players, topN, fit)
   // One list for every view: recommendation, talent cards, chart labels, player cards and the printed report.
   const talents = group.secondLook
   const secondLookIds = new Set(group.secondLook.map((p) => p.id))
+  const borderlineIds = new Set(group.borderline.map((p) => p.id))
   const selectedIds = new Set((view === 'fair' ? diff.fair : diff.raw).map((p) => p.id))
   const ordered = [...players].sort((a, b) => (view === 'fair' ? a.fairRank - b.fairRank : a.rawRank - b.rawRank))
   const cardPlayer = players.find((p) => p.id === cardId) ?? null
@@ -135,7 +136,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
       <StepHeading t={t} step={3} title={t.stepNames.decision} lead={t.decisionLead} />
       {synthetic && (
         <p className="synthetic" role="note">
-          {t.syntheticBanner}
+          {t.syntheticShort}
         </p>
       )}
       {n < 4 && <p className="alert alert--soft">{t.tooFew}</p>}
@@ -187,12 +188,17 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                         <button type="button" className="second" onClick={() => setCardId(p.id)} aria-label={t.openCard(p.name)}>
                           <span className="second__name">{p.name}</span>
                           <QuarterBadge q={p.quarter} labels={qLabels} />
-                          <span className="second__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
+                          {borderlineIds.has(p.id) ? (
+                            <span className="pill">≈ {t.borderlineBadge}</span>
+                          ) : (
+                            <span className="second__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
+                          )}
                           <span className="second__age">{relAge(p)}</span>
                         </button>
                       </li>
                     ))}
                   </ul>
+                  {group.borderline.length > 0 && <p className="outcome__reason">{t.borderlineWhy}</p>}
                 </div>
               )}
             </div>
@@ -286,7 +292,9 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                       <td data-label={t.colStatus}>
                         <span className="status-cell">
                           {!second && <span className="status">{selected ? `✓ ${t.selected}` : t.notSelected}</span>}
-                          {second && <span className="pill pill--late">＋ {t.secondLookBadge}</span>}
+                          {second && (
+                            <span className="pill pill--late">{borderlineIds.has(p.id) ? `≈ ${t.borderlineBadge}` : `＋ ${t.secondLookBadge}`}</span>
+                          )}
                           {gained && <span className="pill pill--late">▲ {t.badgeIn}</span>}
                           {lost && <span className="pill pill--early">▼ {t.badgeOut}</span>}
                         </span>

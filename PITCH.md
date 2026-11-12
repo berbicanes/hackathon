@@ -32,39 +32,33 @@ browser tab with the sample already loaded on step 3 as backup.
   p = 0.0007. We tested three age bands, so the bar is 0.017, not 0.05: 22–25 clears it,
   26–29 (p = 0.03) does not, so we don't claim it. Small effect. A clue, not proof."
 
-**1:00 – 2:10 · Steps 2 and 3, Vaša ekipa → Odluka (for the coach)**
+**1:00 – 2:35 · Steps 2 and 3, Vaša ekipa → Odluka (for the coach) — the demo in 5 moves**
 
-- Click **Provjerite svoju ekipu** → **Probajte s primjerom**. Point at the orange
-  banner: synthetic, invented kids.
-- "**14 of 20** born in the first half of the year. That's the bias, inside one squad."
-- "In this squad every month of age is worth about **2.2 points** on the test. That's not
-  talent, that's birthdays."
-- Click **Pogledajte odluku →**. Step 3 opens on the recommendation:
-  **"Proširite grupu za 3 mjesta da ne izgubite kasno rođene talente."**
-  "We don't tell the coach to cut anyone. The 10 he picked stay. We ask him to add three:
-  Ena and Benjamin, born October–December, and Hana, born in summer. *Drugi pogled —
-  ponovna procjena za 6 mjeseci.*"
-- Point at the line under it: "≈ 2,2 boda po mjesecu, raspon 1,1–3,3. Every month of age
-  is worth about two points here, and we show how sure we are. In a small or noisy squad
-  the app says the adjustment is only a rough guide."
-- Scroll to **Kako radi** (the scatter plot): "Every dot is a child: age across, score up.
-  The dashed line is what's expected for that age. Ena, Benjamin and Asja score low, but
-  they are the youngest; for their age they are at or above the line." Shapes and labels,
-  not only colour.
-- Only if asked: the **Uporedite** toggle (Preporuka / Sirova ocjena / Prilagođeno
-  starosti) shows the strict swap, and step 2 has settings for lower-is-better tests
-  (sprint times) and for a 1 September or 1 April selection year.
+1. **Step 2:** click **Provjerite svoju ekipu** → **Probajte s primjerom** (orange banner:
+   synthetic, invented kids). "**14 of 20** born in the first half of the year. That's the
+   bias, inside one squad." Click **Pogledajte odluku →**.
+2. **The recommendation:** *"Proširite grupu za 4 mjesta da ne izgubite kasno rođene
+   talente."* "We don't cut anyone. The 10 he picked stay. We ask him to add four for a
+   second look in six months: Ena, Benjamin, Hana, and Adnan, who is *Na granici*: too
+   close to the last place for this test to call."
+3. **How sure we are:** "≈ 2,2 boda po mjesecu, raspon 1,1–3,3. Every month of age is
+   worth about two points here. In a small or noisy squad the app says the adjustment is
+   only a rough guide."
+4. **Kako radi (scatter plot):** "Every dot is a child: age across, score up. The dashed
+   line is what's expected for that age. The four named children are exactly the four in
+   the recommendation, the same four on the printed report."
+5. **Tap Ena:** "6 months younger than the squad average, rank 16 on raw score, rank 7 for
+   age. *Take a second look.* The tool never says a child is bad; worst case it says
+   *keep developing*."
 
-**2:10 – 2:35 · Player card (for the youth-work person)**
-
-- Click **Ena**. Read it out: "6 months younger than the squad average, rank 16 on raw
-  score, rank 7 for age. *Take a second look. Keep in the group, reassess in 6 months.*"
-- "The tool never says a child is bad. Worst case it says *keep developing*. It's built
-  to start a conversation before a kid gets cut, not to rank children."
+Only if asked: **Prikaži sve igrače (20)** opens the full ranking with the
+Preporuka / Sirova ocjena / Prilagođeno starosti comparison; step 2 has settings for
+lower-is-better tests and for a 1 September or 1 April selection year.
 
 **2:35 – 3:00 · Close**
 
-- Scroll to **Šta vaš klub može uraditi već u ponedjeljak**: three free changes.
+- Scroll to **Šta vaš klub može uraditi već u ponedjeljak**: three free changes, one line
+  each (tap one to open it).
   Print button → one-page report a coach can pin on the wall or take to the board.
 - "It's free, works on a phone, in Bosnian, and the squad file never leaves the device.
   No server, no login, no tracking. Kids' data stays with the coach."
@@ -107,6 +101,13 @@ Wales and Japan (April cut-off) it is 1.84×. So the mixing hid a little of the 
 didn't create it. England measured from 1 September points the same way (1.5×), but with
 only 175 under-21 players that is not significant on its own (p = 0.065), and we say so.
 Across all 1,762 English players it is clear (2.1×). The table is on step 1 under “Za analitičare”.
+
+**Why is Adnan on the list but Asja isn't?**
+One rule, one list. A child is added if they would be selected once age is taken into
+account, or if their gap to the last place is smaller than the uncertainty of the age
+adjustment ("Na granici"). Adnan's gap is inside that uncertainty; Asja's is not. The
+recommendation, the chart labels, the player cards and the printed report all use that
+same list.
 
 **Why widen the group instead of swapping children?**
 Because a swap means telling three early-born kids they are out on the basis of a

@@ -169,6 +169,40 @@ describe('selection-year cut-off (1 January, 1 September, 1 April)', () => {
   })
 })
 
+describe('borderline children ("Na granici")', () => {
+  const sample = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)
+  const group = recommendGroup(sample.players, 10, sample.fit)
+
+  it('adds children whose gap to the last place is within the uncertainty of the age trend', () => {
+    expect(group.borderline.map((p) => p.name)).toEqual(['Adnan'])
+    const last = compareSelections(sample.players, 10).fair[9]
+    const halfWidth = ((sample.fit.slopeHigh as number) - (sample.fit.slopeLow as number)) / 2
+    for (const p of group.borderline) {
+      expect(last.residual - p.residual).toBeGreaterThan(0)
+      expect(last.residual - p.residual).toBeLessThanOrEqual(halfWidth * Math.abs(p.ageMonths - last.ageMonths))
+    }
+  })
+  it('leaves out a child whose gap is larger than the uncertainty (Asja)', () => {
+    const asja = sample.players.find((p) => p.name === 'Asja') as (typeof sample.players)[number]
+    const last = compareSelections(sample.players, 10).fair[9]
+    const halfWidth = ((sample.fit.slopeHigh as number) - (sample.fit.slopeLow as number)) / 2
+    expect(last.residual - asja.residual).toBeGreaterThan(halfWidth * Math.abs(asja.ageMonths - last.ageMonths))
+    expect(group.borderline.some((p) => p.name === 'Asja')).toBe(false)
+  })
+  it('keeps one list: age-adjusted entrants first, then borderline, nobody twice, nobody already selected', () => {
+    expect(group.secondLook.map((p) => p.name)).toEqual(['Ena', 'Benjamin', 'Hana', 'Adnan'])
+    expect(new Set(group.secondLook.map((p) => p.id)).size).toBe(group.secondLook.length)
+    const kept = new Set(group.keep.map((p) => p.id))
+    expect(group.secondLook.some((p) => kept.has(p.id))).toBe(false)
+    expect(group.size).toBe(14)
+  })
+  it('calls nobody borderline when the trend has no interval', () => {
+    const tiny = analyseSquad(squadOf('2014-01-01', '2014-06-01'), REF)
+    expect(recommendGroup(tiny.players, 1, tiny.fit).borderline).toEqual([])
+    expect(recommendGroup(sample.players, 10).borderline).toEqual([])
+  })
+})
+
 describe('test direction (lower score is better, e.g. sprint in seconds)', () => {
   // Sprint times: older children are faster; the December child is fast for their age.
   const SPRINT: Player[] = SQUAD.map((p) => ({ ...p, score: 20 - p.score / 10 }))
@@ -287,6 +321,7 @@ describe('one set of highlighted children', () => {
     const ranks = group.secondLook.map((p) => p.fairRank)
     expect(ranks).toEqual([...ranks].sort((a, b) => a - b))
     group.secondLook.forEach((p) => expect(p.rawRank).toBeGreaterThan(10))
+    expect(group.borderline).toEqual([])
   })
   it('does not highlight a child who gains rank but stays outside the list (Asja)', () => {
     const { players } = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)

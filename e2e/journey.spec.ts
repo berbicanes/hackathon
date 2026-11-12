@@ -77,9 +77,12 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page.locator('.squad-table tbody tr')).toHaveCount(20)
 
   // Default view is a wider group, not a swap: nobody is shown as dropped.
-  await expect(page.locator('#recommend-title')).toHaveText('Widen the group by 3 places so you do not lose late-born talent.')
+  await expect(page.locator('#recommend-title')).toHaveText('Widen the group by 4 places so you do not lose late-born talent.')
   await expect(page.locator('.recommend')).toContainText('Second look — reassess in 6 months')
-  await expect(page.locator('.squad-table tr.is-second')).toHaveCount(3)
+  await expect(page.locator('.squad-table tr.is-second')).toHaveCount(4)
+  await expect(page.locator('.recommend')).toContainText('Borderline: the gap to the last place is smaller than the uncertainty')
+  await expect(page.locator('.synthetic')).toContainText('SYNTHETIC SAMPLE')
+  await expect(page.locator('.recommend .second-list li').last()).toContainText('Borderline')
   await expect(page.locator('.squad-table tr.is-lost')).toHaveCount(0)
   await expect(page.locator('.squad-table')).not.toContainText('Drops out')
 
@@ -90,10 +93,10 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(scatter.locator('.scatter__dot')).toHaveCount(20 + 4)
   await expect(scatter.locator('.scatter__legend')).toContainText('expected for this age')
   // One set of highlighted children in every view, in the same order.
-  const expected = ['Ena', 'Benjamin', 'Hana']
+  const expected = ['Ena', 'Benjamin', 'Hana', 'Adnan']
   await expect(page.locator('.recommend .second__name')).toHaveText(expected)
   await expect(scatter.locator('.scatter__name')).toHaveText(expected)
-  await expect(page.locator('.print-report__second')).toHaveText(/^Ena \(.*\), Benjamin \(.*\), Hana \(.*\)$/)
+  await expect(page.locator('.print-report__second')).toHaveText(/^Ena \(.*\), Benjamin \(.*\), Hana \(.*\), Adnan \(.*\)$/)
   for (const name of expected) {
     await page.locator('.recommend .second-list').getByRole('button', { name: new RegExp(name) }).click()
     await expect(page.locator('.advice__title')).toHaveText('Take a second look')

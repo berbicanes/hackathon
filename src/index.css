@@ -2083,3 +2083,14 @@ td small {
     padding-bottom: 24px;
   }
 }
+
+@media (max-width: 560px) {
+  /* The age detail is on the player card; keep each child to one line on a phone. */
+  .second__age {
+    display: none;
+  }
+
+  .monday__title {
+    font-size: 0.95rem;
+  }
+}

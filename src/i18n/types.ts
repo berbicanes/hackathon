@@ -118,6 +118,7 @@ export interface Strings {
   downloadTemplate: string
   csvHelp: string
   syntheticBanner: string
+  syntheticShort: string
   assessmentDate: string
   dateInput: 'dmy' | 'native'
   dateHint: string
@@ -158,6 +159,8 @@ export interface Strings {
   keepText: string
   secondLookTitle: string
   secondLookBadge: string
+  borderlineBadge: string
+  borderlineWhy: string
   showAll: (n: number) => string
   compareNote: string
   inTitle: string

@@ -227,17 +227,43 @@ export function compareSelections(players: AnalysedPlayer[], topN: number): Sele
 export interface GroupRecommendation {
   /** Everyone in the top N on raw score. Nobody is removed. */
   keep: AnalysedPlayer[]
-  /** Children who would be selected once age is taken into account: add them, reassess later. */
+  /**
+   * The one list of highlighted children: first those who would be selected once age is
+   * taken into account, then the borderline ones, each part in age-adjusted rank order.
+   */
   secondLook: AnalysedPlayer[]
+  /** The part of `secondLook` that is too close to the last place to call. */
+  borderline: AnalysedPlayer[]
   /** Size of the expanded group. */
   size: number
 }
 
 /**
- * Default recommendation: a second look, not a swap. Keep the raw top N and widen the
- * group by the children the age-adjusted ranking would have selected.
+ * Children just below the last age-adjusted place whose gap to it is within the
+ * uncertainty of the age trend. Two children's adjusted scores differ by
+ * Δscore − slope × Δage, so the slope's 95% half-width times their age difference is how
+ * far that comparison could move. Without an interval nobody is called borderline.
  */
-export function recommendGroup(players: AnalysedPlayer[], topN: number): GroupRecommendation {
+function borderlineChildren(players: AnalysedPlayer[], diff: SelectionDiff, fit: LinearFit | undefined): AnalysedPlayer[] {
+  const last = diff.fair[diff.fair.length - 1]
+  if (!last || !fit || fit.slopeLow === null || fit.slopeHigh === null) return []
+  const halfWidth = (fit.slopeHigh - fit.slopeLow) / 2
+  const taken = new Set([...diff.raw, ...diff.fair].map((p) => p.id))
+  return players
+    .filter((p) => !taken.has(p.id))
+    .filter((p) => last.residual - p.residual <= halfWidth * Math.abs(p.ageMonths - last.ageMonths))
+    .sort((a, b) => a.fairRank - b.fairRank)
+}
+
+/**
+ * Default recommendation: a second look, not a swap. Keep the raw top N and widen the
+ * group by the children the age-adjusted ranking would have selected, plus those too
+ * close to the last place to call ("borderline"). Pass the squad's fit to enable the
+ * borderline rule.
+ */
+export function recommendGroup(players: AnalysedPlayer[], topN: number, fit?: LinearFit): GroupRecommendation {
   const diff = compareSelections(players, topN)
-  return { keep: diff.raw, secondLook: diff.gained, size: diff.raw.length + diff.gained.length }
+  const borderline = borderlineChildren(players, diff, fit)
+  const secondLook = [...diff.gained, ...borderline]
+  return { keep: diff.raw, secondLook, borderline, size: diff.raw.length + secondLook.length }
 }

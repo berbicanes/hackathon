@@ -106,7 +106,14 @@ is 0.05 ÷ 3 = 0.017. Only the 22–25 result passes it.
 - **Selection-year start**: 1 January (default), 1 September (England, Wales) or 1 April
   (Japan). Birth quarters, badges, "early/late born" and the squad chart follow it; ages,
   ranks and fair scores do not depend on it.
-- **Hidden talents**: the biggest rank gains once age is accounted for.
+- **One list of highlighted children.** The second-look list is the single source of
+  truth: the recommendation, the names on the scatter plot, the "take a second look"
+  player cards and the printed report show exactly the same children in the same order.
+  A child who merely gains rank is not highlighted.
+- **Borderline ("Na granici")**: a child just below the last age-adjusted place joins the
+  second-look list when their gap to that place is at most the slope's 95% half-width
+  times their age difference to the last selected child (two adjusted scores differ by
+  Δscore − slope × Δage, so that is how far the comparison could move).
 - **Player card** (`src/lib/playerCard.ts`): months younger/older than the squad
   average, standing for their age, raw vs fair rank, and one of four next steps: *take a
   second look*, *keep*, *look past size and speed*, *keep developing*. No negative
