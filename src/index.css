@@ -852,3 +852,8 @@ tbody th {
     color: #333;
   }
 }
+
+/* Row labels in wide data tables keep a readable width instead of wrapping word by word. */
+.row-label {
+  min-width: 12rem;
+}

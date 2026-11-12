@@ -28,6 +28,11 @@ describe('translations', () => {
       expect(bs[key].length).toBe(en[key].length)
     }
   })
+  it('label the same cut-off rows in both languages', () => {
+    expect(Object.keys(strings.bs.cutoffRows)).toEqual(Object.keys(strings.en.cutoffRows))
+    expect(strings.en.cutoffDate(9)).toBe('1 Sep')
+    expect(strings.bs.cutoffDate(9)).toBe('1. sep')
+  })
   it('formats dates without relying on browser locale data', () => {
     const d = new Date(Date.UTC(2014, 11, 2))
     expect(strings.bs.formatDate(d)).toBe('2. decembar 2014.')

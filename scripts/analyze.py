@@ -31,6 +31,12 @@ YEAR_DAYS = sum(DAYS_PER_MONTH)
 EXPECTED_MONTH_SHARE = [d / YEAR_DAYS for d in DAYS_PER_MONTH]
 EXPECTED_QUARTER_SHARE = [sum(EXPECTED_MONTH_SHARE[q * 3:q * 3 + 3]) for q in range(4)]
 
+# Countries whose youth football does not use the 1 January cut-off, keyed by
+# country_of_citizenship -> month in which the selection year starts.
+# England and Wales: 1 September (school year). Japan: 2 April (school year),
+# approximated here as 1 April because the analysis works on whole months.
+NON_JANUARY_CUTOFFS = {"England": 9, "Wales": 9, "Japan": 4}
+
 
 # ---------------------------------------------------------------- statistics
 
@@ -155,6 +161,7 @@ def load_players(path: Path) -> list[dict]:
                 "age": age_on(born, REFERENCE_DATE),
                 "active": last_season >= ACTIVE_FROM_SEASON,
                 "value": value,
+                "country": (row.get("country_of_citizenship") or "").strip(),
             })
     return players
 
@@ -183,6 +190,59 @@ def distribution(players: list[dict]) -> dict:
         "q1_q4_ratio": round(rel[0] / rel[3], 3),
         "chi_square_quarters": chi_square_gof(quarters, EXPECTED_QUARTER_SHARE),
         "chi_square_months": chi_square_gof(months, EXPECTED_MONTH_SHARE),
+    }
+
+
+def cutoff_row(row_id: str, players: list[dict], start_month: int = 1) -> dict:
+    """Quarter skew with quarters counted from the selection-year start month.
+
+    "First quarter" = the three months right after the cut-off (the oldest
+    children in a year group), "last quarter" = the three months before it.
+    """
+    months = [0] * 12
+    for p in players:
+        months[p["born"].month - 1] += 1
+    order = [(start_month - 1 + i) % 12 for i in range(12)]
+    rotated = [months[m] for m in order]
+    expected_months = [EXPECTED_MONTH_SHARE[m] for m in order]
+    quarters = [sum(rotated[q * 3:q * 3 + 3]) for q in range(4)]
+    expected = [sum(expected_months[q * 3:q * 3 + 3]) for q in range(4)]
+    n = sum(quarters)
+    share = [c / n for c in quarters]
+    test = chi_square_gof(quarters, expected)
+    return {
+        "id": row_id,
+        "cutoff_month": start_month,
+        "n": n,
+        "quarters": quarters,
+        "first_quarter_share": round(share[0], 4),
+        "last_quarter_share": round(share[3], 4),
+        "ratio": round((share[0] / expected[0]) / (share[3] / expected[3]), 3),
+        "chi2": test["chi2"],
+        "p_value": test["p_value"],
+        "significant_at_05": test["p_value"] < 0.05,
+    }
+
+
+def cutoff_robustness(players: list[dict], young: list[dict]) -> dict:
+    """Does mixing in countries with a non-January cut-off change the result?"""
+    def of(group: list[dict], country: str) -> list[dict]:
+        return [p for p in group if p["country"] == country]
+
+    return {
+        "country_field": "country_of_citizenship",
+        "non_january_cutoffs": NON_JANUARY_CUTOFFS,
+        "rows": [
+            cutoff_row("u21_all", young),
+            cutoff_row("u21_excl_england", [p for p in young if p["country"] != "England"]),
+            cutoff_row("u21_excl_non_january",
+                       [p for p in young if p["country"] not in NON_JANUARY_CUTOFFS]),
+            cutoff_row("england_u21_jan", of(young, "England")),
+            cutoff_row("england_u21", of(young, "England"), NON_JANUARY_CUTOFFS["England"]),
+            cutoff_row("england_all", of(players, "England"), NON_JANUARY_CUTOFFS["England"]),
+            cutoff_row("japan_u21", of(young, "Japan"), NON_JANUARY_CUTOFFS["Japan"]),
+            cutoff_row("japan_all", of(players, "Japan"), NON_JANUARY_CUTOFFS["Japan"]),
+        ],
     }
 
 
@@ -234,6 +294,7 @@ def main(argv: list[str]) -> int:
         "all_players": distribution(players),
         "active_players": distribution(active),
         "under_21": distribution(young),
+        "cutoff_robustness": cutoff_robustness(players, young),
         "underdog": underdog(players),
     }
 
@@ -252,6 +313,11 @@ def main(argv: list[str]) -> int:
         print(f"Underdog {row['band']}: median Q1 EUR {row['median_value_q1']:,.0f} (n={row['n_q1']}) "
               f"vs Q4 EUR {row['median_value_q4']:,.0f} (n={row['n_q4']}), "
               f"P(Q4>Q1)={row['prob_q4_greater']}, p={fmt_p(row['p_value'])}")
+    print("Cut-off robustness (first vs last quarter of the selection year):")
+    for row in result["cutoff_robustness"]["rows"]:
+        print(f"  {row['id']:22s} cut-off month {row['cutoff_month']:>2}: n={row['n']:>5}, "
+              f"first {row['first_quarter_share']:.1%}, last {row['last_quarter_share']:.1%}, "
+              f"ratio {row['ratio']}, chi2 {row['chi2']}, p={fmt_p(row['p_value'])}")
     print("\nHEADLINES")
     print(f"1. {u21['quarter_share'][0]:.0%} of active under-21 pros are born Jan-Mar "
           f"(expected {EXPECTED_QUARTER_SHARE[0]:.0%}); only {u21['quarter_share'][3]:.0%} Oct-Dec.")

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { Strings } from '../i18n'
+import type { CutoffRowId, Strings } from '../i18n'
 import { formatP } from '../lib/format'
 import { BarChart, type Bar } from './BarChart'
 
@@ -31,9 +31,21 @@ interface UnderdogRow {
   significant_at_05: boolean
 }
 
+interface CutoffRow {
+  id: CutoffRowId
+  cutoff_month: number
+  n: number
+  first_quarter_share: number
+  last_quarter_share: number
+  ratio: number
+  p_value: number
+  significant_at_05: boolean
+}
+
 export interface RaeData {
   all_players: Distribution
   under_21: Distribution
+  cutoff_robustness: { rows: CutoffRow[] }
   underdog: UnderdogRow[]
 }
 
@@ -43,7 +55,12 @@ type Group = 'under_21' | 'all_players'
 
 function isRaeData(x: unknown): x is RaeData {
   const d = x as RaeData
-  return Boolean(d?.all_players?.quarter_share && d?.under_21?.quarter_share && Array.isArray(d?.underdog))
+  return Boolean(
+    d?.all_players?.quarter_share &&
+      d?.under_21?.quarter_share &&
+      Array.isArray(d?.cutoff_robustness?.rows) &&
+      Array.isArray(d?.underdog),
+  )
 }
 
 export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => void }) {
@@ -73,6 +90,18 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
     tone: i === 0 ? 'early' : i === 3 ? 'late' : 'neutral',
     marker: i === 0 ? `▲ ${t.earlyBorn}` : i === 3 ? `▼ ${t.lateBorn}` : undefined,
   }))
+  const cutoffRows = data.cutoff_robustness.rows.filter((r) => r.id in t.cutoffRows)
+  const cutoff = (id: CutoffRowId) => cutoffRows.find((r) => r.id === id)
+  const [cBase, cExclEng, cExclAll, cEng, cEngAll] = [
+    cutoff('u21_all'),
+    cutoff('u21_excl_england'),
+    cutoff('u21_excl_non_january'),
+    cutoff('england_u21'),
+    cutoff('england_all'),
+  ]
+  /** Three-month range label, e.g. cut-off month 9 → "Sep–Nov" (offset 0) or "Jun–Aug" (offset 9). */
+  const monthRange = (cutoffMonth: number, offset: number) =>
+    `${t.months[(cutoffMonth - 1 + offset) % 12]}–${t.months[(cutoffMonth + 1 + offset) % 12]}`
   const monthBars: Bar[] = dist.month_share.map((v, i) => ({
     label: t.months[i],
     value: v,
@@ -138,6 +167,60 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
           formatShare={(v) => t.pct(v, 1)}
           compact
         />
+      </section>
+
+      <section className="card" aria-labelledby="cutoff-title">
+        <h2 id="cutoff-title">{t.cutoffTitle}</h2>
+        <p>{t.cutoffIntro}</p>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">{t.cutoffColGroup}</th>
+                <th scope="col">{t.cutoffColCutoff}</th>
+                <th scope="col">{t.cutoffColN}</th>
+                <th scope="col">{t.cutoffColFirst}</th>
+                <th scope="col">{t.cutoffColLast}</th>
+                <th scope="col">{t.cutoffColRatio}</th>
+                <th scope="col">{t.underdogP}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cutoffRows.map((r) => (
+                <tr key={r.id}>
+                  <th scope="row" className="row-label">{t.cutoffRows[r.id]}</th>
+                  <td>{t.cutoffDate(r.cutoff_month)}</td>
+                  <td>{t.num(r.n)}</td>
+                  <td>
+                    {t.pct(r.first_quarter_share, 1)} <small>{monthRange(r.cutoff_month, 0)}</small>
+                  </td>
+                  <td>
+                    {t.pct(r.last_quarter_share, 1)} <small>{monthRange(r.cutoff_month, 9)}</small>
+                  </td>
+                  <td>{t.num(r.ratio, 2)}×</td>
+                  <td>
+                    {formatP(r.p_value, t.decimal)}{' '}
+                    {!r.significant_at_05 && <span className="pill">{t.cutoffNotSig}</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {cBase && cExclEng && cExclAll && cEng && cEngAll && (
+          <p className="note">
+            {t.cutoffSummary({
+              base: t.num(cBase.ratio, 2),
+              exclEngland: t.num(cExclEng.ratio, 2),
+              exclAll: t.num(cExclAll.ratio, 2),
+              englandRatio: t.num(cEng.ratio, 2),
+              englandN: t.num(cEng.n),
+              englandP: formatP(cEng.p_value, t.decimal),
+              englandSignificant: cEng.significant_at_05,
+              englandAllRatio: t.num(cEngAll.ratio, 2),
+            })}
+          </p>
+        )}
       </section>
 
       <section className="card" aria-labelledby="underdog-title">

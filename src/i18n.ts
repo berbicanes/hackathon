@@ -65,6 +65,27 @@ export interface Strings {
   underdogVerdictYes: string
   underdogVerdictNo: string
   underdogSummary: string
+  cutoffTitle: string
+  cutoffIntro: string
+  cutoffColGroup: string
+  cutoffColCutoff: string
+  cutoffColN: string
+  cutoffColFirst: string
+  cutoffColLast: string
+  cutoffColRatio: string
+  cutoffRows: Record<CutoffRowId, string>
+  cutoffDate: (month: number) => string
+  cutoffNotSig: string
+  cutoffSummary: (a: {
+    base: string
+    exclEngland: string
+    exclAll: string
+    englandRatio: string
+    englandN: string
+    englandP: string
+    englandSignificant: boolean
+    englandAllRatio: string
+  }) => string
   methodTitle: string
   method: string[]
   limitsTitle: string
@@ -155,6 +176,16 @@ export interface Strings {
   reportFooter: string
 }
 
+export type CutoffRowId =
+  | 'u21_all'
+  | 'u21_excl_england'
+  | 'u21_excl_non_january'
+  | 'england_u21_jan'
+  | 'england_u21'
+  | 'england_all'
+  | 'japan_u21'
+  | 'japan_all'
+
 const en: Strings = {
   decimal: EN_SEP.decimal,
   num: (v, digits = 0) => formatNumber(v, digits, EN_SEP),
@@ -204,6 +235,29 @@ const en: Strings = {
   underdogVerdictNo: 'No clear difference',
   underdogSummary:
     'Honest reading: at 18–21 there is no difference. From 22 onward, the late-born players who made it are worth slightly more — consistent with the idea that they had to be better to survive selection. The effect is small; it is a clue, not proof.',
+  cutoffTitle: 'Does the cut-off date change the picture?',
+  cutoffIntro:
+    'Not every country groups children by calendar year. England and Wales use 1 September and Japan 2 April (counted here from 1 April), so January–December quarters are the wrong ruler for them. We re-ran the under-21 test without those countries, and measured England and Japan against their own cut-off. “Oldest quarter” is the three months right after the cut-off, “youngest quarter” the three months before it. Country means citizenship in Transfermarkt.',
+  cutoffColGroup: 'Group',
+  cutoffColCutoff: 'Cut-off',
+  cutoffColN: 'Players',
+  cutoffColFirst: 'Oldest quarter',
+  cutoffColLast: 'Youngest quarter',
+  cutoffColRatio: 'Oldest : youngest',
+  cutoffRows: {
+    u21_all: 'Under 21, all countries',
+    u21_excl_england: 'Under 21, without England',
+    u21_excl_non_january: 'Under 21, without England, Wales and Japan',
+    england_u21_jan: 'England under 21, wrong ruler',
+    england_u21: 'England under 21, own cut-off',
+    england_all: 'England, all players',
+    japan_u21: 'Japan under 21, own cut-off',
+    japan_all: 'Japan, all players',
+  },
+  cutoffDate: (month) => `1 ${en.months[month - 1]}`,
+  cutoffNotSig: 'not significant',
+  cutoffSummary: (a) =>
+    `Honest reading: the headline holds. Without England the ratio moves from ${a.base}× to ${a.exclEngland}× (${a.exclAll}× without Wales and Japan too), so mixing cut-offs was hiding a little of the effect, not creating it. England’s under-21s, measured from 1 September, point the same way (${a.englandRatio}×), but with only ${a.englandN} players that is ${a.englandSignificant ? 'statistically significant' : 'not statistically significant on its own'} (p = ${a.englandP}). Across all English players in the data the skew is clear (${a.englandAllRatio}×).`,
   methodTitle: 'Method',
   method: [
     'Birth dates of all players in the public Transfermarkt dataset (snapshot July 2026); ages on 1 July 2026.',
@@ -215,7 +269,8 @@ const en: Strings = {
   limits: [
     'Births are not perfectly uniform across the year; national seasonal patterns differ slightly from the day-weighted expectation.',
     'Transfermarkt covers professional leagues, mostly in Europe, and players with a profile — not every footballer.',
-    'Countries with different selection cut-offs are mixed in, which if anything makes the effect look smaller.',
+    'The headline numbers use January–December quarters for everyone, although England, Wales and Japan use other cut-offs. Leaving them out changes the under-21 result only slightly (see the cut-off check). Countries are identified by citizenship, so that split is approximate, and other countries with unusual cut-offs may remain.',
+    'England’s under-21 sample is small (175 players): on its own, measured from 1 September, its skew is not statistically significant.',
     'Market value is an imperfect proxy for ability.',
   ],
   loading: 'Loading analysis…',
@@ -391,6 +446,29 @@ const bs: Strings = {
   underdogVerdictNo: 'Nema jasne razlike',
   underdogSummary:
     'Iskreno tumačenje: sa 18–21 godina nema razlike. Od 22. godine kasno rođeni koji su uspjeli vrijede malo više — što se slaže s idejom da su morali biti bolji da prežive selekciju. Efekat je mali; to je trag, ne dokaz.',
+  cutoffTitle: 'Mijenja li datum granice sliku?',
+  cutoffIntro:
+    'Ne grupišu sve zemlje djecu po kalendarskoj godini. Engleska i Vels koriste 1. septembar, a Japan 2. april (ovdje računato od 1. aprila), pa su kvartali januar–decembar za njih pogrešno mjerilo. Ponovili smo test za mlađe od 21 bez tih zemalja, a Englesku i Japan izmjerili prema njihovoj vlastitoj granici. „Najstariji kvartal“ su tri mjeseca odmah nakon granice, a „najmlađi kvartal“ tri mjeseca prije nje. Zemlja znači državljanstvo na Transfermarktu.',
+  cutoffColGroup: 'Grupa',
+  cutoffColCutoff: 'Granica',
+  cutoffColN: 'Igrača',
+  cutoffColFirst: 'Najstariji kvartal',
+  cutoffColLast: 'Najmlađi kvartal',
+  cutoffColRatio: 'Najstariji : najmlađi',
+  cutoffRows: {
+    u21_all: 'Mlađi od 21, sve zemlje',
+    u21_excl_england: 'Mlađi od 21, bez Engleske',
+    u21_excl_non_january: 'Mlađi od 21, bez Engleske, Velsa i Japana',
+    england_u21_jan: 'Engleska do 21, pogrešno mjerilo',
+    england_u21: 'Engleska do 21, vlastita granica',
+    england_all: 'Engleska, svi igrači',
+    japan_u21: 'Japan do 21, vlastita granica',
+    japan_all: 'Japan, svi igrači',
+  },
+  cutoffDate: (month) => `1. ${bs.months[month - 1]}`,
+  cutoffNotSig: 'nije značajno',
+  cutoffSummary: (a) =>
+    `Iskreno tumačenje: glavni nalaz stoji. Bez Engleske omjer se pomjera sa ${a.base}× na ${a.exclEngland}× (${a.exclAll}× kad se izuzmu i Vels i Japan), dakle miješanje granica je malo skrivalo efekat, a nije ga stvaralo. Engleski igrači mlađi od 21, mjereni od 1. septembra, pokazuju isti smjer (${a.englandRatio}×), ali sa samo ${a.englandN} igrača to ${a.englandSignificant ? 'jeste statistički značajno' : 'samo po sebi nije statistički značajno'} (p = ${a.englandP}). Kod svih engleskih igrača u podacima pomak je jasan (${a.englandAllRatio}×).`,
   methodTitle: 'Metoda',
   method: [
     'Datumi rođenja svih igrača iz javnog Transfermarkt skupa podataka (stanje jul 2026); starost na dan 1. 7. 2026.',
@@ -402,7 +480,8 @@ const bs: Strings = {
   limits: [
     'Rođenja nisu savršeno ravnomjerna tokom godine; sezonski obrasci u zemljama malo odstupaju od očekivanja po danima.',
     'Transfermarkt pokriva profesionalne lige, uglavnom u Evropi, i igrače s profilom — ne svakog fudbalera.',
-    'Uključene su i zemlje s drugačijim datumom granice, što efekat prije umanjuje nego uvećava.',
+    'Glavni brojevi koriste kvartale januar–decembar za sve, iako Engleska, Vels i Japan imaju drugačije granice. Kad se oni izuzmu, rezultat za mlađe od 21 mijenja se tek neznatno (vidi provjeru granice). Zemlje su određene po državljanstvu, pa je ta podjela približna, a moguće je da su ostale i druge zemlje s neuobičajenom granicom.',
+    'Engleski uzorak mlađih od 21 je mali (175 igrača): sam za sebe, mjeren od 1. septembra, njegov pomak nije statistički značajan.',
     'Tržišna vrijednost je nesavršena mjera kvaliteta.',
   ],
   loading: 'Učitavam analizu…',

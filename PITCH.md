@@ -74,8 +74,14 @@ age band, with a rank test (Mann-Whitney) so a few superstar values can't drive 
 report the null result at 18–21.
 
 **Isn't this dataset biased itself?**
-It's professionals with a Transfermarkt profile, mostly Europe. Countries with other
-cut-off dates are mixed in. If anything that waters the effect down.
+It's professionals with a Transfermarkt profile, mostly Europe.
+
+**England's cut-off is 1 September, not 1 January. Doesn't that break your quarters?**
+We checked. Without England the under-21 ratio goes from 1.79× to 1.81×; without England,
+Wales and Japan (April cut-off) it is 1.84×. So the mixing hid a little of the effect, it
+didn't create it. England measured from 1 September points the same way (1.5×), but with
+only 175 under-21 players that is not significant on its own (p = 0.065), and we say so.
+Across all 1,762 English players it is clear (2.1×). The table is in the Bias mirror.
 
 **How does the age adjustment work?**
 Straight-line fit of score on age in months, across the squad. The fair score is how far

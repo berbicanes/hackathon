@@ -35,6 +35,11 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
 | Active under-21 professionals born Jan–Mar | **32.3%** (expected 24.7% by days), Oct–Dec only **18.4%** (n = 5,538, χ² = 234.9, p ≈ 1 × 10⁻⁵⁰) |
 | Relative likelihood, Jan–Mar vs Oct–Dec born | **1.8×** |
 | All 50,100 players | Q1 32.5% vs Q4 18.2%, χ² = 2,374, p < 10⁻³⁰⁰ |
+| Under-21, **excluding England** (1 Sept cut-off) | Q1 32.3% vs Q4 18.1%, ratio **1.81×** (n = 5,363, χ² = 233.8, p ≈ 2 × 10⁻⁵⁰): the headline holds |
+| Under-21, excluding England, Wales and Japan | Q1 32.8% vs Q4 18.1%, ratio 1.84× (n = 5,213, p ≈ 1 × 10⁻⁵²) |
+| **England under-21, 1 Sept cut-off** | Sep–Nov 28.6% vs Jun–Aug 18.9%, ratio 1.53×, but n = 175 and **p = 0.065: not significant on its own** |
+| England, all 1,762 players, 1 Sept cut-off | Sep–Nov 33.0% vs Jun–Aug 15.9%, ratio 2.10×, p ≈ 8 × 10⁻²⁹ |
+| Japan under-21, 1 April cut-off | Apr–Jun 37.2% vs Jan–Mar 15.3%, ratio 2.41× (n = 137, p = 0.0008) |
 | "Underdog" check, age 22–25 | Q4-born players are worth more: median €700k vs €600k (Mann-Whitney p = 0.0007) |
 | "Underdog" check, age 26–29 | Small Q4 edge (p = 0.03) |
 | "Underdog" check, age 18–21 | **No difference** (p = 0.96) |
@@ -52,6 +57,11 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
   flat 25% / 8.33%.
 - **Chi-square goodness-of-fit** tests for quarters (df 3) and months (df 11), for all
   players, active players (last season ≥ 2024) and active under-21s.
+- **Cut-off robustness**: England and Wales select by school year (1 September) and
+  Japan by 2 April (approximated as 1 April, since the analysis works on whole months),
+  so calendar quarters are the wrong ruler for them. The script re-runs the under-21 test
+  without England, and without all three, and tests England and Japan separately with
+  quarters counted from their own cut-off month. Country = `country_of_citizenship`.
 - **Q1:Q4 likelihood ratio** = (observed / expected share for Q1) ÷ (same for Q4).
 - **Underdog check**: current market value of Q1- vs Q4-born active players, compared
   **within** age bands 18–21, 22–25 and 26–29 (never pooled, so age never drives the
@@ -82,8 +92,20 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
 - Births are not perfectly uniform over the year; national seasonal patterns differ
   slightly from the day-weighted expectation.
 - Transfermarkt covers professional players with a profile, mostly in Europe, not all
-  footballers. Countries with other cut-off dates are mixed in, which, if anything,
-  understates the effect.
+  footballers.
+- **Cut-off dates.** The headline numbers use January–December quarters for every
+  player, although England and Wales (1 September) and Japan (2 April) use other
+  cut-offs. Checked: excluding England moves the under-21 ratio from 1.79× to 1.81×, and
+  excluding all three to 1.84×, so the mixing slightly understates the effect rather than
+  creating it. Countries are identified by citizenship, which is only a proxy for where a
+  player was developed (an English-raised player with another passport stays in the main
+  group), and other countries with unusual or changing cut-offs (e.g. the USA) are not
+  separated.
+- **England on its own is weak evidence at under-21.** With a 1 September cut-off the
+  direction is the same (28.6% born Sep–Nov vs 18.9% Jun–Aug, 1.53×), but with only 175
+  players it is not statistically significant (p = 0.065). The skew is clear only across
+  all 1,762 English players in the data (2.10×, p ≈ 8 × 10⁻²⁹), which includes older and
+  retired players. Wales has too few under-21 players (13) to test.
 - Market value is an imperfect proxy for ability; the underdog effect is small.
 - The squad adjustment is a linear trend estimated from the squad itself. With fewer than
   about 10 players it is noisy, and the app says so. It is a prompt to take a second look,

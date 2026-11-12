@@ -229,6 +229,152 @@
    "p_value": 3.5104148490093023e-57
   }
  },
+ "cutoff_robustness": {
+  "country_field": "country_of_citizenship",
+  "non_january_cutoffs": {
+   "England": 9,
+   "Wales": 9,
+   "Japan": 4
+  },
+  "rows": [
+   {
+    "id": "u21_all",
+    "cutoff_month": 1,
+    "n": 5538,
+    "quarters": [
+     1788,
+     1304,
+     1427,
+     1019
+    ],
+    "first_quarter_share": 0.3229,
+    "last_quarter_share": 0.184,
+    "ratio": 1.789,
+    "chi2": 234.88,
+    "p_value": 1.2191171784357286e-50,
+    "significant_at_05": true
+   },
+   {
+    "id": "u21_excl_england",
+    "cutoff_month": 1,
+    "n": 5363,
+    "quarters": [
+     1730,
+     1274,
+     1387,
+     972
+    ],
+    "first_quarter_share": 0.3226,
+    "last_quarter_share": 0.1812,
+    "ratio": 1.814,
+    "chi2": 233.79,
+    "p_value": 2.0916330426162524e-50,
+    "significant_at_05": true
+   },
+   {
+    "id": "u21_excl_non_january",
+    "cutoff_month": 1,
+    "n": 5213,
+    "quarters": [
+     1707,
+     1218,
+     1342,
+     946
+    ],
+    "first_quarter_share": 0.3275,
+    "last_quarter_share": 0.1815,
+    "ratio": 1.839,
+    "chi2": 244.51,
+    "p_value": 1.0050137358804709e-52,
+    "significant_at_05": true
+   },
+   {
+    "id": "england_u21_jan",
+    "cutoff_month": 1,
+    "n": 175,
+    "quarters": [
+     58,
+     30,
+     40,
+     47
+    ],
+    "first_quarter_share": 0.3314,
+    "last_quarter_share": 0.2686,
+    "ratio": 1.258,
+    "chi2": 9.85,
+    "p_value": 0.019876238541438038,
+    "significant_at_05": true
+   },
+   {
+    "id": "england_u21",
+    "cutoff_month": 9,
+    "n": 175,
+    "quarters": [
+     50,
+     54,
+     38,
+     33
+    ],
+    "first_quarter_share": 0.2857,
+    "last_quarter_share": 0.1886,
+    "ratio": 1.532,
+    "chi2": 7.24,
+    "p_value": 0.06463820993624737,
+    "significant_at_05": false
+   },
+   {
+    "id": "england_all",
+    "cutoff_month": 9,
+    "n": 1762,
+    "quarters": [
+     581,
+     523,
+     378,
+     280
+    ],
+    "first_quarter_share": 0.3297,
+    "last_quarter_share": 0.1589,
+    "ratio": 2.098,
+    "chi2": 133.8,
+    "p_value": 8.205842579454566e-29,
+    "significant_at_05": true
+   },
+   {
+    "id": "japan_u21",
+    "cutoff_month": 4,
+    "n": 137,
+    "quarters": [
+     51,
+     40,
+     25,
+     21
+    ],
+    "first_quarter_share": 0.3723,
+    "last_quarter_share": 0.1533,
+    "ratio": 2.409,
+    "chi2": 16.71,
+    "p_value": 0.0008115241756931841,
+    "significant_at_05": true
+   },
+   {
+    "id": "japan_all",
+    "cutoff_month": 4,
+    "n": 939,
+    "quarters": [
+     305,
+     282,
+     186,
+     166
+    ],
+    "first_quarter_share": 0.3248,
+    "last_quarter_share": 0.1768,
+    "ratio": 1.822,
+    "chi2": 59.9,
+    "p_value": 6.170838484525861e-13,
+    "significant_at_05": true
+   }
+  ]
+ },
  "underdog": [
   {
    "band": "18-21",

@@ -15,6 +15,11 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await expect(page.locator('section[aria-labelledby="underdog-title"]')).toContainText('22-25')
 
+  // Cut-off robustness check is shown with England measured from 1 September.
+  const cutoff = page.locator('section[aria-labelledby="cutoff-title"]')
+  await expect(cutoff.getByRole('row', { name: /England under 21, own cut-off/ })).toContainText('1 Sep')
+  await expect(cutoff.locator('tbody tr')).toHaveCount(8)
+
   // Your squad with the synthetic sample.
   await page.getByRole('button', { name: 'Your squad', exact: true }).click()
   await page.getByRole('button', { name: 'Load synthetic sample' }).click()
