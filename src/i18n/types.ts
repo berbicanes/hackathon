@@ -34,6 +34,38 @@ export interface Strings {
   privacy: string
   footerData: string
   privacyLink: string
+  pitchLink: string
+  pitch: {
+    hookTitle: string
+    hookJanuary: string
+    hookJanuaryAge: string
+    hookDecember: string
+    hookDecemberAge: string
+    hookSub: string
+    problemKicker: string
+    problemTitle: string
+    problemEarly: string
+    problemLate: string
+    problemRatio: string
+    problemJapan: (ratio: string) => string
+    problemSource: (n: string, p: string) => string
+    solutionKicker: string
+    solutionTitle: string
+    solutionSteps: [string, string, string]
+    demo: string
+    closeTitle: string
+    trustPrivacy: string
+    trustCases: (cases: number) => string
+    trustProdReady: string
+    qrAlt: (url: string) => string
+    backupKicker: string
+    backupTitle: string
+    backupPoints: string[]
+    backupLink: string
+    controls: string
+    exit: string
+    keys: string
+  }
   privacyTitle: string
   privacyLead: string
   privacySections: { title: string; text: string }[]

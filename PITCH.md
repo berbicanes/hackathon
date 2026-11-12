@@ -1,75 +1,107 @@
-# Late Bloomers — 3-minute demo
+# Late Bloomers — 3-minute pitch + 2-minute Q&A
 
-Live: https://berbicanes.github.io/hackathon/ (opens in Bosnian; switch top right)
+- **Slides (in the app):** https://berbicanes.github.io/hackathon/#pitch
+- **Live app:** https://berbicanes.github.io/hackathon/ (opens in Bosnian; switch top right)
 
-Before going on stage: open the site on step 1 (**Problem**), zoom the browser
-to ~125%. The app is a 3-step flow: **1 Problem → 2 Vaša ekipa → 3 Odluka** (stepper in the
-header; each step has its own link: `#problem`, `#squad`, `#decision`). Have a second
-browser tab with the sample already loaded on step 3 as backup.
+## Before going on stage
 
-## Script
+1. Open `#pitch`, press **F** for full screen. Check slide 2 shows the numbers (it loads
+   them once; after that the deck works offline).
+2. Keys: **→ / space / click** next, **←** back, **B** backup slide ("Rezerva"), **F** full
+   screen, **Esc** exit. The language switch (BS / EN) is in the bar under the slide.
+3. In a second browser tab, load the sample and stop on step 3 (**Odluka**) as a backup
+   for the live demo.
+4. If the projector or wifi fails: the deck prints to PDF, one slide per landscape page
+   (browser Print → Save as PDF). Make that PDF before you leave.
 
-**0:00 – 0:20 · Hook**
+## Script — exactly 3:00
 
-> Every year at U10 trials, a kid born in January stands next to a kid born in December.
-> Same "age group", but one of them is almost a year older. Guess who gets picked.
-> Coaches aren't doing it on purpose. They just can't see it. We built something so they can.
+### 0:00 – 0:15 · Slide 1, hook
 
-**0:20 – 1:00 · Step 1, Problem (for the data person)**
+**BS:** „Dva dječaka, isto godište, ista selekcija U10. Jedan je rođen u januaru, drugi u
+decembru. Između njih je skoro godinu dana razlike. Ko bude izabran? Trener to ne radi
+namjerno. On to jednostavno ne vidi.“
 
-- Point at the big number: **32% of active under-21 pros are born January–March.**
-  By days in the calendar it should be about 25%. Only **18%** are born October–December.
-- "So Q1-born players are **1.8×** as common as Q4-born among under-21 pros."
-  (Say "as common", not "as likely to make it": we count who is in the pro pool, we don't
-  follow children over time.)
-- Toggle *All players*: same picture across **50,100** players.
-- Small grey stats line under the chart: n = 5,538, chi-square, **p ≈ 10⁻⁵⁰**. Expected line is weighted by days per
-  month, not a flat 25%.
-- Open **Za analitičare: detaljna provjera** (collapsed by default) and point at the
-  underdog table: "We also checked whether the late-born players who survive
-  are better. Within the same age band, never pooled. At 18–21: **no difference**, and we
-  show that. At 22–25 the late-born are worth more: **€700k vs €600k median**,
-  p = 0.0007. We tested three age bands, so the bar is 0.017, not 0.05: 22–25 clears it,
-  26–29 (p = 0.03) does not, so we don't claim it. Small effect. A clue, not proof."
+**EN:** "Two boys, same age group, same U10 trial. One was born in January, one in
+December. Almost a year apart. Who gets picked? The coach isn't doing it on purpose. He
+just can't see it."
 
-**1:00 – 2:35 · Steps 2 and 3, Vaša ekipa → Odluka (for the coach) — the demo in 5 moves**
+### 0:15 – 0:40 · Slide 2, problem
 
-1. **Step 2:** click **Provjerite svoju ekipu** → **Probajte s primjerom** (orange banner:
-   synthetic, invented kids). "**14 of 20** born in the first half of the year. That's the
-   bias, inside one squad." Click **Pogledajte odluku →**.
-2. **The recommendation:** *"Proširite grupu za 3 mjesta: 3 kasno rođena talenta."* "We
-   don't cut anyone. The 10 he picked stay. We ask him to add three for a second look in
-   six months: Ena, Benjamin and Hana."
-3. **How sure we are:** "≈ 2,2 boda po mjesecu, raspon 1,1–3,3. Every month of age is
-   worth about two points here. In a small or noisy squad the app says the adjustment is
-   only a rough guide."
-4. **Kako radi (scatter plot):** "Every dot is a child: age across, score up. The dashed
-   line is what's expected for that age. The three named children are exactly the three in
-   the recommendation, the same three on the printed report."
-5. **Tap Ena:** "6 months younger than the squad average, rank 16 on raw score, rank 7 for
-   age. *Take a second look.* The tool never says a child is bad; worst case it says
-   *keep developing*."
+**BS:** „Među profesionalcima mlađim od 21 godine, 32% je rođeno od januara do marta, a
+samo 18% od oktobra do decembra. Rano rođenih je 1,8 puta više. To nije slučajnost:
+5.538 igrača, javni podaci Transfermarkta. A u Japanu, gdje godište počinje u aprilu,
+prednost imaju rođeni u aprilu: 2,4 puta. Efekat prati datum presjeka, ne mjesec.“
 
-**Math decides, AI explains.** Optional last touch on the recommendation or on Ena's
-card: **Objasni mi (AI)**. "The calculation already made the recommendation; this button
-only puts it into three plain sentences for a parent. It sends anonymous numbers, never a
-name or a birth date, and if the AI is unavailable the app shows its own explanation."
+**EN:** "Among professionals under 21, 32% were born January to March and only 18%
+October to December. Early-born players are 1.8 times as common. This is not chance:
+5,538 players, public Transfermarkt data. And in Japan, where the age group starts in
+April, it is the April-born who lead: 2.4 times. The effect follows the cut-off date, not
+the month."
 
-Only if asked: **Prikaži sve igrače (20)** opens the full ranking with the
-Preporuka / Sirova ocjena / Prilagođeno starosti comparison; step 2 has settings for
-lower-is-better tests and for a 1 September or 1 April selection year.
+### 0:40 – 2:30 · Slide 3, then the live demo
 
-**2:35 – 3:00 · Close**
+Slide 3 (10 seconds), **BS:** „Zato smo napravili Late Bloomers: besplatan alat za
+trenera, u tri koraka.“ / **EN:** "So we built Late Bloomers: a free tool for the coach,
+in three steps." Click **Demo uživo →**.
 
-- Scroll to **Šta vaš klub može uraditi već u ponedjeljak**: three free changes, one line
-  each (tap one to open it).
-  Print button → one-page report a coach can pin on the wall or take to the board.
-- "It's free, works on a phone, in Bosnian, and the squad file never leaves the device.
-  No login, no tracking. Kids' names and birth dates stay with the coach."
-- "Proven on 50,000 pros, tested on 43 edge-case squads. Usable on Monday by any
-  grassroots coach."
+Demo, five moves (about 20 seconds each):
 
-## Likely jury questions
+1. **Vaša ekipa → Probajte s primjerom.** BS: „Ovo je izmišljena ekipa. 14 od 20 djece
+   rođeno je u prvoj polovini godine. Pristrasnost je već u ekipi.“ EN: "An invented
+   squad. 14 of 20 were born in the first half of the year. The bias is already inside."
+2. **Pogledajte odluku →.** BS: „Preporuka: proširite grupu za 3 mjesta. Niko ne ispada.
+   Deset izabranih ostaje, a troje dobija drugi pogled za šest mjeseci.“ EN: "The
+   recommendation: widen the group by 3 places. Nobody is cut. The ten stay, and three
+   get a second look in six months."
+3. **Line under it.** BS: „Svaki mjesec starosti ovdje vrijedi oko 2,2 boda, i kažemo
+   koliko smo sigurni: od 1,1 do 3,3.“ EN: "Each month of age is worth about 2.2 points
+   here, and we say how sure we are: 1.1 to 3.3."
+4. **Kako radi (scatter).** BS: „Svaka tačka je dijete. Ena, Benjamin i Hana imaju niže
+   ocjene, ali su najmlađi; za svoju starost su iznad linije.“ EN: "Every dot is a child.
+   Ena, Benjamin and Hana score lower, but they are the youngest; for their age they are
+   above the line."
+5. **Tap Ena → Objasni mi (AI).** BS: „Matematika je već odlučila. AI samo objašnjava
+   roditelju, običnim jezikom, i dobija samo anonimne brojeve.“ EN: "The math has already
+   decided. The AI only explains it to a parent in plain words, and receives only
+   anonymous numbers." (The answer takes up to 10 seconds: keep talking. If it does not
+   come, the app shows its own explanation.)
+
+Return to the deck (browser Back, or the **Prezentacija** link in the footer) and go to
+slide 4.
+
+### 2:30 – 3:00 · Slide 4, close
+
+**BS:** „Talenat ne smije zavisiti od mjeseca rođenja. Alat je besplatan, radi na
+telefonu, na bosanskom. Podaci o djeci ostaju na uređaju trenera. Testirali smo ga na 43
+rubna slučaja, a nezavisna provjera spremnosti za produkciju dala mu je 93 od 100.
+Skenirajte kod i probajte ga u ponedjeljak na svom treningu.“
+
+**EN:** "Talent must not depend on the month you were born. The tool is free, works on a
+phone, in Bosnian. The children's data stays on the coach's device. We tested it on 43
+edge cases, and an independent production-readiness scan gave it 93 out of 100. Scan the
+code and try it on Monday at your own training."
+
+## Q&A — 2 minutes, 15-second answers
+
+Press **B** for the backup slide ("Matematika odlučuje, AI objašnjava") when the question
+is about how it works.
+
+| Question | 15-second answer (BS) | 15-second answer (EN) |
+|---|---|---|
+| Isn't this already known? | „Jeste, 30 godina. Ali trener volonter nema alat. Mi smo ga napravili.“ | "Yes, for 30 years. But a volunteer coach has no tool. We built one." |
+| How does the adjustment work? | „Prava linija: ocjena prema starosti u mjesecima. Gledamo koliko je dijete iznad ili ispod očekivanog za svoju starost.“ | "A straight line of score on age in months. We look at how far a child is above or below what is expected for their age." |
+| How sure are you? | „Pokazujemo raspon od 95%. Ako je ekipa mala ili raspon uključuje nulu, aplikacija kaže da je to samo orijentacija.“ | "We show a 95% range. If the squad is small or the range includes zero, the app says it is only a guide." |
+| Why not just swap children? | „Jer bismo troje djece izbacili zbog statistike. Proširenje košta tri mjesta i niko ne gubi.“ | "Because we would cut three children on a statistic. Widening costs three places and nobody loses." |
+| What does the AI do? | „Samo objašnjava. Odluku donosi računica. AI dobija anonimne brojeve, nikad ime ni datum rođenja.“ | "It only explains. The math decides. The AI gets anonymous numbers, never a name or a birth date." |
+| GDPR, children's data? | „Fajl nikad ne napušta uređaj. Nema naloga, nema praćenja. AI je opcionalan i dobija samo brojeve.“ | "The file never leaves the device. No accounts, no tracking. The AI is optional and gets numbers only." |
+| How do you know it's reliable? | „190 automatskih testova i 43 namjerno nezgodne ekipe. Devet ih je otkrilo problem; svaki je popravljen i ostao kao test.“ | "190 automated tests and 43 deliberately awkward squads. Nine exposed a problem; each was fixed and kept as a test." |
+| England uses 1 September. | „Imamo postavku: 1. januar, 1. septembar ili 1. april. I bez Engleske omjer je 1,8.“ | "There is a setting: 1 January, 1 September or 1 April. Without England the ratio is still 1.8." |
+| What about sprint times? | „Postavka ‚Šta je bolji rezultat?‘: veći ili manji broj. Sve se okrene, i grafikon.“ | "The setting 'What counts as a better result?': higher or lower number. Everything flips, the chart too." |
+| What is 1.8× exactly? | „Rano rođenih je 1,8 puta više među profesionalcima do 21. To je prebrojavanje, ne šansa pojedinog djeteta.“ | "Early-born players are 1.8 times as common among under-21 pros. It is a count, not one child's odds." |
+| What's next? | „Pogled na nivou saveza, procjena biološke zrelosti i praćenje djece koja su dobila drugi pogled.“ | "A federation-level view, biological maturity, and following the children who got a second look." |
+
+## Longer answers (reference)
 
 **Isn't RAE already known?**
 Yes, that's the point. It's been in research for 30+ years and it still happens at every

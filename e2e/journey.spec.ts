@@ -335,3 +335,60 @@ test('odd data is explained to the coach, not silently used', async ({ page }) =
   await page.getByText('How we calculate this').click()
   await expect(page.locator('details.how')).toContainText('Tested on 43 edge cases')
 })
+
+test('pitch deck: four slides, backup slide, keyboard, exit', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 768 })
+  await page.goto('./')
+  await page.getByRole('contentinfo').getByRole('link', { name: 'Prezentacija' }).click()
+  await expect(page).toHaveURL(/#pitch$/)
+  // Full screen: no stepper around the slides.
+  await expect(page.getByRole('navigation', { name: 'Koraci' })).toHaveCount(0)
+
+  const current = page.locator('.pitch__slide--current')
+  const counter = page.locator('.pitch__counter')
+  await expect(current).toContainText('Isto godište. Skoro godinu dana razlike.')
+  await expect(current).toContainText('Ko bude izabran?')
+  await expect(counter).toHaveText('1 / 4')
+
+  await page.keyboard.press('ArrowRight')
+  await expect(current).toContainText('32%')
+  await expect(current).toContainText('18%')
+  await expect(current).toContainText('1,8×')
+  await expect(current).toContainText('Japan, gdje godište počinje u aprilu: 2,4×. Efekat prati datum presjeka, ne mjesec.')
+  await expect(current).toContainText('n = 5.538 · p ≈ 10⁻⁵⁰ · Izvor: Transfermarkt')
+
+  await page.keyboard.press('Space')
+  await expect(current).toContainText('Late Bloomers — besplatan alat za trenera')
+  await expect(current.getByRole('link', { name: /Demo uživo/ })).toHaveAttribute('href', '#problem')
+
+  await current.click({ position: { x: 20, y: 20 } })
+  await expect(counter).toHaveText('4 / 4')
+  await expect(current).toContainText('Talenat ne smije zavisiti od mjeseca rođenja.')
+  await expect(current).toContainText('43 rubna slučaja')
+  await expect(current).toContainText('ProdReady 93 / A')
+  await expect(current).toContainText('berbicanes.github.io/hackathon/')
+  const qr = current.getByRole('img', { name: /QR kod/ })
+  await expect(qr).toBeVisible()
+  expect(await qr.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0)
+
+  // The main sequence ends at slide 4; the backup slide is reached only on purpose.
+  await page.keyboard.press('ArrowRight')
+  await expect(counter).toHaveText('4 / 4')
+  await page.keyboard.press('b')
+  await expect(current).toContainText('Matematika odlučuje, AI objašnjava.')
+  await expect(current.locator('.scatter__dot').first()).toBeVisible()
+  await expect(counter).toHaveText('Rezerva')
+  await page.keyboard.press('b')
+  await expect(counter).toHaveText('4 / 4')
+
+  // English through the language switch, back with the arrow, slides fit the screen.
+  await page.getByRole('button', { name: 'English' }).click()
+  await expect(current).toContainText('Talent must not depend on the month you were born.')
+  await page.keyboard.press('ArrowLeft')
+  await expect(current.getByRole('link', { name: /Live demo/ })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+
+  await page.keyboard.press('Escape')
+  await expect(page).toHaveURL(/#problem$/)
+  await expect(page.getByRole('navigation', { name: 'Steps' })).toBeVisible()
+})
