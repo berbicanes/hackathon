@@ -141,6 +141,18 @@ export interface Strings {
   mondayTitle: string
   mondayIntro: string
   monday: { title: string; text: string }[]
+
+  printButton: string
+  reportTitle: string
+  reportMeta: (date: string, n: number) => string
+  reportSkew: string
+  reportSelection: (n: number) => string
+  reportIn: string
+  reportOut: string
+  reportNone: string
+  reportTalents: string
+  reportSynthetic: string
+  reportFooter: string
 }
 
 const en: Strings = {
@@ -317,6 +329,17 @@ const en: Strings = {
       text: 'Make sure every birth quarter gets starts and squad places, or run trials in half-year groups so January and December children are not compared directly.',
     },
   ],
+  printButton: 'Print squad fairness report',
+  reportTitle: 'Squad fairness report',
+  reportMeta: (date, n) => `Assessment date ${date} · ${n} players`,
+  reportSkew: 'Birth quarters in this squad',
+  reportSelection: (n) => `Top ${n} selection: what changes when age is taken into account`,
+  reportIn: 'Come in with the fair view',
+  reportOut: 'Drop out with the fair view',
+  reportNone: 'No changes.',
+  reportTalents: 'Take a second look at',
+  reportSynthetic: 'Synthetic sample data — not real children.',
+  reportFooter: 'Made with Late Bloomers. Data was processed only on this device. A prompt for a conversation, not a verdict on any child.',
 }
 
 const bs: Strings = {
@@ -496,6 +519,17 @@ const bs: Strings = {
       text: 'Osigurajte da svaki kvartal rođenja dobije minute i mjesta u ekipi, ili organizujte probe u polugodišnjim grupama da se djeca iz januara i decembra ne porede direktno.',
     },
   ],
+  printButton: 'Odštampaj izvještaj o pravednosti',
+  reportTitle: 'Izvještaj o pravednosti selekcije',
+  reportMeta: (date, n) => `Datum testiranja ${date} · ${n} ${bsPlural(n, 'igrač', 'igrača', 'igrača')}`,
+  reportSkew: 'Kvartali rođenja u ovoj ekipi',
+  reportSelection: (n) => `Izbor najboljih ${n}: šta se mijenja kad se uzme u obzir starost`,
+  reportIn: 'Ulaze u poštenom prikazu',
+  reportOut: 'Izlaze u poštenom prikazu',
+  reportNone: 'Nema promjena.',
+  reportTalents: 'Pogledajte još jednom',
+  reportSynthetic: 'Sintetički primjer — nisu stvarna djeca.',
+  reportFooter: 'Napravljeno pomoću Late Bloomers. Podaci su obrađeni samo na ovom uređaju. Poziv na razgovor, a ne presuda o djetetu.',
 }
 
 export const strings: Record<Lang, Strings> = { bs, en }

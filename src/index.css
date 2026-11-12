@@ -790,3 +790,65 @@ tbody th {
   display: grid;
   place-items: center;
 }
+
+/* Printable squad fairness report */
+.print-report {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  :root,
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .player-card,
+  .stack > :not(.print-report) {
+    display: none !important;
+  }
+
+  .print-report {
+    display: block;
+    color: #000;
+  }
+
+  .print-report h1 {
+    font-size: 20pt;
+    margin-bottom: 2mm;
+  }
+
+  .print-report h2 {
+    font-size: 13pt;
+    margin: 6mm 0 2mm;
+  }
+
+  .print-report td {
+    border: 1px solid #999;
+    padding: 2mm 3mm;
+  }
+
+  .print-report li + li {
+    margin-top: 1.5mm;
+  }
+
+  .print-report__warn {
+    border: 2px dashed #000;
+    padding: 2mm 3mm;
+    font-weight: 700;
+  }
+
+  .print-report__foot {
+    margin-top: 8mm;
+    font-size: 9pt;
+    color: #333;
+  }
+}

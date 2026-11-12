@@ -6,6 +6,7 @@ import { analyseSquad, compareSelections, hiddenTalents, type AnalysedPlayer, ty
 import { BarChart } from './BarChart'
 import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
+import { PrintReport } from './PrintReport'
 
 type View = 'raw' | 'fair'
 
@@ -178,7 +179,17 @@ export function YourSquad({ t }: { t: Strings }) {
       )}
 
       {analysis && (
-        <SquadResults t={t} analysis={analysis} topN={topN} setTopN={setTopN} view={view} setView={setView} onDownload={onDownloadResults} />
+        <SquadResults
+          t={t}
+          analysis={analysis}
+          reference={reference}
+          synthetic={loaded?.synthetic ?? false}
+          topN={topN}
+          setTopN={setTopN}
+          view={view}
+          setView={setView}
+          onDownload={onDownloadResults}
+        />
       )}
 
       <MondayPanel t={t} />
@@ -194,9 +205,11 @@ interface ResultsProps {
   view: View
   setView: (v: View) => void
   onDownload: () => void
+  reference: Date
+  synthetic: boolean
 }
 
-function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }: ResultsProps) {
+function SquadResults({ t, analysis, reference, synthetic, topN, setTopN, view, setView, onDownload }: ResultsProps) {
   const { players, quarterCounts, fit, meanAgeMonths } = analysis
   const n = players.length
   const diff = compareSelections(players, topN)
@@ -340,11 +353,27 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
             </table>
           </div>
           <p className="help">{t.fairExplain}</p>
-          <button type="button" className="button button--ghost" onClick={onDownload}>
-            {t.downloadResults}
-          </button>
+          <div className="actions">
+            <button type="button" className="button button--ghost" onClick={onDownload}>
+              {t.downloadResults}
+            </button>
+            <button type="button" className="button button--ghost" onClick={() => window.print()}>
+              {t.printButton}
+            </button>
+          </div>
         </section>
       )}
+
+      <PrintReport
+        t={t}
+        reference={reference}
+        players={players}
+        quarterCounts={quarterCounts}
+        diff={diff}
+        talents={talents}
+        slope={fit.slope}
+        synthetic={synthetic}
+      />
 
       <PlayerCard
         t={t}
