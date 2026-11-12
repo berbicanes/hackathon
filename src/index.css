@@ -1265,3 +1265,49 @@ tbody th {
 .stats--muted dd {
   font-family: inherit;
 }
+
+/* Step 2: upload */
+.dropzone {
+  border: 2px dashed var(--line);
+  border-radius: 16px;
+  padding: 24px 16px;
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  background: var(--bg);
+}
+
+.dropzone--over {
+  border-color: var(--early);
+  background: var(--early-soft);
+}
+
+.dropzone__title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.dropzone .help {
+  margin: 0;
+  max-width: 56ch;
+}
+
+.dropzone .link-button {
+  min-height: 44px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.or-sample {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 24px;
+  color: var(--muted);
+}

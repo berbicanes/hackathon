@@ -32,7 +32,7 @@ to ~125%. Have a second tab with the squad tab and sample already loaded as back
 
 **1:00 – 2:10 · Your squad (for the coach)**
 
-- Click **Provjerite svoju ekipu** → **Učitaj sintetički primjer**. Point at the orange
+- Click **Provjerite svoju ekipu** → **Probajte s primjerom**. Point at the orange
   banner: synthetic, invented kids.
 - "**14 of 20** born in the first half of the year. That's the bias, inside one squad."
 - "In this squad every month of age is worth about **2.2 points** on the test. That's not

@@ -1,4 +1,4 @@
-import { useId, type ChangeEvent } from 'react'
+import { useId, useState, type ChangeEvent } from 'react'
 import type { Strings } from '../i18n'
 import { CSV_TEMPLATE, MAX_ROWS } from '../lib/csv'
 import type { LoadError, SquadState } from '../useSquad'
@@ -27,6 +27,7 @@ interface Props {
 /** Step 2: load a squad (own CSV or the synthetic sample) and see its birth-month skew. */
 export function SquadStep({ t, squad, onNext }: Props) {
   const fileId = useId()
+  const [dragging, setDragging] = useState(false)
   const { analysis, synthetic, issues, truncated, error } = squad
 
   const onFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,19 +48,36 @@ export function SquadStep({ t, squad, onNext }: Props) {
         <p className="privacy" role="note">
           <span aria-hidden="true">🔒</span> {t.privacy}
         </p>
-        <div className="actions">
-          <input id={fileId} className="sr-only" type="file" accept=".csv,text/csv" onChange={onFile} />
+        <input id={fileId} className="sr-only" type="file" accept=".csv,text/csv" onChange={onFile} />
+        <div
+          className={`dropzone${dragging ? ' dropzone--over' : ''}`}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setDragging(true)
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault()
+            setDragging(false)
+            const file = e.dataTransfer.files?.[0]
+            if (file) void squad.loadFile(file)
+          }}
+        >
+          <p className="dropzone__title">{t.dropTitle}</p>
           <label htmlFor={fileId} className="button button--primary">
             {t.upload}
           </label>
-          <button type="button" className="button" onClick={squad.loadSample}>
-            {t.loadSample}
-          </button>
-          <button type="button" className="button button--ghost" onClick={() => downloadText('late-bloomers-template.csv', CSV_TEMPLATE)}>
+          <p className="help">{t.csvHelp}</p>
+          <button type="button" className="link-button" onClick={() => downloadText('late-bloomers-template.csv', CSV_TEMPLATE)}>
             {t.downloadTemplate}
           </button>
         </div>
-        <p className="help">{t.csvHelp}</p>
+        <div className="or-sample">
+          <span>{t.orSample}</span>
+          <button type="button" className="button" onClick={squad.loadSample}>
+            {t.loadSample}
+          </button>
+        </div>
         <DateField
           id="ref-date"
           label={t.assessmentDate}
@@ -69,6 +87,7 @@ export function SquadStep({ t, squad, onNext }: Props) {
           hint={t.dateHint}
           invalidMessage={t.dateInvalid}
         />
+        <p className="help">{t.dateExplain}</p>
         {error && (
           <p role="alert" className="alert">
             {errorText(t, error)}

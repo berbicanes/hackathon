@@ -153,9 +153,12 @@ export const en: Strings = {
   squadTitle: 'Your squad, seen fairly',
   squadIntro:
     'Upload your squad’s assessment scores. Late Bloomers separates what is ability from what is simply being older, so you can take a second look before you cut a child.',
-  upload: 'Upload squad CSV',
-  loadSample: 'Load synthetic sample',
-  downloadTemplate: 'Download CSV template',
+  upload: 'Choose a CSV file',
+  loadSample: 'Try with the sample',
+  dropTitle: 'Drop your squad file here',
+  orSample: 'No file at hand?',
+  dateExplain: 'We calculate each child’s age on the assessment date.',
+  downloadTemplate: 'Download a CSV template',
   csvHelp: 'Columns: name, birth_date (2014-03-21 or 21.03.2014), score (any test or rating where higher is better).',
   syntheticBanner:
     'SYNTHETIC SAMPLE — invented children and scores, for demonstration only. Upload your own CSV to analyse a real squad.',

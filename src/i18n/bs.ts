@@ -153,9 +153,12 @@ export const bs: Strings = {
   squadTitle: 'Vaša ekipa, pošteno gledano',
   squadIntro:
     'Učitajte ocjene sa testiranja svoje ekipe. Late Bloomers razdvaja ono što je sposobnost od onoga što je samo veća starost, kako biste još jednom pogledali prije nego što odbijete dijete.',
-  upload: 'Učitaj CSV ekipe',
-  loadSample: 'Učitaj sintetički primjer',
-  downloadTemplate: 'Preuzmi CSV šablon',
+  upload: 'Izaberite CSV fajl',
+  loadSample: 'Probajte s primjerom',
+  dropTitle: 'Prevucite fajl svoje ekipe ovdje',
+  orSample: 'Nemate fajl pri ruci?',
+  dateExplain: 'Starost računamo na dan testiranja.',
+  downloadTemplate: 'Preuzmite CSV šablon',
   csvHelp: 'Kolone: name (ime), birth_date (2014-03-21 ili 21.03.2014), score (bilo koji test ili ocjena gdje je više bolje).',
   syntheticBanner:
     'SINTETIČKI PRIMJER — izmišljena djeca i ocjene, samo za demonstraciju. Učitajte svoj CSV da analizirate stvarnu ekipu.',

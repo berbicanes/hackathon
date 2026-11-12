@@ -54,7 +54,7 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page).toHaveURL(/#squad$/)
 
   // Step 2: the synthetic sample.
-  await page.getByRole('button', { name: 'Load synthetic sample' }).click()
+  await page.getByRole('button', { name: 'Try with the sample' }).click()
   await expect(page.locator('.synthetic')).toContainText('SYNTHETIC SAMPLE')
   await expect(page.getByText('14 of 20 players were born in the first half of the year.')).toBeVisible()
 

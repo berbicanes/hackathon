@@ -112,6 +112,9 @@ export interface Strings {
   squadIntro: string
   upload: string
   loadSample: string
+  dropTitle: string
+  orSample: string
+  dateExplain: string
   downloadTemplate: string
   csvHelp: string
   syntheticBanner: string
