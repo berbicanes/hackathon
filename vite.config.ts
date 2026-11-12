@@ -11,7 +11,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       // The pure logic is unit tested; screens are covered by the e2e journey in e2e/.
-      include: ['src/lib/**', 'src/i18n/**'],
+      include: ['src/lib/**', 'src/i18n/**', 'worker/src/schema.ts', 'worker/src/prompt.ts'],
       exclude: ['src/**/*.test.ts'],
       reporter: ['text-summary'],
       // Floor just under the current level, so coverage cannot silently decay.
