@@ -17,6 +17,12 @@ Late Bloomers does two things:
    scores and see which children are being judged on age rather than ability, before you
    cut anyone.
 
+For each child there is a plain-language **player card** ("6 months younger than the
+squad average, top 32% for their age: take a second look, reassess in 6 months"), a
+**"What your club can do on Monday"** panel with three no-cost actions, and a
+**printable one-page squad fairness report**. The app is in **Bosnian** (default) and
+**English**.
+
 Everything runs in the browser. **Uploaded squad data never leaves the device**: no
 backend, no database, no accounts, no analytics.
 
@@ -64,6 +70,10 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
 - **Selection**: top N by raw score vs top N by fair score; the app highlights exactly
   which children come in and which drop out.
 - **Hidden talents**: the biggest rank gains once age is accounted for.
+- **Player card** (`src/lib/playerCard.ts`): months younger/older than the squad
+  average, standing for their age, raw vs fair rank, and one of four next steps: *take a
+  second look*, *keep*, *look past size and speed*, *keep developing*. No negative
+  labels, by design.
 - **Synthetic sample**: 20 invented players with an early-skewed intake and a maturity
   bonus of 1.8 points per month of age. It is clearly labelled in the UI.
 
@@ -113,6 +123,17 @@ Player B,2014-11-03,64
 - `score` is any assessment where higher is better; decimal commas are accepted.
 - Files are limited to 200 KB and 300 players. Invalid rows are skipped and listed.
 
+## Project layout
+
+```
+scripts/analyze.py        RAE analysis (standard library only)
+public/data/rae.json      analysis output used by the Bias mirror
+src/lib/                  pure logic + unit tests (squad, csv, playerCard, format)
+src/components/           screens and UI pieces
+src/i18n.ts               Bosnian and English strings
+PITCH.md                  3-minute demo script and jury Q&A
+```
+
 ## Deploy
 
 Every push to `main` runs `.github/workflows/deploy.yml`: lint → test → build → deploy to
@@ -124,5 +145,7 @@ served under `/hackathon/` (see `vite.config.ts`).
 - No server, no cookies, no tracking. Squad files are read with the browser File API and
   analysed in memory.
 - A strict Content-Security-Policy allows scripts only from the site itself.
+- An error boundary shows a reload message instead of a blank page; errors stay in the
+  browser console.
 - Uploaded files are size- and row-limited and parsed defensively; exported CSV cells are
   protected against spreadsheet formula injection.
