@@ -253,3 +253,68 @@ for (const width of [390, 1366]) {
     }
   })
 }
+
+test('AI explanation (mocked proxy): marked as AI, and only anonymous numbers are sent', async ({ page }) => {
+  const sent: Record<string, any>[] = []
+  await page.route(`${AI_ORIGIN}/**`, async (route) => {
+    const request = route.request()
+    if (request.method() === 'OPTIONS') {
+      await route.fulfill({
+        status: 204,
+        headers: { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type' },
+      })
+      return
+    }
+    const body = JSON.parse(request.postData() ?? '{}')
+    sent.push(body)
+    // Slow enough for the loading state to be seen.
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: { 'access-control-allow-origin': '*' },
+      body: JSON.stringify({ text: `Mocked explanation for a ${body.kind} request.`, model: 'mock' }),
+    })
+  })
+
+  await page.goto('./#squad')
+  await page.getByRole('button', { name: 'English' }).click()
+  await page.getByRole('button', { name: 'Try with the sample' }).click()
+  await page.getByRole('button', { name: /See the decision/ }).click()
+
+  // Nothing is sent before the coach asks.
+  expect(sent).toEqual([])
+
+  // Recommendation card: loading state, then AI text that is visibly marked as AI.
+  const ai = page.locator('.recommend .ai')
+  await ai.getByRole('button', { name: /Explain \(AI\)/ }).click()
+  await expect(ai.getByRole('status')).toHaveText('The AI is writing an explanation…')
+  await expect(ai.locator('.ai__result--ai')).toContainText('Mocked explanation for a squad request.')
+  await expect(ai.locator('.ai__badge')).toHaveText(/AI-generated/)
+  await expect(ai).toContainText('The calculation makes the decision, not the AI.')
+  // The recommendation itself did not change.
+  await expect(page.locator('#recommend-title')).toHaveText('Widen the group by 3 places: 3 late-born talents')
+
+  // Player card for the first second-look child.
+  await page.locator('.recommend .second-list').getByRole('button', { name: /Ena/ }).click()
+  const cardAi = page.locator('.player-card .ai')
+  await cardAi.getByRole('button', { name: /Explain \(AI\)/ }).click()
+  await expect(cardAi.locator('.ai__result--ai')).toContainText('Mocked explanation for a child request.')
+  await expect(page.locator('.advice__title')).toHaveText('Take a second look')
+
+  // What left the browser: two requests, numbers and fixed codes only.
+  expect(sent.map((b) => b.kind)).toEqual(['squad', 'child'])
+  expect(sent[1].child).toMatchObject({ rawRank: 16, adjustedRank: 7, lateBorn: true, secondLook: true, borderline: false })
+  expect(sent[1].language).toBe('en')
+  const names = ['Ena', 'Benjamin', 'Hana', 'Asja', 'Adnan', 'Lana', 'Emina', 'Haris', 'Tarik', 'Dino', 'Amar']
+  for (const body of sent) {
+    const text = JSON.stringify(body)
+    for (const name of names) expect(text).not.toContain(name)
+    expect(text).not.toMatch(/\d{4}-\d{2}-\d{2}|\d{1,2}\.\d{1,2}\.\d{4}/)
+    expect(text).not.toMatch(/name|birth|date/i)
+    // The only text values anywhere in the payload are the two fixed codes.
+    const stringValues = (value: unknown): string[] =>
+      typeof value === 'string' ? [value] : typeof value === 'object' && value !== null ? Object.values(value).flatMap(stringValues) : []
+    expect(stringValues(body).sort()).toEqual([body.kind, body.language].sort())
+  }
+})
