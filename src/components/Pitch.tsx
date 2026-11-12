@@ -5,6 +5,7 @@ import { EDGE_CASES_TESTED } from '../lib/edgeCaseCount'
 import { sampleSquad, SAMPLE_REFERENCE_DATE } from '../lib/sample'
 import { analyseSquad, quarterLabels, recommendGroup } from '../lib/squad'
 import { ScatterPlot } from './ScatterPlot'
+import { useYouthData } from '../useYouthData'
 
 interface PitchData {
   under_21: { n: number; quarter_share: number[]; q1_q4_ratio: number; chi_square_quarters: { p_value: number } }
@@ -30,6 +31,7 @@ interface Props {
 export function Pitch({ t, lang, setLang, onExit }: Props) {
   const [slide, setSlide] = useState(0)
   const [data, setData] = useState<PitchData | null>(null)
+  const youth = useYouthData()
 
   useEffect(() => {
     const controller = new AbortController()
@@ -125,6 +127,11 @@ export function Pitch({ t, lang, setLang, onExit }: Props) {
             </div>
           </div>
           <p className="pitch__line">{t.pitch.problemJapan(japan ? t.num(japan.ratio, 1) : '…')}</p>
+          {youth && (
+            <p className="pitch__line pitch__line--second">
+              {t.pitch.youthLine(t.num(youth.boys.q1_q4_ratio, 1), youth.girls.significant_at_05 ? t.num(youth.girls.q1_q4_ratio, 1) : null)}
+            </p>
+          )}
           <p className="pitch__source">
             {u21 && pExponent !== null ? t.pitch.problemSource(t.num(u21.n), `10${superscript(pExponent)}`) : ''}
           </p>

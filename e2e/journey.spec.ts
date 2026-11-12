@@ -43,6 +43,12 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(underdog.getByRole('row', { name: /26-29/ })).toContainText('No, does not hold')
   await expect(page.locator('.hero__sub')).toContainText('1.8× as common as late-born players (October–December) among under-21 pros')
   await expect(page.locator('.also')).toContainText('Japan')
+  // Real youth evidence, aggregate only.
+  const youth = page.locator('section.youth')
+  await expect(youth).toContainText('Not only professionals: the 2025 U-17 World Cups')
+  await expect(youth).toContainText('n = 987 · 2.8× · p = 6.7 × 10⁻³⁷')
+  await expect(youth).toContainText('n = 504 · 1.4× · p = 0.026')
+  await expect(youth.getByRole('link', { name: 'Boys' })).toHaveAttribute('href', /wikipedia\.org\/wiki\/2025_FIFA_U-17_World_Cup_squads/)
 
   // Cut-off robustness check is shown with England measured from 1 September.
   const cutoff = page.locator('section[aria-labelledby="cutoff-title"]')
@@ -356,6 +362,7 @@ test('pitch deck: four slides, backup slide, keyboard, exit', async ({ page }) =
   await expect(current).toContainText('1,8×')
   await expect(current).toContainText('Japan, gdje godište počinje u aprilu: 2,4×. Efekat prati datum presjeka, ne mjesec.')
   await expect(current).toContainText('n = 5.538 · p ≈ 10⁻⁵⁰ · Izvor: Transfermarkt')
+  await expect(current).toContainText('SP U-17 2025: dječaci 2,8×, djevojčice 1,4× (slabije).')
 
   await page.keyboard.press('Space')
   await expect(current).toContainText('Late Bloomers — besplatan alat za trenera')

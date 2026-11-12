@@ -99,6 +99,14 @@ describe('step and decision wording', () => {
     expect(strings.bs.cutoffHelp).toBe('Kod nas je to obično 1. januar.')
     expect(strings.en.cutoffHelp).toBe('In most countries it is 1 January.')
   })
+  it('reports the youth evidence honestly, including a non-significant result', () => {
+    expect(strings.bs.youthSentence('2,8', '1,4', true)).toContain('slabiji (1,4×) i tek na granici statističke značajnosti')
+    expect(strings.bs.youthSentence('2,8', '1,1', false)).toContain('nije statistički značajan')
+    expect(strings.en.youthSentence('2.8', '1.1', false)).toContain('not statistically significant')
+    expect(strings.bs.pitch.youthLine('2,8', null)).toBe('SP U-17 2025: dječaci 2,8×.')
+    expect(strings.bs.pitch.youthLine('2,8', '1,4')).toBe('SP U-17 2025: dječaci 2,8×, djevojčice 1,4× (slabije).')
+    expect(strings.en.youthBarLabel('Boys', ['41%', '27%', '17%', '15%'])).toContain('41% born January–March')
+  })
   it('describes the scatter plot in words for screen readers', () => {
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')

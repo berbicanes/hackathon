@@ -41,6 +41,8 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
 | Active under-21 professionals born Jan–Mar | **32.3%** (expected 24.7% by days), Oct–Dec only **18.4%** (n = 5,538, χ² = 234.9, p ≈ 1 × 10⁻⁵⁰) |
 | Q1 vs Q4 among under-21 pros | Q1-born players are **1.8×** as common as Q4-born among under-21 pros (day-adjusted ratio 1.79) |
 | All 50,100 players | Q1 32.5% vs Q4 18.2%, χ² = 2,374, p < 10⁻³⁰⁰ |
+| **Real youth football: 2025 FIFA U-17 World Cup squads, boys** | Q1 40.7% vs Q4 14.7%, ratio **2.83×** (n = 987, χ² = 171.3, p ≈ 7 × 10⁻³⁷) |
+| 2025 FIFA U-17 Women's World Cup squads, girls | Q1 29.8% vs Q4 21.2%, ratio 1.43× (n = 504, χ² = 9.3, **p = 0.026**: weaker, and it does not survive a correction for testing two groups, 0.025) |
 | Under-21, **excluding England** (1 Sept cut-off) | Q1 32.3% vs Q4 18.1%, ratio **1.81×** (n = 5,363, χ² = 233.8, p ≈ 2 × 10⁻⁵⁰): the headline holds |
 | Under-21, excluding England, Wales and Japan | Q1 32.8% vs Q4 18.1%, ratio 1.84× (n = 5,213, p ≈ 1 × 10⁻⁵²) |
 | **England under-21, 1 Sept cut-off** | Sep–Nov 28.6% vs Jun–Aug 18.9%, ratio 1.53×, but n = 175 and **p = 0.065: not significant on its own** |
@@ -66,6 +68,11 @@ is 0.05 ÷ 3 = 0.017. Only the 22–25 result passes it.
   flat 25% / 8.33%.
 - **Chi-square goodness-of-fit** tests for quarters (df 3) and months (df 11), for all
   players, active players (last season ≥ 2024) and active under-21s.
+- **Youth evidence** (`scripts/youth.py` → `public/data/youth.json`): the public Wikipedia
+  squad lists of the 2025 FIFA U-17 World Cup and U-17 Women's World Cup, both with a
+  1 January eligibility cut-off. The script keeps only birth months; no names and no
+  individual birth dates are stored or shown (the players are minors). Same day-weighted
+  expectation and chi-square test as above, boys and girls separately.
 - **Cut-off robustness**: England and Wales select by school year (1 September) and
   Japan by 2 April (approximated as 1 April, since the analysis works on whole months),
   so calendar quarters are the wrong ruler for them. The script re-runs the under-21 test
@@ -147,6 +154,9 @@ is 0.05 ÷ 3 = 0.017. Only the 22–25 result passes it.
   players it is not statistically significant (p = 0.065). The skew is clear only across
   all 1,762 English players in the data (2.10×, p ≈ 8 × 10⁻²⁹), which includes older and
   retired players. Wales has too few under-21 players (13) to test.
+- The U-17 World Cup squads are national-team selections, the far end of youth selection,
+  not a grassroots club: the boys' effect there (2.8×) is stronger than among under-21
+  professionals, and the girls' effect (1.4×, p = 0.026) is weak evidence on its own.
 - Market value is an imperfect proxy for ability; the underdog effect is small, and only
   the 22–25 band survives correction for testing three age bands.
 - The squad adjustment is a linear trend estimated from the squad itself. With fewer than

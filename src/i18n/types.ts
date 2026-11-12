@@ -49,6 +49,8 @@ export interface Strings {
     problemRatio: string
     problemJapan: (ratio: string) => string
     problemSource: (n: string, p: string) => string
+    /** girlsRatio is null when the girls' result is not statistically significant. */
+    youthLine: (boysRatio: string, girlsRatio: string | null) => string
     solutionKicker: string
     solutionTitle: string
     solutionSteps: [string, string, string]
@@ -80,6 +82,13 @@ export interface Strings {
   problemTitle: string
   problemLead: string
   japanLine: (ratio: string) => string
+  youthTitle: string
+  youthSentence: (boysRatio: string, girlsRatio: string, girlsSignificant: boolean) => string
+  youthBoys: string
+  youthGirls: string
+  youthStats: (n: string, ratio: string, p: string) => string
+  youthBarLabel: (group: string, shares: string[]) => string
+  youthSource: string
   biasSub: (expected: string, q4: string, ratio: string) => string
   chartTitle: string
   expectedLine: string

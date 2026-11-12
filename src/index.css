@@ -2639,3 +2639,74 @@ td small {
   font-size: 1.4em;
   padding: 0.5em 1.3em;
 }
+
+/* ---------- Youth evidence card ---------- */
+.youth__row {
+  margin: 16px 0;
+}
+
+.youth__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-bottom: 4px;
+}
+
+.youth__stats {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.youth__bar {
+  display: flex;
+  height: 44px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.youth__seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid var(--card);
+}
+
+.youth__seg:last-child {
+  border-right: 0;
+}
+
+.youth__seg--early {
+  background: var(--early);
+}
+
+.youth__seg--late {
+  background: var(--late);
+}
+
+.youth__seg--neutral {
+  background: #6b7280;
+}
+
+@media (max-width: 560px) {
+  .youth__seg-label {
+    display: none;
+  }
+}
+
+.pitch__line--second {
+  font-size: 1.3em;
+  margin: 0;
+  color: var(--muted);
+}
+
+.pitch__slide:nth-of-type(2) {
+  gap: 0.7em;
+}

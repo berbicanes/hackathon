@@ -51,6 +51,7 @@ export const bs: Strings = {
     problemRatio: 'brojniji: rano rođeni naspram kasno rođenih',
     problemJapan: (ratio) => `Japan, gdje godište počinje u aprilu: ${ratio}×. Efekat prati datum presjeka, ne mjesec.`,
     problemSource: (n, p) => `n = ${n} · p ≈ ${p} · Izvor: Transfermarkt (otvoreni podaci)`,
+    youthLine: (boys, girls) => `SP U-17 2025: dječaci ${boys}×${girls ? `, djevojčice ${girls}× (slabije)` : ''}.`,
     solutionKicker: 'Rješenje',
     solutionTitle: 'Late Bloomers — besplatan alat za trenera',
     solutionSteps: ['Vidite pristrasnost na stvarnim podacima', 'Učitajte rezultate testiranja', 'Proširite grupu, ne izbacujte'],
@@ -113,6 +114,14 @@ export const bs: Strings = {
   problemLead: 'Ne zato što su talentovanija, nego zato što su na dan testiranja nekoliko mjeseci starija.',
   japanLine: (ratio) =>
     `Isto vrijedi i u Japanu, gdje generacija počinje 1. aprila: tamo su rano rođeni (april–juni) ${ratio}× brojniji od kasno rođenih.`,
+  youthTitle: 'Ne samo profesionalci: SP U-17 2025',
+  youthSentence: (boys, girls, girlsSignificant) =>
+    `Među dječacima izabranim za Svjetsko prvenstvo U-17 2025. rano rođenih (januar–mart) je ${boys}× više nego kasno rođenih. Kod djevojčica je efekat ${girlsSignificant ? `slabiji (${girls}×) i tek na granici statističke značajnosti` : `manji (${girls}×) i nije statistički značajan`}.`,
+  youthBoys: 'Dječaci',
+  youthGirls: 'Djevojčice',
+  youthStats: (n, ratio, p) => `n = ${n} · ${ratio}× · p = ${p}`,
+  youthBarLabel: (group, shares) => `${group}: ${shares[0]} rođeno januar–mart, ${shares[1]} april–juni, ${shares[2]} juli–septembar, ${shares[3]} oktobar–decembar`,
+  youthSource: 'Izvor: spiskovi ekipa na Wikipediji (samo zbirni brojevi, bez imena).',
   biasSub: (expected, q4, ratio) =>
     `Po kalendaru bi ih trebalo biti oko ${expected}. Od oktobra do decembra rođeno je samo ${q4}. Među profesionalcima mlađim od 21 godine rano rođeni (januar–mart) su ${ratio}× brojniji od kasno rođenih (oktobar–decembar).`,
   chartTitle: 'Kada su igrači rođeni',

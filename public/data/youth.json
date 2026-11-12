@@ -1,0 +1,92 @@
+{
+ "title": "2025 FIFA U-17 World Cup and U-17 Women's World Cup squads",
+ "privacy": "Aggregate counts only. No names and no individual birth dates are stored.",
+ "definitions": {
+  "quarters": "Q1 = Jan-Mar, Q4 = Oct-Dec (both tournaments use a 1 January eligibility cut-off)",
+  "expected": "share of days in the period (Feb = 28.25 days)",
+  "ratio": "(observed / expected share for Q1) / (same for Q4)"
+ },
+ "retrieved": "2026-11-12",
+ "boys": {
+  "n": 987,
+  "months": [
+   157,
+   120,
+   125,
+   94,
+   92,
+   82,
+   73,
+   53,
+   46,
+   48,
+   50,
+   47
+  ],
+  "quarters": [
+   402,
+   268,
+   172,
+   145
+  ],
+  "quarter_share": [
+   0.4073,
+   0.2715,
+   0.1743,
+   0.1469
+  ],
+  "expected_quarter_share": [
+   0.2471,
+   0.2491,
+   0.2519,
+   0.2519
+  ],
+  "q1_q4_ratio": 2.826,
+  "chi2": 171.29,
+  "p_value": 6.702276480149753e-37,
+  "significant_at_05": true,
+  "january_cutoff": true,
+  "source": "https://en.wikipedia.org/wiki/2025_FIFA_U-17_World_Cup_squads"
+ },
+ "girls": {
+  "n": 504,
+  "months": [
+   56,
+   42,
+   52,
+   44,
+   51,
+   35,
+   59,
+   23,
+   35,
+   39,
+   34,
+   34
+  ],
+  "quarters": [
+   150,
+   130,
+   117,
+   107
+  ],
+  "quarter_share": [
+   0.2976,
+   0.2579,
+   0.2321,
+   0.2123
+  ],
+  "expected_quarter_share": [
+   0.2471,
+   0.2491,
+   0.2519,
+   0.2519
+  ],
+  "q1_q4_ratio": 1.429,
+  "chi2": 9.28,
+  "p_value": 0.025810012686200385,
+  "significant_at_05": true,
+  "january_cutoff": true,
+  "source": "https://en.wikipedia.org/wiki/2025_FIFA_U-17_Women%27s_World_Cup_squads"
+ }
+}

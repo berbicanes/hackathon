@@ -51,6 +51,7 @@ export const en: Strings = {
     problemRatio: 'as common: early-born vs late-born',
     problemJapan: (ratio) => `Japan, where the age group starts in April: ${ratio}×. The effect follows the cut-off date, not the month.`,
     problemSource: (n, p) => `n = ${n} · p ≈ ${p} · Source: Transfermarkt (open data)`,
+    youthLine: (boys, girls) => `2025 U-17 World Cups: boys ${boys}×${girls ? `, girls ${girls}× (weaker)` : ''}.`,
     solutionKicker: 'The solution',
     solutionTitle: 'Late Bloomers — a free tool for the coach',
     solutionSteps: ['See the bias in real data', 'Load your test results', 'Widen the group, cut nobody'],
@@ -113,6 +114,14 @@ export const en: Strings = {
   problemLead: 'Not because they are more talented. Because they are a few months older on the day of the trial.',
   japanLine: (ratio) =>
     `The same holds in Japan, where the age group starts on 1 April: there the early-born (April–June) are ${ratio}× as common as the late-born.`,
+  youthTitle: 'Not only professionals: the 2025 U-17 World Cups',
+  youthSentence: (boys, girls, girlsSignificant) =>
+    `Among the boys picked for the 2025 U-17 World Cup, the early-born (January–March) are ${boys}× as common as the late-born. Among the girls the effect is ${girlsSignificant ? `weaker (${girls}×) and only just statistically significant` : `smaller (${girls}×) and not statistically significant`}.`,
+  youthBoys: 'Boys',
+  youthGirls: 'Girls',
+  youthStats: (n, ratio, p) => `n = ${n} · ${ratio}× · p = ${p}`,
+  youthBarLabel: (group, shares) => `${group}: ${shares[0]} born January–March, ${shares[1]} April–June, ${shares[2]} July–September, ${shares[3]} October–December`,
+  youthSource: 'Source: Wikipedia squad lists (counts only, no names).',
   biasSub: (expected, q4, ratio) =>
     `By the calendar it should be about ${expected}. Only ${q4} were born October–December. Early-born players (January–March) are ${ratio}× as common as late-born players (October–December) among under-21 pros.`,
   chartTitle: 'When the players were born',

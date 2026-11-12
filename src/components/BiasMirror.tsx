@@ -3,6 +3,7 @@ import type { CutoffRowId, Strings } from '../i18n'
 import { formatP } from '../lib/format'
 import { BarChart, type Bar } from './BarChart'
 import { StepHeading } from './StepHeading'
+import { YouthCard } from './YouthCard'
 
 interface ChiSquare {
   chi2: number
@@ -169,6 +170,8 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
           </div>
         </dl>
       </section>
+
+      <YouthCard t={t} />
 
       <details className="card analysts">
         <summary>

@@ -30,12 +30,14 @@ just can't see it."
 
 **BS:** „Među profesionalcima mlađim od 21 godine, 32% je rođeno od januara do marta, a
 samo 18% od oktobra do decembra. Rano rođenih je 1,8 puta više. To nije slučajnost:
-5.538 igrača, javni podaci Transfermarkta. A u Japanu, gdje godište počinje u aprilu,
+5.538 igrača, javni podaci Transfermarkta. I ne samo kod profesionalaca: na Svjetskom
+prvenstvu U-17 2025. rano rođenih dječaka je 2,8 puta više. A u Japanu, gdje godište počinje u aprilu,
 prednost imaju rođeni u aprilu: 2,4 puta. Efekat prati datum presjeka, ne mjesec.“
 
 **EN:** "Among professionals under 21, 32% were born January to March and only 18%
 October to December. Early-born players are 1.8 times as common. This is not chance:
-5,538 players, public Transfermarkt data. And in Japan, where the age group starts in
+5,538 players, public Transfermarkt data. And not only among professionals: at the 2025
+U-17 World Cup, early-born boys are 2.8 times as common. And in Japan, where the age group starts in
 April, it is the April-born who lead: 2.4 times. The effect follows the cut-off date, not
 the month."
 
@@ -98,6 +100,7 @@ is about how it works.
 | How do you know it's reliable? | „190 automatskih testova i 43 namjerno nezgodne ekipe. Devet ih je otkrilo problem; svaki je popravljen i ostao kao test.“ | "190 automated tests and 43 deliberately awkward squads. Nine exposed a problem; each was fixed and kept as a test." |
 | England uses 1 September. | „Imamo postavku: 1. januar, 1. septembar ili 1. april. I bez Engleske omjer je 1,8.“ | "There is a setting: 1 January, 1 September or 1 April. Without England the ratio is still 1.8." |
 | What about sprint times? | „Postavka ‚Šta je bolji rezultat?‘: veći ili manji broj. Sve se okrene, i grafikon.“ | "The setting 'What counts as a better result?': higher or lower number. Everything flips, the chart too." |
+| Does this happen in youth football, not just pros? | „Da. Na SP U-17 2025: kod dječaka 2,8 puta više rano rođenih (987 igrača). Kod djevojčica slabije, 1,4 puta, na granici značajnosti.“ | "Yes. At the 2025 U-17 World Cups: 2.8 times among boys (987 players). Among girls it is weaker, 1.4 times, and only borderline significant." |
 | What is 1.8× exactly? | „Rano rođenih je 1,8 puta više među profesionalcima do 21. To je prebrojavanje, ne šansa pojedinog djeteta.“ | "Early-born players are 1.8 times as common among under-21 pros. It is a count, not one child's odds." |
 | What's next? | „Pogled na nivou saveza, procjena biološke zrelosti i praćenje djece koja su dobila drugi pogled.“ | "A federation-level view, biological maturity, and following the children who got a second look." |
 
