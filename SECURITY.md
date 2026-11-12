@@ -22,5 +22,5 @@ private channel; do not post personal data or real squad files.
   end-to-end journey, and a smoke check of the deployed site.
 - Explanation Worker: requests accepted only from the deployed site's origin, strict
   schema (numbers, booleans and fixed codes only; names and free text are rejected),
-  20 requests per hour per IP, no logging, API key held as a Worker secret. The model's
+  60 requests per hour per IP, no logging, API key held as a Worker secret. The model's
   output is rendered as plain text, never as HTML.

@@ -49,7 +49,7 @@ export const en: Strings = {
     },
     {
       title: 'Optional AI explanation',
-      text: 'The calculation runs on your device and makes every decision. Only if you click “Explain (AI)” does the app send a short list of anonymous numbers to get a plain-language explanation: the child’s age in months, raw and age-adjusted score and rank, squad size, the age trend and its range, the cut-off month, the test direction, whether the child is late-born or borderline, and the language. Never a name, never a birth date, never the file. The numbers go through our own small relay (a Cloudflare Worker) to Anthropic, whose Claude model writes the text. The relay keeps no request content and no logs; for one hour it keeps an anonymous counter per visitor to limit use to 20 requests an hour. Anthropic processes the request under its own API terms. If you never click the button, nothing is sent.',
+      text: 'The calculation runs on your device and makes every decision. Only if you click “Explain (AI)” does the app send a short list of anonymous numbers to get a plain-language explanation: the child’s age in months, raw and age-adjusted score and rank, squad size, the age trend and its range, the cut-off month, the test direction, whether the child is late-born or borderline, and the language. Never a name, never a birth date, never the file. The numbers go through our own small relay (a Cloudflare Worker) to Anthropic, whose Claude model writes the text. The relay keeps no request content and no logs; for one hour it keeps an anonymous counter per visitor to limit use to 60 requests an hour. Anthropic processes the request under its own API terms. If you never click the button, nothing is sent.',
     },
     {
       title: 'Cookies and tracking',

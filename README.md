@@ -231,7 +231,7 @@ served under `/hackathon/` (see `vite.config.ts`).
 Browser (GitHub Pages, static)                Cloudflare Worker (/worker)          Anthropic
 ┌───────────────────────────────┐   click    ┌──────────────────────────────┐    ┌────────────┐
 │ CSV → analysis → recommendation│ ─────────▶ │ CORS allow-list, strict      │ ─▶ │ Messages   │
-│ (src/lib/squad.ts, all local)  │  numbers   │ schema, 20/hour per IP,      │    │ API        │
+│ (src/lib/squad.ts, all local)  │  numbers   │ schema, 60/hour per IP,      │    │ API        │
 │ "Objasni mi (AI)" (optional)   │ ◀───────── │ no logging, key as a secret  │ ◀─ │            │
 └───────────────────────────────┘    text    └──────────────────────────────┘    └────────────┘
 ```
@@ -248,7 +248,7 @@ Browser (GitHub Pages, static)                Cloudflare Worker (/worker)       
   Tests assert this for every child in the sample.
 - **The Worker** (`worker/src/index.ts`) accepts requests only from the deployed site,
   rejects anything that is not exactly the schema (unknown fields, text where a number
-  belongs), limits each IP to 20 requests an hour (a hashed counter in KV that expires
+  belongs), limits each IP to 60 requests an hour (a hashed counter in KV that expires
   after an hour), logs nothing, and calls the Anthropic Messages API with model
   `claude-opus-5-5` and `max_tokens: 400`. The API key is a Worker secret and is never
   in this repository.

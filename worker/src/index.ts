@@ -7,7 +7,7 @@
  *
  * - The Anthropic API key is a Worker secret (ANTHROPIC_API_KEY); it is never in the repo.
  * - CORS: only the deployed site may call it.
- * - Rate limit: 20 requests per hour per IP, counted under a salted hash that expires.
+ * - Rate limit: 60 requests per hour per IP, counted under a salted hash that expires.
  * - Nothing is logged: no request bodies, no responses, no IP addresses.
  */
 import Anthropic from '@anthropic-ai/sdk'
@@ -28,7 +28,8 @@ const ALLOWED_ORIGIN = 'https://berbicanes.github.io'
 const MODEL = 'claude-opus-5-5'
 const MAX_TOKENS = 400
 const MAX_BODY_BYTES = 2_000
-const REQUESTS_PER_HOUR = 20
+/** A venue or club often shares one public IP, so the limit is per address, not per person. */
+const REQUESTS_PER_HOUR = 60
 const HOUR_SECONDS = 3_600
 /** The web app gives up after 10 s, so the upstream call must fail sooner. */
 const UPSTREAM_TIMEOUT_MS = 8_500
