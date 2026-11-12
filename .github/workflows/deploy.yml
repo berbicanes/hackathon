@@ -26,6 +26,11 @@ jobs:
       - run: npm ci
       - name: Dependency audit
         run: npm audit --audit-level=high
+      - name: Worker dependencies, audit and type check
+        run: |
+          npm ci --prefix worker
+          npm audit --prefix worker --audit-level=high
+          npm run typecheck --prefix worker
       - run: npm run lint
       - name: Type check
         run: npm run typecheck

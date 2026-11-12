@@ -46,7 +46,13 @@ const corsHeaders = {
 function json(status: number, body: Record<string, unknown>, extra: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...corsHeaders, ...extra },
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store',
+      'x-content-type-options': 'nosniff',
+      ...corsHeaders,
+      ...extra,
+    },
   })
 }
 
@@ -73,6 +79,8 @@ async function explain(request: Request, env: Env): Promise<Response> {
   const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown'
   if (!(await underRateLimit(env.RATE_LIMIT, ip))) return json(429, { error: 'rate_limited' }, { 'retry-after': String(HOUR_SECONDS) })
 
+  // Refuse an oversized body before reading it, then check what was actually sent.
+  if (Number(request.headers.get('content-length') ?? '0') > MAX_BODY_BYTES) return json(413, { error: 'too_large' })
   const raw = await request.text()
   if (raw.length > MAX_BODY_BYTES) return json(413, { error: 'too_large' })
   let body: unknown

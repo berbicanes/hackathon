@@ -18,7 +18,7 @@ private channel; do not post personal data or real squad files.
 - Uploaded CSV files are limited in size and rows, parsed defensively, and names are
   stripped of control characters. Exported CSV cells are protected against spreadsheet
   formula injection.
-- CI on every push: dependency audit, lint, type check, unit tests with a coverage floor,
+- CI on every push: dependency audit and type check for the site and for the Worker, lint, unit tests with a coverage floor,
   end-to-end journey, and a smoke check of the deployed site.
 - Explanation Worker: requests accepted only from the deployed site's origin, strict
   schema (numbers, booleans and fixed codes only; names and free text are rejected),

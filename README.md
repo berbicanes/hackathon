@@ -214,7 +214,8 @@ worker/                   optional Cloudflare Worker: AI explanation proxy (sche
 
 ## Deploy
 
-Every push to `main` runs `.github/workflows/deploy.yml`: lint → unit tests with a
+Every push to `main` runs `.github/workflows/deploy.yml`: dependency audit and type check
+(site and Worker) → lint → unit tests with a
 coverage floor → build → end-to-end journey → deploy to GitHub Pages (Settings → Pages →
 Source: GitHub Actions) → the same journey again as a smoke check against the live site. The site is fully static and is
 served under `/hackathon/` (see `vite.config.ts`).
