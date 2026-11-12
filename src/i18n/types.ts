@@ -11,6 +11,15 @@ export interface Strings {
   langSwitch: string
   skip: string
   navLabel: string
+  stepWord: string
+  stepNames: { problem: string; squad: string; decision: string }
+  stepOf: (i: number, n: number) => string
+  stepPrev: string
+  stepNext: string
+  squadNext: string
+  decisionLead: string
+  decisionEmpty: string
+  decisionEmptyAction: string
   appName: string
   tagline: string
   tabBias: string

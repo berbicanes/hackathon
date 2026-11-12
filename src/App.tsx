@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { BiasMirror } from './components/BiasMirror'
+import { DecisionStep } from './components/DecisionStep'
 import { Privacy } from './components/Privacy'
-import { YourSquad } from './components/YourSquad'
+import { SquadStep } from './components/SquadStep'
+import { Stepper } from './components/Stepper'
 import { LANGS, strings, type Lang } from './i18n'
+import { STEPS, type Step } from './steps'
+import { useSquad } from './useSquad'
 
-type Tab = 'bias' | 'squad' | 'privacy'
-
-const PRIVACY_HASH = '#privacy'
+type Route = Step | 'privacy'
 
 const LANG_KEY = 'late-bloomers-lang'
 
@@ -20,9 +22,17 @@ function initialLang(): Lang {
   return 'bs'
 }
 
+/** Each step has its own address: #problem, #squad, #decision (and #privacy). */
+function routeFromHash(): Route {
+  const hash = window.location.hash.slice(1)
+  if (hash === 'privacy') return 'privacy'
+  return (STEPS as readonly string[]).includes(hash) ? (hash as Step) : 'problem'
+}
+
 export default function App() {
-  const [tab, setTabState] = useState<Tab>(() => (window.location.hash === PRIVACY_HASH ? 'privacy' : 'bias'))
+  const [route, setRoute] = useState<Route>(routeFromHash)
   const [lang, setLang] = useState<Lang>(initialLang)
+  const squad = useSquad()
   const t = strings[lang]
 
   useEffect(() => {
@@ -34,29 +44,18 @@ export default function App() {
     }
   }, [lang])
 
-  // The privacy page has its own address (#privacy) so it can be linked to directly.
-  const setTab = (next: Tab) => {
-    setTabState(next)
-    const hash = next === 'privacy' ? PRIVACY_HASH : ''
-    if (window.location.hash !== hash) {
-      window.history.replaceState(null, '', hash || window.location.pathname + window.location.search)
-    }
-  }
-
   useEffect(() => {
     const onHash = () => {
-      if (window.location.hash === PRIVACY_HASH) {
-        setTabState('privacy')
-        window.scrollTo({ top: 0 })
-      }
+      setRoute(routeFromHash())
+      window.scrollTo({ top: 0 })
     }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
-  const goToSquad = () => {
-    setTab('squad')
-    window.scrollTo({ top: 0 })
+  const goTo = (next: Route) => {
+    if (window.location.hash === `#${next}`) return
+    window.location.hash = next
   }
 
   return (
@@ -66,42 +65,31 @@ export default function App() {
       </a>
       <header className="site-header">
         <div className="container site-header__inner">
-          <div>
-            <h1 className="brand">
-              <span className="brand__mark" aria-hidden="true">
-                ✿
-              </span>
-              {t.appName}
-            </h1>
-            <p className="tagline">{t.tagline}</p>
-          </div>
-          <div className="segmented segmented--small" role="group" aria-label={t.langSwitch}>
+          <a className="brand" href="#problem" aria-label={`${t.appName}: ${t.tagline}`}>
+            <span className="brand__mark" aria-hidden="true">
+              ✿
+            </span>
+            <h1 className="brand__name">{t.appName}</h1>
+          </a>
+          <Stepper t={t} current={route === 'privacy' ? null : route} />
+          <div className="segmented segmented--small lang" role="group" aria-label={t.langSwitch}>
             {LANGS.map((l) => (
               <button key={l} type="button" lang={l} aria-pressed={lang === l} onClick={() => setLang(l)}>
-                {strings[l].langName}
+                <span className="lang__full">{strings[l].langName}</span>
+                <span className="lang__short" aria-hidden="true">
+                  {l.toUpperCase()}
+                </span>
               </button>
             ))}
           </div>
         </div>
-        <nav className="container tabs" aria-label={t.navLabel}>
-          {(['bias', 'squad'] as const).map((id) => (
-            <button
-              key={id}
-              type="button"
-              className="tabs__tab"
-              aria-current={tab === id ? 'page' : undefined}
-              onClick={() => setTab(id)}
-            >
-              {id === 'bias' ? t.tabBias : t.tabSquad}
-            </button>
-          ))}
-        </nav>
       </header>
 
       <main id="main" className="container">
-        {tab === 'bias' && <BiasMirror t={t} onGoToSquad={goToSquad} />}
-        {tab === 'squad' && <YourSquad t={t} />}
-        {tab === 'privacy' && <Privacy t={t} onBack={() => setTab('bias')} />}
+        {route === 'problem' && <BiasMirror t={t} onGoToSquad={() => goTo('squad')} />}
+        {route === 'squad' && <SquadStep t={t} squad={squad} onNext={() => goTo('decision')} />}
+        {route === 'decision' && <DecisionStep t={t} squad={squad} onBack={() => goTo('squad')} />}
+        {route === 'privacy' && <Privacy t={t} onBack={() => goTo('problem')} />}
       </main>
 
       <footer className="container site-footer">
@@ -110,7 +98,7 @@ export default function App() {
         </p>
         <p>{t.footerData}</p>
         <p>
-          <a href={PRIVACY_HASH}>{t.privacyLink}</a>
+          <a href="#privacy">{t.privacyLink}</a>
         </p>
       </footer>
     </>

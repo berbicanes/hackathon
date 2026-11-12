@@ -14,6 +14,7 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
 
   await page.goto('./')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Late Bloomers')
+  await page.setViewportSize({ width: 1366, height: 900 })
   await expect(page.locator('html')).toHaveAttribute('lang', 'bs')
 
   // Bias mirror loads the analysis and shows the headline share.
@@ -39,10 +40,39 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(cutoff.getByRole('row', { name: /England under 21, own cut-off/ })).toContainText('1 Sep')
   await expect(cutoff.locator('tbody tr')).toHaveCount(8)
 
-  // Your squad with the synthetic sample.
-  await page.getByRole('button', { name: 'Your squad', exact: true }).click()
+  // Step 1 ends with one button to step 2; every step has its own address.
+  const stepper = page.getByRole('navigation', { name: 'Steps' })
+  await expect(stepper.getByRole('link', { name: /The problem/ })).toHaveAttribute('aria-current', 'step')
+  await page.getByRole('button', { name: /Check your own squad/ }).click()
+  await expect(page).toHaveURL(/#squad$/)
+  await expect(stepper.getByRole('link', { name: /Your squad/ })).toHaveAttribute('aria-current', 'step')
+
+  // Step 3 without a squad sends the coach back to step 2.
+  await stepper.getByRole('link', { name: /Decision/ }).click()
+  await page.getByRole('button', { name: /Go to Your squad/ }).click()
+  await expect(page).toHaveURL(/#squad$/)
+
+  // Step 2: the synthetic sample.
   await page.getByRole('button', { name: 'Load synthetic sample' }).click()
   await expect(page.locator('.synthetic')).toContainText('SYNTHETIC SAMPLE')
+  await expect(page.getByText('14 of 20 players were born in the first half of the year.')).toBeVisible()
+
+  // In Bosnian the assessment date always reads dd.mm.yyyy, whatever the browser locale.
+  await page.getByRole('button', { name: 'Bosanski' }).click()
+  const date = page.getByLabel(/Datum testiranja/)
+  await expect(date).toHaveValue(/^\d{2}\.\d{2}\.\d{4}$/)
+  const sampleDate = await date.inputValue()
+  await date.fill('31.02.2026')
+  await expect(date).toHaveAttribute('aria-invalid', 'true')
+  await date.fill(sampleDate)
+  await expect(date).toHaveAttribute('aria-invalid', 'false')
+  await date.blur()
+  await expect(date).toHaveValue(sampleDate)
+  await page.getByRole('button', { name: 'English' }).click()
+
+  // Step 3: the decision.
+  await page.getByRole('button', { name: /See the decision/ }).click()
+  await expect(page).toHaveURL(/#decision$/)
   await expect(page.locator('.squad-table tbody tr')).toHaveCount(20)
 
   // Switching to the age-adjusted view changes who is selected.
@@ -53,20 +83,7 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   // Player card opens with a suggested next step.
   await page.locator('.squad-table tr.is-gained').first().getByRole('button').click()
   await expect(page.getByText('Suggested next step')).toBeVisible()
-
   await page.keyboard.press('Escape')
-
-  // In Bosnian the assessment date always reads dd.mm.yyyy, whatever the browser locale.
-  await page.getByRole('button', { name: 'Bosanski' }).click()
-  const date = page.getByLabel(/Datum testiranja/)
-  await expect(date).toHaveValue(/^\d{2}\.\d{2}\.\d{4}$/)
-  await date.fill('31.02.2026')
-  await expect(date).toHaveAttribute('aria-invalid', 'true')
-  await date.fill('15.03.2026')
-  await expect(date).toHaveAttribute('aria-invalid', 'false')
-  await date.blur()
-  await expect(date).toHaveValue('15.03.2026')
-  await page.getByRole('button', { name: 'English' }).click()
 
   // Privacy page is linked from the footer and has its own address.
   await page.getByRole('contentinfo').getByRole('link', { name: 'Privacy' }).click()
@@ -76,4 +93,22 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page.getByRole('heading', { name: 'Privatnost' })).toBeVisible()
 
   expect(errors).toEqual([])
+})
+
+test('phone: compact stepper, no horizontal scroll on any step', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 })
+  await page.goto('./')
+  const noOverflow = async () =>
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  await expect(page.locator('.hero__number')).toContainText('32')
+  await expect(page.locator('.stepper__compact')).toContainText('Korak 1 od 3')
+  await noOverflow()
+  await page.getByRole('link', { name: /Sljedeći korak/ }).click()
+  await expect(page.locator('.stepper__compact')).toContainText('Korak 2 od 3')
+  await page.getByRole('button', { name: /primjer/i }).click()
+  await noOverflow()
+  await page.getByRole('link', { name: /Sljedeći korak/ }).click()
+  await expect(page.locator('.stepper__compact')).toContainText('Korak 3 od 3')
+  await expect(page.locator('.squad-table tbody tr')).toHaveCount(20)
+  await noOverflow()
 })
