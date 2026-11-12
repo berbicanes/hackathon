@@ -210,7 +210,6 @@ src/lib/                  pure logic + unit tests (squad, csv, playerCard, forma
 src/components/           screens and UI pieces
 src/i18n/                 Bosnian and English strings (one file per language)
 worker/                   optional Cloudflare Worker: AI explanation proxy (schema, prompt, handler)
-PITCH.md                  3-minute demo script and jury Q&A
 ```
 
 ## Deploy

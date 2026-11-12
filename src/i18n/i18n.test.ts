@@ -103,8 +103,6 @@ describe('step and decision wording', () => {
     expect(strings.bs.youthSentence('2,8', '1,4', true)).toContain('slabiji (1,4×) i tek na granici statističke značajnosti')
     expect(strings.bs.youthSentence('2,8', '1,1', false)).toContain('nije statistički značajan')
     expect(strings.en.youthSentence('2.8', '1.1', false)).toContain('not statistically significant')
-    expect(strings.bs.pitch.youthLine('2,8', null)).toBe('SP U-17 2025: dječaci 2,8×.')
-    expect(strings.bs.pitch.youthLine('2,8', '1,4')).toBe('SP U-17 2025: dječaci 2,8×, djevojčice 1,4× (slabije).')
     expect(strings.en.youthBarLabel('Boys', ['41%', '27%', '17%', '15%'])).toContain('41% born January–March')
   })
   it('confirms a load with the right Bosnian plural and the file name', () => {

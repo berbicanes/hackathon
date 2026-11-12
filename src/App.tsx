@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BiasMirror } from './components/BiasMirror'
 import { DecisionStep } from './components/DecisionStep'
-import { Pitch } from './components/Pitch'
 import { Privacy } from './components/Privacy'
 import { SquadStep } from './components/SquadStep'
 import { Stepper } from './components/Stepper'
@@ -9,7 +8,7 @@ import { LANGS, strings, type Lang } from './i18n'
 import { STEPS, type Step } from './steps'
 import { useSquad } from './useSquad'
 
-type Route = Step | 'privacy' | 'pitch'
+type Route = Step | 'privacy'
 
 const LANG_KEY = 'late-bloomers-lang'
 
@@ -26,7 +25,7 @@ function initialLang(): Lang {
 /** Each step has its own address: #problem, #squad, #decision (and #privacy). */
 function routeFromHash(): Route {
   const hash = window.location.hash.slice(1)
-  if (hash === 'privacy' || hash === 'pitch') return hash
+  if (hash === 'privacy') return 'privacy'
   return (STEPS as readonly string[]).includes(hash) ? (hash as Step) : 'problem'
 }
 
@@ -58,9 +57,6 @@ export default function App() {
     if (window.location.hash === `#${next}`) return
     window.location.hash = next
   }
-
-  // The pitch deck takes the whole screen: no header, stepper or footer around it.
-  if (route === 'pitch') return <Pitch t={t} lang={lang} setLang={setLang} onExit={() => goTo('problem')} />
 
   return (
     <>
@@ -102,7 +98,7 @@ export default function App() {
         </p>
         <p>{t.footerData}</p>
         <p>
-          <a href="#privacy">{t.privacyLink}</a> · <a href="#pitch">{t.pitchLink}</a>
+          <a href="#privacy">{t.privacyLink}</a>
         </p>
       </footer>
     </>
