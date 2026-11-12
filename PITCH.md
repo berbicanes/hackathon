@@ -66,7 +66,8 @@ lower-is-better tests and for a 1 September or 1 April selection year.
   Print button → one-page report a coach can pin on the wall or take to the board.
 - "It's free, works on a phone, in Bosnian, and the squad file never leaves the device.
   No login, no tracking. Kids' names and birth dates stay with the coach."
-- "Proven on 50,000 pros. Usable on Monday by any grassroots coach."
+- "Proven on 50,000 pros, tested on 43 edge-case squads. Usable on Monday by any
+  grassroots coach."
 
 ## Likely jury questions
 
@@ -113,6 +114,16 @@ zamijeniti redoslijed). We walk down the age-adjusted ranking from the last plac
 each child while their gap is inside that uncertainty, stop at the first who is not, and
 never take more than three. In the demo with 10 places the next child, Asja, is too far,
 so the list stops there. Set 8 places and you get "1 kasno rođeni talenat + 3 na granici".
+
+**How do you know it's reliable?**
+Three layers. The method is ordinary least squares with a 95% interval, and the app says
+so when the interval is too wide or the squad too small. The code has over 180 automated
+tests. And we ran 43 deliberately awkward squads through it: one child, identical
+scores, a typo of 9999, sprint times, ties at the last place, impossible dates, Excel
+files with semicolons and č ć đ š ž, 500 players. 9 of them showed something the app
+handled badly, for example suggesting "late-born talents" in a squad where younger
+children scored higher; we fixed those and each is now a permanent test. The app never
+crashes on them and never gives a recommendation without saying how sure it is.
 
 **Why widen the group instead of swapping children?**
 Because a swap means telling three early-born kids they are out on the basis of a
