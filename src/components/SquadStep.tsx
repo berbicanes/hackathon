@@ -88,6 +88,19 @@ export function SquadStep({ t, squad, onNext }: Props) {
           invalidMessage={t.dateInvalid}
         />
         <p className="help">{t.dateExplain}</p>
+        <div className="field field--wide">
+          <span className="field__label" id="direction-label">
+            {t.directionLabel}
+          </span>
+          <div className="segmented segmented--row segmented--wrap" role="group" aria-labelledby="direction-label">
+            <button type="button" aria-pressed={squad.higherIsBetter} onClick={() => squad.setHigherIsBetter(true)}>
+              {t.directionHigher}
+            </button>
+            <button type="button" aria-pressed={!squad.higherIsBetter} onClick={() => squad.setHigherIsBetter(false)}>
+              {t.directionLower}
+            </button>
+          </div>
+        </div>
         {error && (
           <p role="alert" className="alert">
             {errorText(t, error)}

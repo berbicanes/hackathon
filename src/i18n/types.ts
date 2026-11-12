@@ -111,6 +111,10 @@ export interface Strings {
   dropTitle: string
   orSample: string
   dateExplain: string
+  directionLabel: string
+  directionHigher: string
+  directionLower: string
+  lowerNote: string
   downloadTemplate: string
   csvHelp: string
   syntheticBanner: string

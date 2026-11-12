@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyseSquad, compareSelections, hiddenTalents, recommendGroup, type Player } from './squad'
+import { ageAdvantage, analyseSquad, compareSelections, hiddenTalents, recommendGroup, type Player } from './squad'
 import { csvCell, parseSquadCsv } from './csv'
 import { sampleSquad, SAMPLE_REFERENCE_DATE } from './sample'
 
@@ -123,6 +123,45 @@ describe('compareSelections', () => {
     expect(compareSelections(result.players, 99).raw).toHaveLength(6)
     expect(compareSelections(result.players, 99).gained).toHaveLength(0)
     expect(compareSelections(result.players, -3).raw).toHaveLength(0)
+  })
+})
+
+describe('test direction (lower score is better, e.g. sprint in seconds)', () => {
+  // Sprint times: older children are faster; the December child is fast for their age.
+  const SPRINT: Player[] = SQUAD.map((p) => ({ ...p, score: 20 - p.score / 10 }))
+  const higher = analyseSquad(SQUAD, REF)
+  const lower = analyseSquad(SPRINT, REF, { higherIsBetter: false })
+
+  it('ranks the smallest time first', () => {
+    const fastest = [...SPRINT].sort((a, b) => a.score - b.score)[0]
+    expect(lower.players.find((p) => p.rawRank === 1)?.name).toBe(fastest.name)
+    expect(lower.higherIsBetter).toBe(false)
+  })
+  it('gives exactly the same ranks as the mirrored higher-is-better test', () => {
+    const ranks = (a: typeof higher) => a.players.map((p) => [p.name, p.rawRank, p.fairRank, p.rankGain, p.agePercentile])
+    expect(ranks(lower)).toEqual(ranks(higher))
+  })
+  it('keeps "better than expected for age" positive and the fair score on the original scale', () => {
+    const dec = lower.players.find((p) => p.name === 'Dec')
+    expect(dec?.residual).toBeGreaterThan(0)
+    // Faster than expected for their age, so the age-adjusted time is lower than the measured one.
+    expect(dec?.fairScore as number).toBeLessThan(dec?.score as number)
+    const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length
+    expect(mean(lower.players.map((p) => p.fairScore))).toBeCloseTo(mean(SPRINT.map((p) => p.score)))
+  })
+  it('reports the age advantage as positive in both directions, with ordered interval ends', () => {
+    const up = ageAdvantage(higher.fit, true)
+    const down = ageAdvantage(lower.fit, false)
+    expect(lower.fit.slope).toBeLessThan(0)
+    expect(down.perMonth).toBeGreaterThan(0)
+    expect(down.perMonth).toBeCloseTo(up.perMonth / 10)
+    expect(down.low as number).toBeLessThan(down.high as number)
+    expect(up).toEqual({ perMonth: higher.fit.slope, low: higher.fit.slopeLow, high: higher.fit.slopeHigh })
+  })
+  it('selects and recommends on the right side', () => {
+    const group = recommendGroup(lower.players, 3)
+    expect(group.keep.map((p) => p.name)).toEqual(recommendGroup(higher.players, 3).keep.map((p) => p.name))
+    expect(group.secondLook.map((p) => p.name)).toEqual(recommendGroup(higher.players, 3).secondLook.map((p) => p.name))
   })
 })
 

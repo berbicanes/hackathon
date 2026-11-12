@@ -28,6 +28,8 @@ export interface SquadState {
   setTopN: (n: number) => void
   view: View
   setView: (v: View) => void
+  higherIsBetter: boolean
+  setHigherIsBetter: (v: boolean) => void
   loadSample: () => void
   loadFile: (file: File) => Promise<void>
 }
@@ -41,6 +43,7 @@ export function useSquad(): SquadState {
   const [truncated, setTruncated] = useState(false)
   const [topN, setTopN] = useState(11)
   const [view, setView] = useState<View>('expanded')
+  const [higherIsBetter, setHigherIsBetter] = useState(true)
 
   const reference = useMemo(() => {
     const d = new Date(`${refDate}T00:00:00Z`)
@@ -48,8 +51,8 @@ export function useSquad(): SquadState {
   }, [refDate])
 
   const analysis = useMemo(
-    () => (loaded && loaded.players.length ? analyseSquad(loaded.players, reference) : null),
-    [loaded, reference],
+    () => (loaded && loaded.players.length ? analyseSquad(loaded.players, reference, { higherIsBetter }) : null),
+    [loaded, reference, higherIsBetter],
   )
 
   const resetFeedback = () => {
@@ -105,6 +108,8 @@ export function useSquad(): SquadState {
     setTopN,
     view,
     setView,
+    higherIsBetter,
+    setHigherIsBetter,
     loadSample,
     loadFile,
   }

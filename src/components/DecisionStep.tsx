@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Strings } from '../i18n'
 import { csvCell } from '../lib/csv'
-import { compareSelections, hiddenTalents, recommendGroup, type AnalysedPlayer } from '../lib/squad'
+import { ageAdvantage, compareSelections, hiddenTalents, recommendGroup, type AnalysedPlayer } from '../lib/squad'
 import { isoDay, type SquadState } from '../useSquad'
 import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
@@ -118,9 +118,13 @@ export function DecisionStep({ t, squad, onBack }: Props) {
       ))}
     </ul>
   )
+  const scoreDigits = players.some((p) => Math.round(p.score * 10) !== p.score * 10) ? 2 : 1
+  const advantage = ageAdvantage(fit, analysis.higherIsBetter)
+  // Sprint times and similar small-number tests need a second decimal.
+  const digits = Math.abs(advantage.perMonth) < 1 ? 2 : 1
   const trendText =
-    fit.slopeLow !== null && fit.slopeHigh !== null
-      ? t.trendCi(t.num(fit.slope, 1), t.num(fit.slopeLow, 1), t.num(fit.slopeHigh, 1), fit.slopeLow >= 0)
+    advantage.low !== null && advantage.high !== null
+      ? t.trendCi(t.num(advantage.perMonth, digits), t.num(advantage.low, digits), t.num(advantage.high, digits), advantage.low >= 0)
       : ''
   const changePlaces = (delta: number) => setTopN(Math.max(1, Math.min(n, topN + delta)))
 
@@ -181,7 +185,9 @@ export function DecisionStep({ t, squad, onBack }: Props) {
               )}
             </div>
             {fit.reliable ? (
-              <p className="trend-line">{trendText}</p>
+              <p className="trend-line">
+                {trendText} {!analysis.higherIsBetter && <span className="help">{t.lowerNote}</span>}
+              </p>
             ) : (
               <p className="alert alert--soft" role="note">
                 <strong>{t.unreliable}</strong> {fit.slopeLow !== null && trendText}
@@ -193,7 +199,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
 
       <section className="card" aria-labelledby="scatter-heading">
         <h3 id="scatter-heading">{t.scatterHeading}</h3>
-        <ScatterPlot t={t} players={players} fit={fit} highlighted={talents} quarterLabels={t.quarterLabels} />
+        <ScatterPlot t={t} players={players} fit={fit} highlighted={talents} quarterLabels={t.quarterLabels} higherIsBetter={analysis.higherIsBetter} />
       </section>
 
       <section className="card" aria-labelledby="talent-title">
@@ -286,8 +292,8 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                         {nameButton(p)} <QuarterBadge q={p.quarter} t={t} />
                       </th>
                       <td data-label={t.colAge}>{ageText(p)}</td>
-                      <td data-label={t.colRaw}>{t.num(p.score, Number.isInteger(p.score) ? 0 : 1)}</td>
-                      <td data-label={t.colFair}>{t.num(p.fairScore, 1)}</td>
+                      <td data-label={t.colRaw}>{t.num(p.score, Number.isInteger(p.score) ? 0 : scoreDigits)}</td>
+                      <td data-label={t.colFair}>{t.num(p.fairScore, scoreDigits)}</td>
                       <td data-label={t.colStatus}>
                         <span className="status-cell">
                           {!second && <span className="status">{selected ? `✓ ${t.selected}` : t.notSelected}</span>}

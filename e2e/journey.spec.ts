@@ -83,7 +83,7 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page.locator('.squad-table tr.is-lost')).toHaveCount(0)
   await expect(page.locator('.squad-table')).not.toContainText('Drops out')
 
-  await expect(page.locator('.trend-line')).toHaveText(/^≈ 2\.2 points per month of age, range \d\.\d–\d\.\d\.$/)
+  await expect(page.locator('.trend-line')).toHaveText(/^≈ 2\.2 points per month of age, range \d\.\d–\d\.\d\.\s*$/)
 
   // "How it works": one dot per child, the trend line, hidden talents named.
   const scatter = page.locator('figure.scatter')
@@ -138,4 +138,20 @@ test('small uploaded squad: the adjustment is flagged as a rough guide only', as
   await page.getByRole('button', { name: /See the decision/ }).click()
   await expect(page.locator('.recommend')).toContainText('age does not reliably affect the score')
   await expect(page.locator('.synthetic')).toHaveCount(0)
+})
+
+test('lower-is-better test: the fastest child ranks first and the chart flips', async ({ page }) => {
+  await page.goto('./#squad')
+  await page.getByRole('button', { name: 'English' }).click()
+  const csv = ['name,birth_date,score']
+  // Twelve sprint times in seconds: older children are faster.
+  for (let m = 1; m <= 12; m++) csv.push(`Kid${m},2014-${String(m).padStart(2, '0')}-15,${(8 + m * 0.1 + (m % 3) * 0.03).toFixed(2)}`)
+  await page.locator('input[type="file"]').setInputFiles({ name: 'sprint.csv', mimeType: 'text/csv', buffer: Buffer.from(csv.join('\n')) })
+  await page.getByRole('button', { name: /Lower score is better/ }).click()
+  await expect(page.getByRole('button', { name: /Lower score is better/ })).toHaveAttribute('aria-pressed', 'true')
+  await page.getByRole('button', { name: /See the decision/ }).click()
+  await expect(page.locator('.squad-table tbody tr').first()).toContainText('Kid1')
+  await expect(page.locator('.squad-table tbody tr').first()).toContainText('8.13')
+  await expect(page.locator('.scatter__label').last()).toContainText('lower is better')
+  await expect(page.locator('.trend-line')).toContainText('per month of age')
 })

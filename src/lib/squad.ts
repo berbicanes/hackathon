@@ -14,7 +14,7 @@ export interface AnalysedPlayer extends Player {
   ageMonths: number
   /** Birth quarter in the selection year (cut-off 1 January): 1 = Jan–Mar … 4 = Oct–Dec. */
   quarter: 1 | 2 | 3 | 4
-  /** Score minus what the squad trend predicts for this age. */
+  /** How much better than the squad trend predicts for this age (positive = better, whatever the test direction). */
   residual: number
   /** Residual shifted back onto the score scale (score at the squad's average age). */
   fairScore: number
@@ -59,6 +59,12 @@ export interface SquadAnalysis {
   fit: LinearFit
   meanAgeMonths: number
   quarterCounts: [number, number, number, number]
+  higherIsBetter: boolean
+}
+
+export interface AnalysisOptions {
+  /** False for tests where a smaller number is the better result, e.g. a sprint in seconds. Default true. */
+  higherIsBetter?: boolean
 }
 
 export interface SelectionDiff {
@@ -117,7 +123,24 @@ function rankBy(players: { id: number; name: string }[], key: (id: number) => nu
   return new Map(sorted.map((p, i) => [p.id, i + 1]))
 }
 
-export function analyseSquad(players: Player[], reference: Date): SquadAnalysis {
+/**
+ * How many score units a month of extra age is worth in the "better" direction, with its
+ * 95% interval. For a lower-is-better test a falling line means older children do better,
+ * so the sign is flipped and the interval ends swap.
+ */
+export function ageAdvantage(fit: LinearFit, higherIsBetter: boolean): { perMonth: number; low: number | null; high: number | null } {
+  if (higherIsBetter) return { perMonth: fit.slope, low: fit.slopeLow, high: fit.slopeHigh }
+  return {
+    perMonth: -fit.slope || 0,
+    low: fit.slopeHigh === null ? null : -fit.slopeHigh || 0,
+    high: fit.slopeLow === null ? null : -fit.slopeLow || 0,
+  }
+}
+
+export function analyseSquad(players: Player[], reference: Date, options: AnalysisOptions = {}): SquadAnalysis {
+  const higherIsBetter = options.higherIsBetter ?? true
+  /** +1 when a higher score is better, −1 when a lower one is. */
+  const direction = higherIsBetter ? 1 : -1
   const base = players.map((p, id) => ({ ...p, id, ageMonths: ageInMonths(p.birthDate, reference) }))
   const fit = linearFit(
     base.map((p) => p.ageMonths),
@@ -127,8 +150,11 @@ export function analyseSquad(players: Player[], reference: Date): SquadAnalysis 
   const meanAgeMonths = n ? base.reduce((a, p) => a + p.ageMonths, 0) / n : 0
   const meanScore = n ? base.reduce((a, p) => a + p.score, 0) / n : 0
 
-  const residuals = new Map(base.map((p) => [p.id, p.score - (fit.intercept + fit.slope * p.ageMonths)]))
-  const raw = new Map(base.map((p) => [p.id, p.score]))
+  // "Better than expected for this age" is always positive, whatever the test direction.
+  const residuals = new Map(
+    base.map((p) => [p.id, direction * (p.score - (fit.intercept + fit.slope * p.ageMonths))]),
+  )
+  const raw = new Map(base.map((p) => [p.id, direction * p.score]))
   const rawRanks = rankBy(base, (id) => raw.get(id) ?? 0)
   const fairRanks = rankBy(base, (id) => residuals.get(id) ?? 0)
 
@@ -146,7 +172,8 @@ export function analyseSquad(players: Player[], reference: Date): SquadAnalysis 
       ...p,
       quarter,
       residual,
-      fairScore: meanScore + residual,
+      // Back on the original scale: for a lower-is-better test a better child gets a lower fair score.
+      fairScore: meanScore + direction * residual,
       rawRank,
       fairRank,
       rankGain: rawRank - fairRank,
@@ -154,7 +181,7 @@ export function analyseSquad(players: Player[], reference: Date): SquadAnalysis 
     }
   })
 
-  return { players: analysed, fit, meanAgeMonths, quarterCounts }
+  return { players: analysed, fit, meanAgeMonths, quarterCounts, higherIsBetter }
 }
 
 /** Compare a top-N selection on raw score with one on age-adjusted score. */
