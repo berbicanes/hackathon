@@ -1,0 +1,18 @@
+name = "late-bloomers-explain"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+# No request or response logging.
+[observability]
+enabled = false
+
+# Hourly rate-limit counters (hashed, expire after one hour).
+# Create with:  npx wrangler kv namespace create RATE_LIMIT
+# then paste the printed id below.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "PASTE_KV_NAMESPACE_ID_HERE"
+
+# The Anthropic API key is a secret, set with:  npx wrangler secret put ANTHROPIC_API_KEY
+# It is never written to this file or to the repository.

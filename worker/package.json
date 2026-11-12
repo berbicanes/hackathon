@@ -1,0 +1,19 @@
+{
+  "name": "late-bloomers-explain",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  },
+  "devDependencies": {
+    "typescript": "~7.0.2",
+    "wrangler": "^4.160.1"
+  }
+}
