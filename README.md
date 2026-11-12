@@ -259,9 +259,10 @@ Browser (GitHub Pages, static)                Cloudflare Worker (/worker)       
 - **Failure is safe.** Loading state, 10-second timeout, and on any error, rate limit or
   refusal the app shows its own deterministic explanation, labelled as not AI. AI text is
   always marked "AI-generated".
-- **Switching it on:** set `EXPLAIN_ENDPOINT` in `src/config.ts` to the Worker URL and add
-  that origin to `connect-src` in `index.html`. While it is empty, the button shows the
-  deterministic explanation and no request is made.
+- **Switched on:** `EXPLAIN_ENDPOINT` in `src/config.ts` points at the deployed Worker and
+  its origin is the only extra entry in `connect-src` in `index.html`. Set the endpoint
+  to an empty string to switch the AI layer off; the button then shows the deterministic
+  explanation and no request is made.
 
 ### Deploying the Worker
 

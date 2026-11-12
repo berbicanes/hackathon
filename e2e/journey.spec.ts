@@ -1,16 +1,24 @@
 import { expect, test } from '@playwright/test'
 
+/** The explanation proxy. Tests never reach the real one: every call is intercepted. */
+const AI_ORIGIN = 'https://late-bloomers-explain.berbicanes6.workers.dev'
+
 test('coach journey: evidence, sample squad, fair selection, player card', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
   // Content-Security-Policy violations are reported on the console.
-  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
-  // The page must not call any third party (fonts are self-hosted).
+  page.on('console', (m) => m.type() === 'error' && !m.location().url.startsWith(AI_ORIGIN) && errors.push(m.text()))
+  // The page must not call any third party (fonts are self-hosted). The one allowed
+  // exception is the explanation proxy, and only after a click on "Explain (AI)".
   const origin = new URL(test.info().project.use.baseURL!).origin
+  const aiCalls: string[] = []
   page.on('request', (r) => {
     const url = new URL(r.url())
-    if (url.protocol.startsWith('http') && url.origin !== origin) errors.push(`third-party request: ${r.url()}`)
+    if (url.origin === AI_ORIGIN) aiCalls.push(r.postData() ?? '')
+    else if (url.protocol.startsWith('http') && url.origin !== origin) errors.push(`third-party request: ${r.url()}`)
   })
+  // In this journey the proxy is "down", so the app must fall back to its own explanation.
+  await page.route(`${AI_ORIGIN}/**`, (route) => route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"busy"}' }))
 
   await page.goto('./')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Late Bloomers')
@@ -89,12 +97,14 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
 
   // Optional AI explanation: clearly labelled, and the app's own text when the AI is unavailable.
   const ai = page.locator('.recommend .ai')
+  expect(aiCalls).toEqual([])
   await expect(ai).toContainText('AI explanation — only anonymous numbers are sent, no names.')
   await ai.getByRole('button', { name: /Explain \(AI\)/ }).click()
   await expect(ai.locator('.ai__badge')).toHaveText('Explanation without AI')
   await expect(ai.locator('.ai__result')).toContainText('Widen the group by 3 places: 3 late-born talents.')
   await expect(ai.locator('.ai__result')).toContainText('≈ 2.2 points per month of age')
   await expect(ai.locator('.ai__result--ai')).toHaveCount(0)
+  expect(aiCalls).toHaveLength(1)
 
   // "How it works": one dot per child, the trend line, hidden talents named.
   const scatter = page.locator('figure.scatter')

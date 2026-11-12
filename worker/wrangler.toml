@@ -2,6 +2,8 @@ name = "late-bloomers-explain"
 main = "src/index.ts"
 compatibility_date = "2026-10-01"
 workers_dev = true
+# Only the production URL is served; no per-version preview URLs.
+preview_urls = false
 
 # No request or response logging.
 [observability]
@@ -12,7 +14,7 @@ enabled = false
 # then paste the printed id below.
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "PASTE_KV_NAMESPACE_ID_HERE"
+id = "e9efdf4d26394b67875cd9c4df4e2e96"
 
 # The Anthropic API key is a secret, set with:  npx wrangler secret put ANTHROPIC_API_KEY
 # It is never written to this file or to the repository.
