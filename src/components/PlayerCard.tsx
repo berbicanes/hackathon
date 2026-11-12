@@ -5,6 +5,7 @@ import type { AnalysedPlayer } from '../lib/squad'
 
 interface Props {
   t: Strings
+  quarterLabels: string[]
   player: AnalysedPlayer | null
   meanAgeMonths: number
   squadSize: number
@@ -12,7 +13,7 @@ interface Props {
 }
 
 /** Plain-language card for one child, shown in a native modal dialog. */
-export function PlayerCard({ t, player, meanAgeMonths, squadSize, onClose }: Props) {
+export function PlayerCard({ t, quarterLabels, player, meanAgeMonths, squadSize, onClose }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export function PlayerCard({ t, player, meanAgeMonths, squadSize, onClose }: Pro
         <div className="player-card__body">
           <p className="kicker">{t.cardTitle}</p>
           <h2 id="player-card-title">{player.name}</h2>
-          <p className="help">{t.cardBorn(born, t.quarterLabels[player.quarter - 1])}</p>
+          <p className="help">{t.cardBorn(born, quarterLabels[player.quarter - 1])}</p>
           <ul className="player-card__facts">
             <li>
               {summary.monthsYounger > 0

@@ -69,6 +69,15 @@ describe('step and decision wording', () => {
     expect(strings.en.trendCi('2.2', '1.4', '3.0', true)).toBe('≈ 2.2 points per month of age, range 1.4–3.0.')
     expect(strings.bs.unreliable).toBe('U vašoj ekipi starost ne utiče pouzdano na ocjenu — prilagodba je samo orijentacija.')
   })
+  it('offers the three selection-year starts and words the squad summary to match', () => {
+    expect(strings.bs.cutoffOption(1)).toBe('1. januar (većina zemalja)')
+    expect(strings.bs.cutoffOption(9)).toBe('1. septembar (Engleska, Vels)')
+    expect(strings.bs.cutoffOption(4)).toBe('1. april (Japan)')
+    expect(strings.en.cutoffOption(9)).toBe('1 September (England, Wales)')
+    expect(strings.bs.skewSummary(14, 20)).toContain('u prvoj polovini godine')
+    expect(strings.bs.skewSummary(9, 20, 'sep–feb')).toContain('starijoj polovini generacije (sep–feb)')
+    expect(strings.en.skewSummary(9, 20, 'Sep–Feb')).toContain('older half of the age group (Sep–Feb)')
+  })
   it('describes the scatter plot in words for screen readers', () => {
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')

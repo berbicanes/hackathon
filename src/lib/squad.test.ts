@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { ageAdvantage, analyseSquad, compareSelections, hiddenTalents, recommendGroup, type Player } from './squad'
+import {
+  ageAdvantage,
+  analyseSquad,
+  compareSelections,
+  hiddenTalents,
+  olderHalfLabel,
+  quarterLabels,
+  recommendGroup,
+  type Player,
+} from './squad'
 import { csvCell, parseSquadCsv } from './csv'
 import { sampleSquad, SAMPLE_REFERENCE_DATE } from './sample'
 
@@ -123,6 +132,41 @@ describe('compareSelections', () => {
     expect(compareSelections(result.players, 99).raw).toHaveLength(6)
     expect(compareSelections(result.players, 99).gained).toHaveLength(0)
     expect(compareSelections(result.players, -3).raw).toHaveLength(0)
+  })
+})
+
+describe('selection-year cut-off (1 January, 1 September, 1 April)', () => {
+  const births = ['2014-01-15', '2014-03-31', '2014-04-01', '2014-08-31', '2014-09-01', '2014-12-10']
+  const quarters = (cutoffMonth?: number) => analyseSquad(squadOf(...births), REF, { cutoffMonth }).players.map((p) => p.quarter)
+
+  it('defaults to 1 January', () => {
+    expect(quarters()).toEqual([1, 1, 2, 3, 3, 4])
+    expect(quarters(1)).toEqual(quarters())
+  })
+  it('counts quarters from 1 September: September is the oldest, August the youngest', () => {
+    expect(quarters(9)).toEqual([2, 3, 3, 4, 1, 2])
+  })
+  it('counts quarters from 1 April: April is the oldest, March the youngest', () => {
+    expect(quarters(4)).toEqual([4, 4, 1, 2, 2, 3])
+  })
+  it('moves the squad chart counts with the cut-off', () => {
+    expect(analyseSquad(squadOf(...births), REF, { cutoffMonth: 9 }).quarterCounts).toEqual([1, 2, 2, 1])
+    expect(analyseSquad(squadOf(...births), REF, { cutoffMonth: 9 }).cutoffMonth).toBe(9)
+  })
+  it('does not change ages, ranks or fair scores, only the labels', () => {
+    const jan = analyseSquad(SQUAD, REF)
+    const sep = analyseSquad(SQUAD, REF, { cutoffMonth: 9 })
+    const core = (a: typeof jan) => a.players.map((p) => [p.ageMonths, p.rawRank, p.fairRank, p.fairScore])
+    expect(core(sep)).toEqual(core(jan))
+  })
+  it('labels quarters and the older half in selection-year order', () => {
+    const en = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    expect(quarterLabels(en, 1)).toEqual(['Jan–Mar', 'Apr–Jun', 'Jul–Sep', 'Oct–Dec'])
+    expect(quarterLabels(en, 9)).toEqual(['Sep–Nov', 'Dec–Feb', 'Mar–May', 'Jun–Aug'])
+    expect(quarterLabels(en, 4)).toEqual(['Apr–Jun', 'Jul–Sep', 'Oct–Dec', 'Jan–Mar'])
+    expect(olderHalfLabel(en, 1)).toBe('Jan–Jun')
+    expect(olderHalfLabel(en, 9)).toBe('Sep–Feb')
+    expect(olderHalfLabel(en, 4)).toBe('Apr–Sep')
   })
 })
 

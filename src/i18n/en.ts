@@ -159,7 +159,7 @@ export const en: Strings = {
   lowerNote: '(lower is better here, so this is how much better older children score)',
   dateExplain: 'We calculate each child’s age on the assessment date.',
   downloadTemplate: 'Download a CSV template',
-  csvHelp: 'Columns: name, birth_date (2014-03-21 or 21.03.2014), score (any test or rating where higher is better).',
+  csvHelp: 'Columns: name, birth_date (2014-03-21 or 21.03.2014), score (any test or rating).',
   syntheticBanner:
     'SYNTHETIC SAMPLE — invented children and scores, for demonstration only. Upload your own CSV to analyse a real squad.',
   assessmentDate: 'Assessment date',
@@ -182,7 +182,13 @@ export const en: Strings = {
 
   skewTitle: 'Your squad’s birth months',
   skewChart: 'How many players were born in each part of the year',
-  skewSummary: (early, n) => `${early} of ${n} players were born in the first half of the year.`,
+  skewSummary: (early, n, half) =>
+    half
+      ? `${early} of ${n} players were born in the older half of the age group (${half}).`
+      : `${early} of ${n} players were born in the first half of the year.`,
+  cutoffLabel: 'The age group starts on',
+  cutoffOption: (month) => `1 ${en.monthsLong[month - 1]}${month === 1 ? ' (most countries)' : month === 9 ? ' (England, Wales)' : month === 4 ? ' (Japan)' : ''}`,
+  cutoffHelp: 'Children born right after this date are the oldest in their group.',
   skewNote: 'In an unbiased intake you would expect about half.',
 
   talentTitle: 'Hidden talents',

@@ -155,3 +155,17 @@ test('lower-is-better test: the fastest child ranks first and the chart flips', 
   await expect(page.locator('.scatter__label').last()).toContainText('lower is better')
   await expect(page.locator('.trend-line')).toContainText('per month of age')
 })
+
+test('selection year from 1 September: badges and the squad chart follow the cut-off', async ({ page }) => {
+  await page.goto('./#squad')
+  await page.getByRole('button', { name: 'English' }).click()
+  await page.getByRole('button', { name: 'Try with the sample' }).click()
+  await expect(page.getByText('14 of 20 players were born in the first half of the year.')).toBeVisible()
+  await page.getByLabel('The age group starts on').selectOption('9')
+  await expect(page.getByText(/of 20 players were born in the older half of the age group \(Sep–Feb\)\./)).toBeVisible()
+  await expect(page.locator('.chart__labels').first()).toContainText('Sep–Nov')
+  await page.getByRole('button', { name: /See the decision/ }).click()
+  await expect(page.locator('.squad-table')).toContainText('Jun–Aug')
+  await expect(page.locator('.squad-table')).not.toContainText('Oct–Dec')
+  await expect(page.locator('.scatter__legend')).toContainText('Sep–Nov · early-born')
+})

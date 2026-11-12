@@ -10,13 +10,14 @@ interface Props {
   talents: AnalysedPlayer[]
   slope: number
   synthetic: boolean
+  quarterLabels: string[]
 }
 
 /** One-page printable summary; hidden on screen, the only thing shown when printing. */
-export function PrintReport({ t, reference, players, quarterCounts, diff, talents, slope, synthetic }: Props) {
+export function PrintReport({ t, reference, players, quarterCounts, diff, talents, slope, synthetic, quarterLabels }: Props) {
   const n = players.length
   const names = (list: AnalysedPlayer[]) =>
-    list.length ? list.map((p) => `${p.name} (${t.quarterLabels[p.quarter - 1]})`).join(', ') : t.reportNone
+    list.length ? list.map((p) => `${p.name} (${quarterLabels[p.quarter - 1]})`).join(', ') : t.reportNone
 
   return (
     <section className="print-report" aria-hidden="true">
@@ -29,8 +30,8 @@ export function PrintReport({ t, reference, players, quarterCounts, diff, talent
         <tbody>
           <tr>
             {quarterCounts.map((c, i) => (
-              <td key={t.quarterLabels[i]}>
-                <strong>{t.quarterLabels[i]}</strong>: {c} ({t.pct(n ? c / n : 0)})
+              <td key={quarterLabels[i]}>
+                <strong>{quarterLabels[i]}</strong>: {c} ({t.pct(n ? c / n : 0)})
               </td>
             ))}
           </tr>

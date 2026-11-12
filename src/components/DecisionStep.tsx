@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Strings } from '../i18n'
 import { csvCell } from '../lib/csv'
-import { ageAdvantage, compareSelections, hiddenTalents, recommendGroup, type AnalysedPlayer } from '../lib/squad'
+import { ageAdvantage, compareSelections, hiddenTalents, quarterLabels, recommendGroup, type AnalysedPlayer } from '../lib/squad'
 import { isoDay, type SquadState } from '../useSquad'
 import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
@@ -48,6 +48,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
   }
 
   const { players, quarterCounts, fit, meanAgeMonths } = analysis
+  const qLabels = quarterLabels(t.months, analysis.cutoffMonth)
   const n = players.length
   const diff = compareSelections(players, topN)
   const talents = hiddenTalents(players, 3)
@@ -113,7 +114,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
     <ul className="chips">
       {list.map((p) => (
         <li key={p.id}>
-          {nameButton(p)} <QuarterBadge q={p.quarter} t={t} />
+          {nameButton(p)} <QuarterBadge q={p.quarter} labels={qLabels} />
         </li>
       ))}
     </ul>
@@ -199,7 +200,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
 
       <section className="card" aria-labelledby="scatter-heading">
         <h3 id="scatter-heading">{t.scatterHeading}</h3>
-        <ScatterPlot t={t} players={players} fit={fit} highlighted={talents} quarterLabels={t.quarterLabels} higherIsBetter={analysis.higherIsBetter} />
+        <ScatterPlot t={t} players={players} fit={fit} highlighted={talents} quarterLabels={qLabels} higherIsBetter={analysis.higherIsBetter} />
       </section>
 
       <section className="card" aria-labelledby="talent-title">
@@ -214,7 +215,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                 <li key={p.id}>
                   <button type="button" className="talent-card" onClick={() => setCardId(p.id)} aria-label={t.openCard(p.name)}>
                     <span className="talent-card__name">{p.name}</span>
-                    <QuarterBadge q={p.quarter} t={t} />
+                    <QuarterBadge q={p.quarter} labels={qLabels} />
                     <span className="talent-card__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
                     <span className="talent-card__age">{relAge(p)}</span>
                   </button>
@@ -289,7 +290,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                         {view === 'fair' ? p.fairRank : p.rawRank}
                       </td>
                       <th scope="row">
-                        {nameButton(p)} <QuarterBadge q={p.quarter} t={t} />
+                        {nameButton(p)} <QuarterBadge q={p.quarter} labels={qLabels} />
                       </th>
                       <td data-label={t.colAge}>{ageText(p)}</td>
                       <td data-label={t.colRaw}>{t.num(p.score, Number.isInteger(p.score) ? 0 : scoreDigits)}</td>
@@ -339,9 +340,10 @@ export function DecisionStep({ t, squad, onBack }: Props) {
         talents={talents}
         slope={fit.slope}
         synthetic={synthetic}
+        quarterLabels={qLabels}
       />
 
-      <PlayerCard t={t} player={cardPlayer} meanAgeMonths={meanAgeMonths} squadSize={n} onClose={() => setCardId(null)} />
+      <PlayerCard t={t} quarterLabels={qLabels} player={cardPlayer} meanAgeMonths={meanAgeMonths} squadSize={n} onClose={() => setCardId(null)} />
     </div>
   )
 }

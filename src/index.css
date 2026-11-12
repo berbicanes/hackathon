@@ -1903,3 +1903,28 @@ td small {
   line-height: 1.2;
   border-radius: 20px;
 }
+
+.field select {
+  font: inherit;
+  padding: 8px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  min-height: 44px;
+  max-width: 100%;
+}
+
+@media (max-width: 860px) {
+  .stepper__compact {
+    gap: 4px;
+  }
+
+  .stepper__where strong {
+    font-size: 0.95rem;
+  }
+
+  .lang button {
+    padding: 8px 10px;
+  }
+}

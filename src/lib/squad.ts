@@ -12,7 +12,7 @@ export interface Player {
 export interface AnalysedPlayer extends Player {
   id: number
   ageMonths: number
-  /** Birth quarter in the selection year (cut-off 1 January): 1 = Jan–Mar … 4 = Oct–Dec. */
+  /** Birth quarter in the selection year: 1 = the three months after the cut-off (oldest) … 4 = the three before it. */
   quarter: 1 | 2 | 3 | 4
   /** How much better than the squad trend predicts for this age (positive = better, whatever the test direction). */
   residual: number
@@ -60,11 +60,15 @@ export interface SquadAnalysis {
   meanAgeMonths: number
   quarterCounts: [number, number, number, number]
   higherIsBetter: boolean
+  /** Month (1–12) in which the selection year starts. */
+  cutoffMonth: number
 }
 
 export interface AnalysisOptions {
   /** False for tests where a smaller number is the better result, e.g. a sprint in seconds. Default true. */
   higherIsBetter?: boolean
+  /** Month (1–12) in which the selection year starts. Default 1 (1 January). */
+  cutoffMonth?: number
 }
 
 export interface SelectionDiff {
@@ -85,8 +89,28 @@ function ageInMonths(birthDate: Date, reference: Date): number {
   return days / DAYS_PER_MONTH
 }
 
-function birthQuarter(birthDate: Date): 1 | 2 | 3 | 4 {
-  return (Math.floor(birthDate.getUTCMonth() / 3) + 1) as 1 | 2 | 3 | 4
+function birthQuarter(birthDate: Date, cutoffMonth: number): 1 | 2 | 3 | 4 {
+  const monthsIntoYear = (birthDate.getUTCMonth() - (cutoffMonth - 1) + 12) % 12
+  return (Math.floor(monthsIntoYear / 3) + 1) as 1 | 2 | 3 | 4
+}
+
+/** Selection-year starts the app offers: 1 January (UEFA default), 1 September (England, Wales), 1 April (Japan). */
+export const CUTOFF_MONTHS = [1, 9, 4] as const
+
+/**
+ * Labels for the four birth quarters of a selection year that starts in `cutoffMonth`
+ * (1–12), oldest children first: e.g. cut-off 9 → "Sep–Nov", "Dec–Feb", "Mar–May", "Jun–Aug".
+ */
+export function quarterLabels(monthNames: string[], cutoffMonth: number): string[] {
+  return [0, 1, 2, 3].map((q) => {
+    const start = (cutoffMonth - 1 + q * 3) % 12
+    return `${monthNames[start]}–${monthNames[(start + 2) % 12]}`
+  })
+}
+
+/** Label for the older half of the selection year, e.g. cut-off 9 → "Sep–Feb". */
+export function olderHalfLabel(monthNames: string[], cutoffMonth: number): string {
+  return `${monthNames[(cutoffMonth - 1) % 12]}–${monthNames[(cutoffMonth + 4) % 12]}`
 }
 
 /** Ordinary least squares fit y = intercept + slope * x. Flat line if x has no spread. */
@@ -141,6 +165,7 @@ export function analyseSquad(players: Player[], reference: Date, options: Analys
   const higherIsBetter = options.higherIsBetter ?? true
   /** +1 when a higher score is better, −1 when a lower one is. */
   const direction = higherIsBetter ? 1 : -1
+  const cutoffMonth = options.cutoffMonth ?? 1
   const base = players.map((p, id) => ({ ...p, id, ageMonths: ageInMonths(p.birthDate, reference) }))
   const fit = linearFit(
     base.map((p) => p.ageMonths),
@@ -163,7 +188,7 @@ export function analyseSquad(players: Player[], reference: Date, options: Analys
 
   const analysed: AnalysedPlayer[] = base.map((p) => {
     const residual = residuals.get(p.id) ?? 0
-    const quarter = birthQuarter(p.birthDate)
+    const quarter = birthQuarter(p.birthDate, cutoffMonth)
     quarterCounts[quarter - 1]++
     const rawRank = rawRanks.get(p.id) ?? n
     const fairRank = fairRanks.get(p.id) ?? n
@@ -181,7 +206,7 @@ export function analyseSquad(players: Player[], reference: Date, options: Analys
     }
   })
 
-  return { players: analysed, fit, meanAgeMonths, quarterCounts, higherIsBetter }
+  return { players: analysed, fit, meanAgeMonths, quarterCounts, higherIsBetter, cutoffMonth }
 }
 
 /** Compare a top-N selection on raw score with one on age-adjusted score. */

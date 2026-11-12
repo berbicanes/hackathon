@@ -159,7 +159,7 @@ export const bs: Strings = {
   lowerNote: '(ovdje je manje bolje, pa je to prednost starije djece)',
   dateExplain: 'Starost računamo na dan testiranja.',
   downloadTemplate: 'Preuzmite CSV šablon',
-  csvHelp: 'Kolone: name (ime), birth_date (2014-03-21 ili 21.03.2014), score (bilo koji test ili ocjena gdje je više bolje).',
+  csvHelp: 'Kolone: name (ime), birth_date (2014-03-21 ili 21.03.2014), score (bilo koji test ili ocjena).',
   syntheticBanner:
     'SINTETIČKI PRIMJER — izmišljena djeca i ocjene, samo za demonstraciju. Učitajte svoj CSV da analizirate stvarnu ekipu.',
   assessmentDate: 'Datum testiranja',
@@ -182,8 +182,13 @@ export const bs: Strings = {
 
   skewTitle: 'Mjeseci rođenja u vašoj ekipi',
   skewChart: 'Koliko je igrača rođeno u kojem dijelu godine',
-  skewSummary: (early, n) =>
-    `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u prvoj polovini godine.`,
+  skewSummary: (early, n, half) =>
+    half
+      ? `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u starijoj polovini generacije (${half}).`
+      : `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u prvoj polovini godine.`,
+  cutoffLabel: 'Generacija počinje',
+  cutoffOption: (month) => `1. ${bs.monthsLong[month - 1]}${month === 1 ? ' (većina zemalja)' : month === 9 ? ' (Engleska, Vels)' : month === 4 ? ' (Japan)' : ''}`,
+  cutoffHelp: 'Djeca rođena odmah nakon tog datuma najstarija su u svojoj generaciji.',
   skewNote: 'Bez pristrasnosti očekivali biste otprilike pola.',
 
   talentTitle: 'Skriveni talenti',

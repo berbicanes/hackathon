@@ -1,6 +1,7 @@
 import { useId, useState, type ChangeEvent } from 'react'
 import type { Strings } from '../i18n'
 import { CSV_TEMPLATE, MAX_ROWS } from '../lib/csv'
+import { CUTOFF_MONTHS, olderHalfLabel, quarterLabels } from '../lib/squad'
 import type { LoadError, SquadState } from '../useSquad'
 import { BarChart } from './BarChart'
 import { DateField } from './DateField'
@@ -39,6 +40,8 @@ export function SquadStep({ t, squad, onNext }: Props) {
   const n = analysis?.players.length ?? 0
   const quarterCounts = analysis?.quarterCounts ?? [0, 0, 0, 0]
   const firstHalf = quarterCounts[0] + quarterCounts[1]
+  const qLabels = quarterLabels(t.months, squad.cutoffMonth)
+  const half = squad.cutoffMonth === 1 ? undefined : olderHalfLabel(t.months, squad.cutoffMonth)
 
   return (
     <div className="stack">
@@ -89,6 +92,17 @@ export function SquadStep({ t, squad, onNext }: Props) {
         />
         <p className="help">{t.dateExplain}</p>
         <div className="field field--wide">
+          <label htmlFor="cutoff">{t.cutoffLabel}</label>
+          <select id="cutoff" value={squad.cutoffMonth} onChange={(e) => squad.setCutoffMonth(Number(e.target.value))}>
+            {CUTOFF_MONTHS.map((m) => (
+              <option key={m} value={m}>
+                {t.cutoffOption(m)}
+              </option>
+            ))}
+          </select>
+          <span className="help">{t.cutoffHelp}</span>
+        </div>
+        <div className="field field--wide">
           <span className="field__label" id="direction-label">
             {t.directionLabel}
           </span>
@@ -132,12 +146,12 @@ export function SquadStep({ t, squad, onNext }: Props) {
           )}
           <section className="card" aria-labelledby="skew-title">
             <h3 id="skew-title">{t.skewTitle}</h3>
-            <p className="big-line">{t.skewSummary(firstHalf, n)}</p>
+            <p className="big-line">{t.skewSummary(firstHalf, n, half)}</p>
             <p className="help">{t.skewNote}</p>
             <BarChart
               title={t.skewChart}
               bars={quarterCounts.map((c, i) => ({
-                label: t.quarterLabels[i],
+                label: qLabels[i],
                 value: n ? c / n : 0,
                 display: `${c}`,
                 tone: i === 0 ? 'early' : i === 3 ? 'late' : 'neutral',

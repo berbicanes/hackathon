@@ -133,7 +133,11 @@ export interface Strings {
 
   skewTitle: string
   skewChart: string
-  skewSummary: (early: number, n: number) => string
+  /** `half` (e.g. "Sep–Feb") is given when the selection year does not start in January. */
+  skewSummary: (early: number, n: number, half?: string) => string
+  cutoffLabel: string
+  cutoffOption: (month: number) => string
+  cutoffHelp: string
   skewNote: string
 
   talentTitle: string
