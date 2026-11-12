@@ -1,0 +1,270 @@
+{
+ "source": "Transfermarkt via github.com/dcaribou/transfermarkt-datasets (players.csv)",
+ "reference_date": "2026-07-01",
+ "definitions": {
+  "active": "last_season >= 2024",
+  "under_21": "active and age < 21 on reference date",
+  "quarters": "Q1 = Jan-Mar, Q4 = Oct-Dec (calendar-year selection cut-off)",
+  "expected": "share of days in the period (Feb = 28.25 days)"
+ },
+ "all_players": {
+  "n": 50100,
+  "quarters": [
+   16292,
+   13257,
+   11450,
+   9101
+  ],
+  "quarter_share": [
+   0.3252,
+   0.2646,
+   0.2285,
+   0.1817
+  ],
+  "expected_quarter_share": [
+   0.2471,
+   0.2491,
+   0.2519,
+   0.2519
+  ],
+  "months": [
+   6082,
+   5025,
+   5185,
+   4722,
+   4482,
+   4053,
+   3989,
+   3842,
+   3619,
+   3281,
+   2958,
+   2862
+  ],
+  "month_share": [
+   0.1214,
+   0.1003,
+   0.1035,
+   0.0943,
+   0.0895,
+   0.0809,
+   0.0796,
+   0.0767,
+   0.0722,
+   0.0655,
+   0.059,
+   0.0571
+  ],
+  "expected_month_share": [
+   0.0849,
+   0.0773,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0821,
+   0.0849
+  ],
+  "q1_q4_ratio": 1.825,
+  "chi_square_quarters": {
+   "chi2": 2374.07,
+   "df": 3,
+   "p_value": 0.0
+  },
+  "chi_square_months": {
+   "chi2": 2553.54,
+   "df": 11,
+   "p_value": 0.0
+  }
+ },
+ "active_players": {
+  "n": 28365,
+  "quarters": [
+   9028,
+   7530,
+   6594,
+   5213
+  ],
+  "quarter_share": [
+   0.3183,
+   0.2655,
+   0.2325,
+   0.1838
+  ],
+  "expected_quarter_share": [
+   0.2471,
+   0.2491,
+   0.2519,
+   0.2519
+  ],
+  "months": [
+   3272,
+   2843,
+   2913,
+   2667,
+   2546,
+   2317,
+   2321,
+   2229,
+   2044,
+   1876,
+   1675,
+   1662
+  ],
+  "month_share": [
+   0.1154,
+   0.1002,
+   0.1027,
+   0.094,
+   0.0898,
+   0.0817,
+   0.0818,
+   0.0786,
+   0.0721,
+   0.0661,
+   0.0591,
+   0.0586
+  ],
+  "expected_month_share": [
+   0.0849,
+   0.0773,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0821,
+   0.0849
+  ],
+  "q1_q4_ratio": 1.765,
+  "chi_square_quarters": {
+   "chi2": 1176.78,
+   "df": 3,
+   "p_value": 8.001494487955368e-255
+  },
+  "chi_square_months": {
+   "chi2": 1249.11,
+   "df": 11,
+   "p_value": 4.200100391511796e-261
+  }
+ },
+ "under_21": {
+  "n": 5538,
+  "quarters": [
+   1788,
+   1304,
+   1427,
+   1019
+  ],
+  "quarter_share": [
+   0.3229,
+   0.2355,
+   0.2577,
+   0.184
+  ],
+  "expected_quarter_share": [
+   0.2471,
+   0.2491,
+   0.2519,
+   0.2519
+  ],
+  "months": [
+   710,
+   545,
+   533,
+   488,
+   409,
+   407,
+   518,
+   494,
+   415,
+   389,
+   328,
+   302
+  ],
+  "month_share": [
+   0.1282,
+   0.0984,
+   0.0962,
+   0.0881,
+   0.0739,
+   0.0735,
+   0.0935,
+   0.0892,
+   0.0749,
+   0.0702,
+   0.0592,
+   0.0545
+  ],
+  "expected_month_share": [
+   0.0849,
+   0.0773,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0849,
+   0.0821,
+   0.0849,
+   0.0821,
+   0.0849
+  ],
+  "q1_q4_ratio": 1.789,
+  "chi_square_quarters": {
+   "chi2": 234.88,
+   "df": 3,
+   "p_value": 1.2191171784357286e-50
+  },
+  "chi_square_months": {
+   "chi2": 297.14,
+   "df": 11,
+   "p_value": 3.5104148490093023e-57
+  }
+ },
+ "underdog": [
+  {
+   "band": "18-21",
+   "n_q1": 1138,
+   "n_q4": 742,
+   "median_value_q1": 400000.0,
+   "median_value_q4": 400000.0,
+   "mean_value_q1": 2553836,
+   "mean_value_q4": 2515957,
+   "p_value": 0.9608580557182838,
+   "prob_q4_greater": 0.4993,
+   "significant_at_05": false
+  },
+  {
+   "band": "22-25",
+   "n_q1": 1943,
+   "n_q4": 1148,
+   "median_value_q1": 600000.0,
+   "median_value_q4": 700000.0,
+   "mean_value_q1": 3184431,
+   "mean_value_q4": 4169016,
+   "p_value": 0.0007183424289191628,
+   "prob_q4_greater": 0.5363,
+   "significant_at_05": true
+  },
+  {
+   "band": "26-29",
+   "n_q1": 1775,
+   "n_q4": 1054,
+   "median_value_q1": 800000.0,
+   "median_value_q4": 800000.0,
+   "mean_value_q1": 3201301,
+   "mean_value_q4": 4143463,
+   "p_value": 0.029083224902691832,
+   "prob_q4_greater": 0.5245,
+   "significant_at_05": true
+  }
+ ]
+}
