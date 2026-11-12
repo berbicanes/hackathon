@@ -27,8 +27,10 @@ squad average, top 32% for their age: take a second look, reassess in 6 months")
 **printable one-page squad fairness report**. The app is in **Bosnian** (default) and
 **English**.
 
-Everything runs in the browser. **Uploaded squad data never leaves the device**: no
-backend, no database, no accounts, no analytics.
+Everything that decides runs in the browser. **The uploaded squad file never leaves the
+device**: no database, no accounts, no analytics. An optional "Objasni mi (AI)" button
+sends only anonymous numbers (never names or birth dates) to get a plain-language
+explanation; see [Architecture](#architecture-math-decides-ai-explains).
 
 ## Key findings
 
@@ -197,6 +199,7 @@ public/data/rae.json      analysis output used by the Bias mirror
 src/lib/                  pure logic + unit tests (squad, csv, playerCard, format)
 src/components/           screens and UI pieces
 src/i18n/                 Bosnian and English strings (one file per language)
+worker/                   optional Cloudflare Worker: AI explanation proxy (schema, prompt, handler)
 PITCH.md                  3-minute demo script and jury Q&A
 ```
 
@@ -212,14 +215,68 @@ served under `/hackathon/` (see `vite.config.ts`).
 - The app has a short **Privacy page** in both languages (footer link, or
   `/hackathon/#privacy`). The only outside service is GitHub Pages hosting; fonts (Inter
   and Space Grotesk, SIL Open Font License) are self-hosted from `src/fonts/`.
-- No server, no cookies, no tracking. Squad files are read with the browser File API and
-  analysed in memory.
+- No cookies, no tracking. Squad files are read with the browser File API and analysed in
+  memory. The only server component is the optional explanation Worker, which receives
+  de-identified numbers on click and stores no request content.
 - A strict Content-Security-Policy allows scripts, styles and fonts only from the site
   itself. The page makes no third-party requests.
 - An error boundary shows a reload message instead of a blank page; errors stay in the
   browser console.
 - Uploaded files are size- and row-limited and parsed defensively; exported CSV cells are
   protected against spreadsheet formula injection.
+
+## Architecture: math decides, AI explains
+
+```
+Browser (GitHub Pages, static)                Cloudflare Worker (/worker)          Anthropic
+┌───────────────────────────────┐   click    ┌──────────────────────────────┐    ┌────────────┐
+│ CSV → analysis → recommendation│ ─────────▶ │ CORS allow-list, strict      │ ─▶ │ Messages   │
+│ (src/lib/squad.ts, all local)  │  numbers   │ schema, 20/hour per IP,      │    │ API        │
+│ "Objasni mi (AI)" (optional)   │ ◀───────── │ no logging, key as a secret  │ ◀─ │            │
+└───────────────────────────────┘    text    └──────────────────────────────┘    └────────────┘
+```
+
+- **The deterministic math is the only decision-maker.** Rankings, the second-look list,
+  borderline children and reliability all come from `src/lib/squad.ts` and are unit
+  tested. The AI never sees the squad file and cannot change a recommendation.
+- **The AI layer is optional and only explains.** Nothing is sent until the coach clicks
+  "Objasni mi (AI)" on the recommendation card or a player card.
+- **What is sent** (`src/lib/explain.ts`, schema in `worker/src/schema.ts`): the child's
+  age in months, raw and adjusted score and rank, squad size, the age trend and its 95%
+  interval, cut-off month, test direction, late-born / borderline / second-look flags and
+  the language. Numbers, booleans and three fixed codes; never names, never birth dates.
+  Tests assert this for every child in the sample.
+- **The Worker** (`worker/src/index.ts`) accepts requests only from the deployed site,
+  rejects anything that is not exactly the schema (unknown fields, text where a number
+  belongs), limits each IP to 20 requests an hour (a hashed counter in KV that expires
+  after an hour), logs nothing, and calls the Anthropic Messages API with model
+  `claude-sonnet-5-5` and `max_tokens: 400`. The API key is a Worker secret and is never
+  in this repository.
+- **The system prompt** (`worker/src/prompt.ts`): 3–4 short sentences in Bosnian or
+  English, only the numbers given, never invent, never say a child is bad or should be
+  cut, frame it as "take a second look", state uncertainty when the interval is wide or
+  the child is borderline.
+- **Failure is safe.** Loading state, 10-second timeout, and on any error, rate limit or
+  refusal the app shows its own deterministic explanation, labelled as not AI. AI text is
+  always marked "AI-generated".
+- **Switching it on:** set `EXPLAIN_ENDPOINT` in `src/config.ts` to the Worker URL and add
+  that origin to `connect-src` in `index.html`. While it is empty, the button shows the
+  deterministic explanation and no request is made.
+
+### Deploying the Worker
+
+```bash
+cd worker
+npm install
+npx wrangler login                              # opens the browser
+npx wrangler kv namespace create RATE_LIMIT     # paste the printed id into wrangler.toml
+npx wrangler secret put ANTHROPIC_API_KEY       # paste the key at the prompt, nowhere else
+npx wrangler deploy                             # prints the workers.dev URL
+```
+
+Set a monthly spend limit for that key in the Anthropic Console: the Origin check stops
+other websites, but a script can forge that header, so the rate limit and the spend limit
+are what bound the cost.
 
 ## Production readiness
 
@@ -233,8 +290,8 @@ fake was added to satisfy them:
 
 | Rule | Why it does not apply |
 |---|---|
-| Audit / activity log table | There is no database and no server. The app never writes a record, so there is nothing to audit. |
-| Scheduled job that deletes expired data | Nothing is stored. Squad data lives in the tab's memory and is gone when the tab closes. |
+| Audit / activity log table | The site has no database. The optional Worker stores no request content and deliberately keeps no log of what coaches ask about children; its only state is an anonymous hourly counter. |
+| Scheduled job that deletes expired data | Squad data lives in the tab's memory and is gone when the tab closes. The Worker's rate-limit counters expire on their own after one hour (KV `expirationTtl`), so no job is needed. |
 | Second reader / code review in the history | Solo hackathon project with one author. `CONTRIBUTING.md` asks for pull requests from here on; no reviews were invented. |
 | Data-protection contact address | No personal data is collected, so there is no controller mailbox. The Privacy page gives a contact route (project issues). |
 | Auth, roles, rate limits, migrations, tenant isolation | No accounts, no API, no stored data. |

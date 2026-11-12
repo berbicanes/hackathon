@@ -1,7 +1,9 @@
 # Security
 
-Late Bloomers is a static site with no server, database, accounts or analytics. Squad
-files are read and analysed in the browser and never leave the device.
+Late Bloomers is a static site with no database, accounts or analytics. Squad files are
+read and analysed in the browser and never leave the device. The only server component
+is an optional Cloudflare Worker (`/worker`) that turns de-identified numbers into a
+short explanation when a coach clicks "Objasni mi (AI)".
 
 ## Reporting a problem
 
@@ -18,3 +20,7 @@ private channel; do not post personal data or real squad files.
   formula injection.
 - CI on every push: dependency audit, lint, type check, unit tests with a coverage floor,
   end-to-end journey, and a smoke check of the deployed site.
+- Explanation Worker: requests accepted only from the deployed site's origin, strict
+  schema (numbers, booleans and fixed codes only; names and free text are rejected),
+  20 requests per hour per IP, no logging, API key held as a Worker secret. The model's
+  output is rendered as plain text, never as HTML.

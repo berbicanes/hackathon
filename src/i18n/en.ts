@@ -33,11 +33,11 @@ export const en: Strings = {
   decisionEmptyAction: 'Go to Your squad',
   appName: 'Late Bloomers',
   tagline: 'See the hidden talent your selection is missing.',
-  privacy: 'Your squad data never leaves this device. No uploads, no accounts, no tracking.',
+  privacy: 'Your squad data stays on this device. No uploads, no accounts, no tracking. The optional AI explanation sends only anonymous numbers.',
   footerData: 'Professional data: Transfermarkt via the open transfermarkt-datasets project.',
   privacyLink: 'Privacy',
   privacyTitle: 'Privacy',
-  privacyLead: 'Late Bloomers collects no data. Your squad file is processed only in your browser and is never sent anywhere.',
+  privacyLead: 'Late Bloomers collects no data. Your squad file is processed only in your browser. Nothing leaves your device unless you click “Explain (AI)”, and then only anonymous numbers are sent.',
   privacySections: [
     {
       title: 'What we collect',
@@ -48,12 +48,16 @@ export const en: Strings = {
       text: 'A CSV you upload is read by your browser and analysed in memory on your device. Names, birth dates and scores are never uploaded, stored or shared. The results CSV and the printed report are created on your device as well.',
     },
     {
+      title: 'Optional AI explanation',
+      text: 'The calculation runs on your device and makes every decision. Only if you click “Explain (AI)” does the app send a short list of anonymous numbers to get a plain-language explanation: the child’s age in months, raw and age-adjusted score and rank, squad size, the age trend and its range, the cut-off month, the test direction, whether the child is late-born or borderline, and the language. Never a name, never a birth date, never the file. The numbers go through our own small relay (a Cloudflare Worker) to Anthropic, whose Claude model writes the text. The relay keeps no request content and no logs; for one hour it keeps an anonymous counter per visitor to limit use to 20 requests an hour. Anthropic processes the request under its own API terms. If you never click the button, nothing is sent.',
+    },
+    {
       title: 'Cookies and tracking',
       text: 'No cookies, no tracking, no advertising. The only thing saved is your language choice, kept in your browser’s local storage and never sent to anyone.',
     },
     {
       title: 'Other services',
-      text: 'The site is hosted on GitHub Pages, and that is the only outside service involved: fonts, scripts and data are all served from the site itself. As with any website, the host sees technical request data such as your IP address when the page loads. It never receives your squad file or anything you type.',
+      text: 'The site is hosted on GitHub Pages; fonts, scripts and data are all served from the site itself. As with any website, the host sees technical request data such as your IP address when the page loads. Cloudflare and Anthropic are involved only when you click “Explain (AI)”, as described above. None of them ever receives your squad file or any name.',
     },
     {
       title: 'How to delete your data',

@@ -33,11 +33,11 @@ export const bs: Strings = {
   decisionEmptyAction: 'Idi na Vaša ekipa',
   appName: 'Late Bloomers',
   tagline: 'Pronađite skriveni talenat koji vaša selekcija propušta.',
-  privacy: 'Podaci o vašoj ekipi nikad ne napuštaju ovaj uređaj. Bez slanja, bez naloga, bez praćenja.',
+  privacy: 'Podaci o vašoj ekipi ostaju na ovom uređaju. Bez slanja fajla, bez naloga, bez praćenja. Opcionalno AI objašnjenje šalje samo anonimne brojeve.',
   footerData: 'Profesionalni podaci: Transfermarkt, preko otvorenog projekta transfermarkt-datasets.',
   privacyLink: 'Privatnost',
   privacyTitle: 'Privatnost',
-  privacyLead: 'Late Bloomers ne prikuplja nikakve podatke. Fajl vaše ekipe obrađuje se samo u vašem pregledniku i nikad se nigdje ne šalje.',
+  privacyLead: 'Late Bloomers ne prikuplja nikakve podatke. Fajl vaše ekipe obrađuje se samo u vašem pregledniku. Ništa ne napušta vaš uređaj osim ako kliknete „Objasni mi (AI)“, a i tada se šalju samo anonimni brojevi.',
   privacySections: [
     {
       title: 'Šta prikupljamo',
@@ -48,12 +48,16 @@ export const bs: Strings = {
       text: 'CSV koji učitate čita vaš preglednik i analizira ga u memoriji vašeg uređaja. Imena, datumi rođenja i ocjene se nikad ne šalju, ne čuvaju i ne dijele. CSV s rezultatima i štampani izvještaj također nastaju na vašem uređaju.',
     },
     {
+      title: 'Opcionalno AI objašnjenje',
+      text: 'Računica se izvodi na vašem uređaju i ona donosi svaku odluku. Samo ako kliknete „Objasni mi (AI)“, aplikacija šalje kratku listu anonimnih brojeva da bi dobila objašnjenje običnim jezikom: starost djeteta u mjesecima, sirovu i prilagođenu ocjenu i mjesto, veličinu ekipe, uticaj starosti i njegov raspon, mjesec početka generacije, smjer testa, da li je dijete kasno rođeno ili na granici, i jezik. Nikad ime, nikad datum rođenja, nikad fajl. Brojevi idu preko našeg malog posrednika (Cloudflare Worker) do kompanije Anthropic, čiji model Claude piše tekst. Posrednik ne čuva sadržaj zahtjeva niti zapise; jedan sat čuva anonimni brojač po posjetiocu da ograniči upotrebu na 20 zahtjeva na sat. Anthropic obrađuje zahtjev prema vlastitim uslovima za API. Ako nikad ne kliknete to dugme, ništa se ne šalje.',
+    },
+    {
       title: 'Kolačići i praćenje',
       text: 'Nema kolačića, nema praćenja, nema reklama. Jedino što se pamti je vaš izbor jezika, sačuvan u lokalnoj memoriji vašeg preglednika, i on se nikome ne šalje.',
     },
     {
       title: 'Druge usluge',
-      text: 'Stranica je smještena na GitHub Pages i to je jedina vanjska usluga: fontovi, skripte i podaci dolaze sa same stranice. Kao i kod svake web-stranice, pružalac hostinga pri učitavanju vidi tehničke podatke o zahtjevu, poput vaše IP adrese. Nikad ne dobija fajl vaše ekipe niti bilo šta što unesete.',
+      text: 'Stranica je smještena na GitHub Pages; fontovi, skripte i podaci dolaze sa same stranice. Kao i kod svake web-stranice, pružalac hostinga pri učitavanju vidi tehničke podatke o zahtjevu, poput vaše IP adrese. Cloudflare i Anthropic uključeni su samo kad kliknete „Objasni mi (AI)“, kako je gore opisano. Niko od njih nikad ne dobija fajl vaše ekipe niti ijedno ime.',
     },
     {
       title: 'Kako obrisati podatke',

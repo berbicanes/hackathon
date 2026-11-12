@@ -50,6 +50,11 @@ browser tab with the sample already loaded on step 3 as backup.
    age. *Take a second look.* The tool never says a child is bad; worst case it says
    *keep developing*."
 
+**Math decides, AI explains.** Optional last touch on the recommendation or on Ena's
+card: **Objasni mi (AI)**. "The calculation already made the recommendation; this button
+only puts it into three plain sentences for a parent. It sends anonymous numbers, never a
+name or a birth date, and if the AI is unavailable the app shows its own explanation."
+
 Only if asked: **Prikaži sve igrače (20)** opens the full ranking with the
 Preporuka / Sirova ocjena / Prilagođeno starosti comparison; step 2 has settings for
 lower-is-better tests and for a 1 September or 1 April selection year.
@@ -60,7 +65,7 @@ lower-is-better tests and for a 1 September or 1 April selection year.
   each (tap one to open it).
   Print button → one-page report a coach can pin on the wall or take to the board.
 - "It's free, works on a phone, in Bosnian, and the squad file never leaves the device.
-  No server, no login, no tracking. Kids' data stays with the coach."
+  No login, no tracking. Kids' names and birth dates stay with the coach."
 - "Proven on 50,000 pros. Usable on Monday by any grassroots coach."
 
 ## Likely jury questions
@@ -137,8 +142,17 @@ the next layer. Bio-banding needs height measurements and a formula; that's a na
 next step.
 
 **Privacy / GDPR with children's data?**
-There's no server. The CSV is read by the browser and analysed in memory. Nothing is
-uploaded, stored or tracked. Closing the tab deletes everything.
+The CSV is read by the browser and analysed in memory; the file is never uploaded, stored
+or tracked, and closing the tab deletes everything. The one optional exception is the
+"Objasni mi (AI)" button: on click it sends de-identified numbers (age in months, scores,
+ranks, squad statistics), never names or birth dates, through our own relay to Anthropic.
+The relay keeps no content and no logs.
+
+**Why use AI at all, and can it change the recommendation?**
+No. Math decides, AI explains. The ranking, the second-look list and the uncertainty all
+come from tested, deterministic code. The AI gets the finished numbers and a strict
+brief: explain in three or four sentences, invent nothing, never call a child bad, frame
+it as a second look. If it fails or refuses, the app shows its own text.
 
 **Could this be misused to rank kids harder?**
 The output is deliberately soft: no "bad" labels, advice is keep / second look /
