@@ -3,6 +3,14 @@ import { expect, test } from '@playwright/test'
 test('coach journey: evidence, sample squad, fair selection, player card', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
+  // Content-Security-Policy violations are reported on the console.
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
+  // The page must not call any third party (fonts are self-hosted).
+  const origin = new URL(test.info().project.use.baseURL!).origin
+  page.on('request', (r) => {
+    const url = new URL(r.url())
+    if (url.protocol.startsWith('http') && url.origin !== origin) errors.push(`third-party request: ${r.url()}`)
+  })
 
   await page.goto('./')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Late Bloomers')
@@ -10,6 +18,7 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
 
   // Bias mirror loads the analysis and shows the headline share.
   await expect(page.locator('.hero__number')).toContainText('32')
+  expect(await page.evaluate(() => document.fonts.ready.then(() => document.fonts.check("16px 'Inter'") && document.fonts.check("700 32px 'Space Grotesk'")))).toBe(true)
 
   await page.getByRole('button', { name: 'English' }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')

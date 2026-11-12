@@ -38,7 +38,7 @@ export const en: Strings = {
     },
     {
       title: 'Other services',
-      text: 'The site is hosted on GitHub Pages and loads its fonts from Google Fonts. As with any website, those providers see technical request data such as your IP address when the page loads. They never receive your squad file or anything you type.',
+      text: 'The site is hosted on GitHub Pages, and that is the only outside service involved: fonts, scripts and data are all served from the site itself. As with any website, the host sees technical request data such as your IP address when the page loads. It never receives your squad file or anything you type.',
     },
     {
       title: 'How to delete your data',

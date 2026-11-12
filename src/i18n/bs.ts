@@ -38,7 +38,7 @@ export const bs: Strings = {
     },
     {
       title: 'Druge usluge',
-      text: 'Stranica je smještena na GitHub Pages, a fontove učitava s Google Fonts. Kao i kod svake web-stranice, ti pružaoci pri učitavanju vide tehničke podatke o zahtjevu, poput vaše IP adrese. Nikad ne dobijaju fajl vaše ekipe niti bilo šta što unesete.',
+      text: 'Stranica je smještena na GitHub Pages i to je jedina vanjska usluga: fontovi, skripte i podaci dolaze sa same stranice. Kao i kod svake web-stranice, pružalac hostinga pri učitavanju vidi tehničke podatke o zahtjevu, poput vaše IP adrese. Nikad ne dobija fajl vaše ekipe niti bilo šta što unesete.',
     },
     {
       title: 'Kako obrisati podatke',

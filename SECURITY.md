@@ -12,7 +12,7 @@ private channel; do not post personal data or real squad files.
 ## What is in place
 
 - Content-Security-Policy (scripts only from the site itself), no inline scripts, no
-  third-party scripts. Fonts are the only outside resource (Google Fonts).
+  third-party scripts, styles or fonts: everything is served from the site itself.
 - Uploaded CSV files are limited in size and rows, parsed defensively, and names are
   stripped of control characters. Exported CSV cells are protected against spreadsheet
   formula injection.
