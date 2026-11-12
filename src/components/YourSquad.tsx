@@ -4,6 +4,8 @@ import { CSV_TEMPLATE, MAX_FILE_BYTES, MAX_ROWS, csvCell, parseSquadCsv, type Pa
 import { SAMPLE_REFERENCE_DATE, sampleSquad } from '../lib/sample'
 import { analyseSquad, compareSelections, hiddenTalents, type AnalysedPlayer, type Player } from '../lib/squad'
 import { BarChart } from './BarChart'
+import { MondayPanel } from './MondayPanel'
+import { PlayerCard } from './PlayerCard'
 
 type View = 'raw' | 'fair'
 
@@ -175,7 +177,11 @@ export function YourSquad({ t }: { t: Strings }) {
         </p>
       )}
 
-      {analysis && <SquadResults t={t} analysis={analysis} topN={topN} setTopN={setTopN} view={view} setView={setView} onDownload={onDownloadResults} />}
+      {analysis && (
+        <SquadResults t={t} analysis={analysis} topN={topN} setTopN={setTopN} view={view} setView={setView} onDownload={onDownloadResults} />
+      )}
+
+      <MondayPanel t={t} />
     </div>
   )
 }
@@ -200,6 +206,14 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
   const selectedIds = new Set((view === 'raw' ? diff.raw : diff.fair).map((p) => p.id))
   const ordered = [...players].sort((a, b) => (view === 'raw' ? a.rawRank - b.rawRank : a.fairRank - b.fairRank))
   const firstHalf = quarterCounts[0] + quarterCounts[1]
+  const [cardId, setCardId] = useState<number | null>(null)
+  const cardPlayer = players.find((p) => p.id === cardId) ?? null
+
+  const nameButton = (p: AnalysedPlayer) => (
+    <button type="button" className="link-button" onClick={() => setCardId(p.id)} aria-label={t.openCard(p.name)}>
+      {p.name}
+    </button>
+  )
 
   const ageText = (p: AnalysedPlayer) => {
     const months = Math.floor(p.ageMonths)
@@ -207,7 +221,8 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
   }
   const relAge = (p: AnalysedPlayer) => {
     const diffM = Math.round(meanAgeMonths - p.ageMonths)
-    return diffM >= 0 ? t.monthsYounger(diffM) : t.monthsOlder(-diffM)
+    if (diffM === 0) return t.averageAge
+    return diffM > 0 ? t.monthsYounger(diffM) : t.monthsOlder(-diffM)
   }
 
   return (
@@ -230,6 +245,7 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
             }))}
             expected={0.25}
             expectedLabel={t.expectedLine}
+            formatShare={(v) => t.pct(v, 1)}
           />
         </section>
 
@@ -243,7 +259,7 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
               {talents.map((p) => (
                 <li key={p.id}>
                   <div className="talents__head">
-                    <strong>{p.name}</strong> <QuarterBadge q={p.quarter} t={t} />
+                    <strong>{nameButton(p)}</strong> <QuarterBadge q={p.quarter} t={t} />
                   </div>
                   <span className="talents__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
                   <span className="help">{relAge(p)}</span>
@@ -251,7 +267,7 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
               ))}
             </ol>
           )}
-          <p className="help">{fit.slope > 0.05 ? t.trend(fit.slope.toFixed(1)) : t.trendNone}</p>
+          <p className="help">{fit.slope > 0.05 ? t.trend(t.num(fit.slope, 1)) : t.trendNone}</p>
         </section>
       </div>
 
@@ -307,11 +323,11 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
                     <tr key={p.id} className={`${selected ? 'is-selected' : ''} ${gained ? 'is-gained' : ''} ${lost ? 'is-lost' : ''}`}>
                       <td>{view === 'raw' ? p.rawRank : p.fairRank}</td>
                       <th scope="row">
-                        {p.name} <QuarterBadge q={p.quarter} t={t} />
+                        {nameButton(p)} <QuarterBadge q={p.quarter} t={t} />
                       </th>
                       <td>{ageText(p)}</td>
-                      <td>{p.score}</td>
-                      <td>{p.fairScore.toFixed(1)}</td>
+                      <td>{t.num(p.score, Number.isInteger(p.score) ? 0 : 1)}</td>
+                      <td>{t.num(p.fairScore, 1)}</td>
                       <td>
                         <span className="status">{selected ? `✓ ${t.selected}` : t.notSelected}</span>
                         {gained && <span className="pill pill--late">▲ {t.badgeIn}</span>}
@@ -329,6 +345,14 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
           </button>
         </section>
       )}
+
+      <PlayerCard
+        t={t}
+        player={cardPlayer}
+        meanAgeMonths={meanAgeMonths}
+        squadSize={n}
+        onClose={() => setCardId(null)}
+      />
     </>
   )
 }

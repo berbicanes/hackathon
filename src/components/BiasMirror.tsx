@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fill, type Strings } from '../i18n'
+import type { Strings } from '../i18n'
 import { formatP } from '../lib/format'
 import { BarChart, type Bar } from './BarChart'
 
@@ -39,16 +39,14 @@ export interface RaeData {
 
 type Group = 'under_21' | 'all_players'
 
-const pct = (v: number, digits = 0) => `${(v * 100).toFixed(digits)}%`
 
-const eur = (v: number) => `€${Math.round(v / 1000).toLocaleString('en')}k`
 
 function isRaeData(x: unknown): x is RaeData {
   const d = x as RaeData
   return Boolean(d?.all_players?.quarter_share && d?.under_21?.quarter_share && Array.isArray(d?.underdog))
 }
 
-export function BiasMirror({ t }: { t: Strings }) {
+export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => void }) {
   const [data, setData] = useState<RaeData | null>(null)
   const [error, setError] = useState(false)
   const [group, setGroup] = useState<Group>('under_21')
@@ -84,13 +82,17 @@ export function BiasMirror({ t }: { t: Strings }) {
   return (
     <div className="stack">
       <section className="card hero" aria-labelledby="bias-headline">
-        <p className="kicker">{fill(t.biasKicker, { n: data.all_players.n.toLocaleString('en') })}</p>
+        <p className="kicker">{t.biasKicker(t.num(data.all_players.n))}</p>
         <h2 id="bias-headline" className="hero__stat">
-          <span className="hero__number">{pct(u21.quarter_share[0])}</span>
+          <span className="hero__number">{t.pct(u21.quarter_share[0])}</span>
           <span className="hero__text">{t.biasHeadline}</span>
         </h2>
         <p className="hero__sub">
-          {t.biasSub(pct(u21.expected_quarter_share[0]), pct(u21.quarter_share[3]), u21.q1_q4_ratio.toFixed(1))}
+          {t.biasSub(
+            t.pct(u21.expected_quarter_share[0]),
+            t.pct(u21.quarter_share[3]),
+            t.num(u21.q1_q4_ratio, 1),
+          )}
         </p>
       </section>
 
@@ -108,23 +110,24 @@ export function BiasMirror({ t }: { t: Strings }) {
           expected={0.25}
           expectedLabel={t.expectedLine}
           maxValue={0.4}
+          formatShare={(v) => t.pct(v, 1)}
         />
         <dl className="stats">
           <div>
             <dt>{t.statSample}</dt>
-            <dd>{dist.n.toLocaleString('en')}</dd>
+            <dd>{t.num(dist.n)}</dd>
           </div>
           <div>
             <dt>{t.statChi}</dt>
-            <dd>{dist.chi_square_quarters.chi2.toLocaleString('en')}</dd>
+            <dd>{t.num(dist.chi_square_quarters.chi2, 2)}</dd>
           </div>
           <div>
             <dt>{t.statP}</dt>
-            <dd>{formatP(dist.chi_square_quarters.p_value)}</dd>
+            <dd>{formatP(dist.chi_square_quarters.p_value, t.decimal)}</dd>
           </div>
           <div>
             <dt>{t.statRatio}</dt>
-            <dd>{dist.q1_q4_ratio.toFixed(2)}×</dd>
+            <dd>{t.num(dist.q1_q4_ratio, 2)}×</dd>
           </div>
         </dl>
         <BarChart
@@ -132,6 +135,7 @@ export function BiasMirror({ t }: { t: Strings }) {
           bars={monthBars}
           expected={dist.expected_month_share}
           expectedLabel={t.expectedMonth}
+          formatShare={(v) => t.pct(v, 1)}
           compact
         />
       </section>
@@ -155,14 +159,14 @@ export function BiasMirror({ t }: { t: Strings }) {
                 <tr key={r.band}>
                   <th scope="row">{r.band}</th>
                   <td>
-                    {eur(r.median_value_q1)} <small>n={r.n_q1}</small>
+                    €{t.num(r.median_value_q1 / 1000)}k <small>n={r.n_q1}</small>
                   </td>
                   <td>
-                    {eur(r.median_value_q4)} <small>n={r.n_q4}</small>
+                    €{t.num(r.median_value_q4 / 1000)}k <small>n={r.n_q4}</small>
                   </td>
-                  <td>{pct(r.prob_q4_greater, 1)}</td>
+                  <td>{t.pct(r.prob_q4_greater, 1)}</td>
                   <td>
-                    {formatP(r.p_value)}{' '}
+                    {formatP(r.p_value, t.decimal)}{' '}
                     <span className={`pill ${r.significant_at_05 ? 'pill--late' : ''}`}>
                       {r.significant_at_05 ? t.underdogVerdictYes : t.underdogVerdictNo}
                     </span>
@@ -173,6 +177,13 @@ export function BiasMirror({ t }: { t: Strings }) {
           </table>
         </div>
         <p className="note">{t.underdogSummary}</p>
+      </section>
+
+      <section className="card cta">
+        <p>{t.ctaSquadText}</p>
+        <button type="button" className="button button--primary" onClick={onGoToSquad}>
+          {t.ctaSquad} →
+        </button>
       </section>
 
       <section className="card two-col">

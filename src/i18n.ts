@@ -1,6 +1,158 @@
-export type Lang = 'en'
+import { formatNumber } from './lib/format'
 
-const en = {
+export type Lang = 'bs' | 'en'
+
+export const LANGS: Lang[] = ['bs', 'en']
+
+/** Bosnian plural forms: 1 / 2–4 / 5+ (11–14 take the "many" form). */
+export function bsPlural(n: number, one: string, few: string, many: string): string {
+  const mod10 = n % 10
+  const mod100 = n % 100
+  if (mod10 === 1 && mod100 !== 11) return one
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few
+  return many
+}
+
+const enPlural = (n: number, word: string) => `${word}${n === 1 ? '' : 's'}`
+
+const EN_SEP = { decimal: '.', group: ',' }
+const BS_SEP = { decimal: ',', group: '.' }
+
+export interface Strings {
+  decimal: string
+  num: (value: number, digits?: number) => string
+  /** Share 0–1 as a percentage. */
+  pct: (share: number, digits?: number) => string
+  formatDate: (d: Date) => string
+  monthsLong: string[]
+  langName: string
+  langSwitch: string
+  skip: string
+  navLabel: string
+  appName: string
+  tagline: string
+  tabBias: string
+  tabSquad: string
+  privacy: string
+  footerData: string
+
+  biasKicker: (n: string) => string
+  biasHeadline: string
+  biasSub: (expected: string, q4: string, ratio: string) => string
+  chartTitle: string
+  expectedLine: string
+  expectedMonth: string
+  groupU21: string
+  groupAll: string
+  groupLabel: string
+  quarterLabels: string[]
+  quarterShort: string[]
+  earlyBorn: string
+  lateBorn: string
+  monthTitle: string
+  months: string[]
+  statSample: string
+  statChi: string
+  statP: string
+  statRatio: string
+  underdogTitle: string
+  underdogIntro: string
+  underdogBand: string
+  underdogMedianQ1: string
+  underdogMedianQ4: string
+  underdogProb: string
+  underdogP: string
+  underdogVerdictYes: string
+  underdogVerdictNo: string
+  underdogSummary: string
+  methodTitle: string
+  method: string[]
+  limitsTitle: string
+  limits: string[]
+  loading: string
+  loadError: string
+  ctaSquad: string
+  ctaSquadText: string
+
+  squadTitle: string
+  squadIntro: string
+  upload: string
+  loadSample: string
+  downloadTemplate: string
+  csvHelp: string
+  syntheticBanner: string
+  assessmentDate: string
+  fileTooLarge: string
+  fileUnreadable: string
+  missingColumns: (cols: string) => string
+  issues: (n: number) => string
+  issueReason: Record<'columns' | 'name' | 'date' | 'score', string>
+  issueLine: (line: number, reason: string) => string
+  truncated: (max: number) => string
+  tooFew: string
+  smallSquad: string
+
+  skewTitle: string
+  skewChart: string
+  skewSummary: (early: number, n: number) => string
+  skewNote: string
+
+  talentTitle: string
+  talentIntro: string
+  talentNone: string
+  talentRank: (from: number, to: number) => string
+  monthsYounger: (m: number) => string
+  monthsOlder: (m: number) => string
+  averageAge: string
+
+  selectionTitle: string
+  selectionIntro: string
+  topN: string
+  viewRaw: string
+  viewFair: string
+  changes: (k: number, n: number) => string
+  badgeIn: string
+  badgeOut: string
+  selected: string
+  notSelected: string
+  colName: string
+  colAge: string
+  colRaw: string
+  colFair: string
+  colRank: string
+  colStatus: string
+  ageYM: (y: number, m: number) => string
+  trend: (slope: string) => string
+  trendNone: string
+  downloadResults: string
+  fairExplain: string
+  openCard: (name: string) => string
+
+  cardTitle: string
+  cardClose: string
+  cardBorn: (date: string, quarter: string) => string
+  cardTopForAge: (pct: number) => string
+  cardDeveloping: string
+  cardRanks: (raw: number, fair: number, n: number) => string
+  cardAdviceTitle: string
+  advice: Record<'secondLook' | 'keep' | 'checkAgeAdvantage' | 'reassess', { title: string; text: string }>
+  cardFooter: string
+
+  mondayTitle: string
+  mondayIntro: string
+  monday: { title: string; text: string }[]
+}
+
+const en: Strings = {
+  decimal: EN_SEP.decimal,
+  num: (v, digits = 0) => formatNumber(v, digits, EN_SEP),
+  pct: (share, digits = 0) => `${formatNumber(share * 100, digits, EN_SEP)}%`,
+  formatDate: (d) => `${d.getUTCDate()} ${en.monthsLong[d.getUTCMonth()]} ${d.getUTCFullYear()}`,
+  monthsLong: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  langName: 'English',
+  langSwitch: 'Language',
+  skip: 'Skip to content',
+  navLabel: 'Sections',
   appName: 'Late Bloomers',
   tagline: 'See the hidden talent your selection is missing.',
   tabBias: 'Bias mirror',
@@ -8,10 +160,9 @@ const en = {
   privacy: 'Your squad data never leaves this device. No uploads, no accounts, no tracking.',
   footerData: 'Professional data: Transfermarkt via the open transfermarkt-datasets project.',
 
-  // Bias mirror
-  biasKicker: 'The evidence · {n} professional players',
+  biasKicker: (n) => `The evidence · ${n} professional players`,
   biasHeadline: 'of active under-21 professionals were born January–March.',
-  biasSub: (expected: string, q4: string, ratio: string) =>
+  biasSub: (expected, q4, ratio) =>
     `By days in the calendar you would expect ${expected}. Only ${q4} were born October–December — a January-to-March child is ${ratio}× as likely to make it as an October-to-December child.`,
   chartTitle: 'Share of players by birth quarter',
   expectedLine: 'Expected 25% (share of days in the quarter)',
@@ -57,8 +208,9 @@ const en = {
   ],
   loading: 'Loading analysis…',
   loadError: 'Could not load the analysis data. Please reload the page.',
+  ctaSquad: 'Check your own squad',
+  ctaSquadText: 'The same bias happens in every U10 trial. See it in your squad in two minutes — free and private.',
 
-  // Your squad
   squadTitle: 'Your squad, seen fairly',
   squadIntro:
     'Upload your squad’s assessment scores. Late Bloomers separates what is ability from what is simply being older, so you can take a second look before you cut a child.',
@@ -71,61 +223,279 @@ const en = {
   assessmentDate: 'Assessment date',
   fileTooLarge: 'That file is too large. Please keep it under 200 KB.',
   fileUnreadable: 'That file could not be read as text.',
-  missingColumns: (cols: string) => `The CSV is missing these columns: ${cols}. Download the template to see the format.`,
-  issues: (n: number) => `${n} row${n === 1 ? '' : 's'} skipped:`,
+  missingColumns: (cols) => `The CSV is missing these columns: ${cols}. Download the template to see the format.`,
+  issues: (n) => `${n} ${enPlural(n, 'row')} skipped:`,
   issueReason: {
     columns: 'not enough columns',
     name: 'missing name',
     date: 'birth date not recognised',
     score: 'score is not a number',
   },
-  issueLine: (line: number, reason: string) => `line ${line}: ${reason}`,
-  truncated: (max: number) => `Only the first ${max} rows were used.`,
+  issueLine: (line, reason) => `line ${line}: ${reason}`,
+  truncated: (max) => `Only the first ${max} rows were used.`,
   tooFew: 'Add at least 4 players to compare selections.',
   smallSquad: 'With fewer than 10 players the age trend is rough — treat results as a prompt, not a verdict.',
 
   skewTitle: 'Your squad’s birth months',
   skewChart: 'Players per birth quarter',
-  skewSummary: (early: number, n: number) => `${early} of ${n} players were born in the first half of the year.`,
+  skewSummary: (early, n) => `${early} of ${n} players were born in the first half of the year.`,
   skewNote: 'In an unbiased intake you would expect about half.',
-  countLabel: 'players',
 
   talentTitle: 'Hidden talents',
-  talentIntro: 'These players rise most once age is taken into account.',
+  talentIntro: 'These players rise most once age is taken into account. Tap a name for their player card.',
   talentNone: 'Nobody moves up much: in this squad, scores barely depend on age.',
-  talentRank: (from: number, to: number) => `Rank ${from} → ${to}`,
-  monthsYounger: (m: number) => `${m} month${m === 1 ? '' : 's'} younger than squad average`,
-  monthsOlder: (m: number) => `${m} month${m === 1 ? '' : 's'} older than squad average`,
+  talentRank: (from, to) => `Rank ${from} → ${to}`,
+  monthsYounger: (m) => `${m} ${enPlural(m, 'month')} younger than the squad average`,
+  monthsOlder: (m) => `${m} ${enPlural(m, 'month')} older than the squad average`,
+  averageAge: 'About the squad’s average age',
 
   selectionTitle: 'Selection: raw vs fair',
   selectionIntro: 'Choose how many players you select. Switch views to see exactly who changes.',
   topN: 'Players to select',
   viewRaw: 'Raw score',
   viewFair: 'Age-adjusted',
-  changes: (k: number, n: number) =>
+  changes: (k, n) =>
     k === 0 ? `The fair view selects the same ${n} players.` : `The fair view changes ${k} of ${n} places.`,
   badgeIn: 'In with fair view',
   badgeOut: 'Out with fair view',
   selected: 'Selected',
   notSelected: 'Not selected',
   colName: 'Name',
-  colBorn: 'Born',
   colAge: 'Age',
   colRaw: 'Raw score',
   colFair: 'Fair score',
   colRank: 'Rank',
   colStatus: 'Status',
-  ageYM: (y: number, m: number) => `${y}y ${m}m`,
-  trend: (slope: string) => `In this squad, each extra month of age is worth about ${slope} points.`,
+  ageYM: (y, m) => `${y}y ${m}m`,
+  trend: (slope) => `In this squad, each extra month of age is worth about ${slope} points.`,
   trendNone: 'In this squad, older players do not score higher — the adjustment changes little.',
   downloadResults: 'Download results CSV',
   fairExplain:
     'Fair score = the player’s score compared with what is typical for their exact age in this squad (residual of a straight-line fit of score on age in months), put back on your original scale.',
+  openCard: (name) => `Open player card for ${name}`,
+
+  cardTitle: 'Player card',
+  cardClose: 'Close',
+  cardBorn: (date, quarter) => `Born ${date} (${quarter})`,
+  cardTopForAge: (pct) => `Top ${pct}% of the squad for their age.`,
+  cardDeveloping: 'Still developing compared with children of the same age.',
+  cardRanks: (raw, fair, n) => `Rank on raw score: ${raw} of ${n}. Rank for their age: ${fair} of ${n}.`,
+  cardAdviceTitle: 'Suggested next step',
+  advice: {
+    secondLook: {
+      title: 'Take a second look',
+      text: 'Part of the gap to older teammates is age, not ability. Keep in the group and reassess in 6 months.',
+    },
+    keep: {
+      title: 'Keep',
+      text: 'Strong for their age. Keep challenging them.',
+    },
+    checkAgeAdvantage: {
+      title: 'Look past size and speed',
+      text: 'Part of this score may come from being older. Check skills that do not depend on physical maturity, such as first touch and decisions.',
+    },
+    reassess: {
+      title: 'Keep developing',
+      text: 'Reassess in 6 months with the whole group, using age-fair measures.',
+    },
+  },
+  cardFooter: 'This card is a prompt for a conversation, not a verdict on a child.',
+
+  mondayTitle: 'What your club can do on Monday',
+  mondayIntro: 'Three changes that cost nothing.',
+  monday: [
+    {
+      title: 'Assess by age in months',
+      text: 'Write each child’s age in months next to every test score, and compare children with others of the same age — not with the oldest in the group.',
+    },
+    {
+      title: 'Reassess late-born players later',
+      text: 'Before releasing a child born October–December, book a second look 6 months later. Late bloomers often catch up.',
+    },
+    {
+      title: 'Rotate or band selection by birth quarter',
+      text: 'Make sure every birth quarter gets starts and squad places, or run trials in half-year groups so January and December children are not compared directly.',
+    },
+  ],
 }
 
-export type Strings = typeof en
-export const strings: Record<Lang, Strings> = { en }
+const bs: Strings = {
+  decimal: BS_SEP.decimal,
+  num: (v, digits = 0) => formatNumber(v, digits, BS_SEP),
+  pct: (share, digits = 0) => `${formatNumber(share * 100, digits, BS_SEP)}%`,
+  formatDate: (d) => `${d.getUTCDate()}. ${bs.monthsLong[d.getUTCMonth()]} ${d.getUTCFullYear()}.`,
+  monthsLong: ['januar', 'februar', 'mart', 'april', 'maj', 'juni', 'juli', 'august', 'septembar', 'oktobar', 'novembar', 'decembar'],
+  langName: 'Bosanski',
+  langSwitch: 'Jezik',
+  skip: 'Preskoči na sadržaj',
+  navLabel: 'Sekcije',
+  appName: 'Late Bloomers',
+  tagline: 'Pronađite skriveni talenat koji vaša selekcija propušta.',
+  tabBias: 'Ogledalo pristranosti',
+  tabSquad: 'Vaša ekipa',
+  privacy: 'Podaci o vašoj ekipi nikad ne napuštaju ovaj uređaj. Bez slanja, bez naloga, bez praćenja.',
+  footerData: 'Profesionalni podaci: Transfermarkt, preko otvorenog projekta transfermarkt-datasets.',
 
-export function fill(template: string, values: Record<string, string>): string {
-  return template.replace(/\{(\w+)\}/g, (_, k: string) => values[k] ?? '')
+  biasKicker: (n) => `Dokazi · ${n} profesionalnih igrača`,
+  biasHeadline: 'aktivnih profesionalaca mlađih od 21 godine rođeno je u januaru, februaru ili martu.',
+  biasSub: (expected, q4, ratio) =>
+    `Prema broju dana u godini očekivali biste ${expected}. Samo ${q4} rođeno je od oktobra do decembra — dijete rođeno u januaru–martu ima ${ratio}× veće šanse da uspije od djeteta rođenog u oktobru–decembru.`,
+  chartTitle: 'Udio igrača po kvartalu rođenja',
+  expectedLine: 'Očekivano 25% (udio dana u kvartalu)',
+  expectedMonth: 'Očekivano (udio dana u mjesecu)',
+  groupU21: 'Mlađi od 21 (aktivni)',
+  groupAll: 'Svi igrači',
+  groupLabel: 'Grupa',
+  quarterLabels: ['jan–mar', 'apr–jun', 'jul–sep', 'okt–dec'],
+  quarterShort: ['K1', 'K2', 'K3', 'K4'],
+  earlyBorn: 'rano rođeni',
+  lateBorn: 'kasno rođeni',
+  monthTitle: 'Po mjesecu rođenja (stvarno i očekivano)',
+  months: ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
+  statSample: 'Veličina uzorka',
+  statChi: 'Hi-kvadrat (df 3)',
+  statP: 'p-vrijednost',
+  statRatio: 'Šansa K1 : K4',
+  underdogTitle: 'Jesu li kasno rođeni koji opstanu na kraju bolji?',
+  underdogIntro:
+    'Provjera „autsajdera“ poredi trenutnu tržišnu vrijednost aktivnih igrača rođenih u K1 i K4 unutar iste starosne grupe, tako da stariji igrači nikad ne naduvaju jednu stranu.',
+  underdogBand: 'Starosna grupa',
+  underdogMedianQ1: 'Medijan vrijednosti K1',
+  underdogMedianQ4: 'Medijan vrijednosti K4',
+  underdogProb: 'Šansa da igrač iz K4 vrijedi više',
+  underdogP: 'p-vrijednost',
+  underdogVerdictYes: 'K4 viši',
+  underdogVerdictNo: 'Nema jasne razlike',
+  underdogSummary:
+    'Iskreno tumačenje: sa 18–21 godina nema razlike. Od 22. godine kasno rođeni koji su uspjeli vrijede malo više — što se slaže s idejom da su morali biti bolji da prežive selekciju. Efekat je mali; to je trag, ne dokaz.',
+  methodTitle: 'Metoda',
+  method: [
+    'Datumi rođenja svih igrača iz javnog Transfermarkt skupa podataka (stanje jul 2026); starost na dan 1. 7. 2026.',
+    '„Aktivni“ znači da je igrač bio u nekoj ekipi u sezoni 2024. ili kasnije. Kvartali prate granicu od 1. januara koja se koristi u UEFA omladinskom fudbalu.',
+    'Očekivani udjeli su ponderisani brojem dana u mjesecu (februar = 28,25 dana). Hi-kvadrat test slaganja s tim očekivanjem.',
+    'Tržišne vrijednosti poređene unutar starosnih grupa Mann-Whitney U testom (nikad zbirno preko svih uzrasta).',
+  ],
+  limitsTitle: 'Ograničenja',
+  limits: [
+    'Rođenja nisu savršeno ravnomjerna tokom godine; sezonski obrasci u zemljama malo odstupaju od očekivanja po danima.',
+    'Transfermarkt pokriva profesionalne lige, uglavnom u Evropi, i igrače s profilom — ne svakog fudbalera.',
+    'Uključene su i zemlje s drugačijim datumom granice, što efekat prije umanjuje nego uvećava.',
+    'Tržišna vrijednost je nesavršena mjera kvaliteta.',
+  ],
+  loading: 'Učitavam analizu…',
+  loadError: 'Analiza se nije mogla učitati. Molimo osvježite stranicu.',
+  ctaSquad: 'Provjerite svoju ekipu',
+  ctaSquadText: 'Ista pristranost se dešava na svakom probnom treningu U10. Pogledajte je u svojoj ekipi za dvije minute — besplatno i privatno.',
+
+  squadTitle: 'Vaša ekipa, pošteno gledano',
+  squadIntro:
+    'Učitajte ocjene sa testiranja svoje ekipe. Late Bloomers razdvaja ono što je sposobnost od onoga što je samo veća starost, kako biste još jednom pogledali prije nego što odbijete dijete.',
+  upload: 'Učitaj CSV ekipe',
+  loadSample: 'Učitaj sintetički primjer',
+  downloadTemplate: 'Preuzmi CSV šablon',
+  csvHelp: 'Kolone: name (ime), birth_date (2014-03-21 ili 21.03.2014), score (bilo koji test ili ocjena gdje je više bolje).',
+  syntheticBanner:
+    'SINTETIČKI PRIMJER — izmišljena djeca i ocjene, samo za demonstraciju. Učitajte svoj CSV da analizirate stvarnu ekipu.',
+  assessmentDate: 'Datum testiranja',
+  fileTooLarge: 'Datoteka je prevelika. Neka bude manja od 200 KB.',
+  fileUnreadable: 'Datoteka se ne može pročitati kao tekst.',
+  missingColumns: (cols) => `CSV nema ove kolone: ${cols}. Preuzmite šablon da vidite format.`,
+  issues: (n) => `Preskočeno ${n} ${bsPlural(n, 'red', 'reda', 'redova')}:`,
+  issueReason: {
+    columns: 'premalo kolona',
+    name: 'nedostaje ime',
+    date: 'datum rođenja nije prepoznat',
+    score: 'ocjena nije broj',
+  },
+  issueLine: (line, reason) => `red ${line}: ${reason}`,
+  truncated: (max) => `Korišteno je samo prvih ${max} redova.`,
+  tooFew: 'Dodajte bar 4 igrača da biste poredili selekcije.',
+  smallSquad: 'S manje od 10 igrača trend po starosti je grub — rezultate shvatite kao podsticaj, ne kao presudu.',
+
+  skewTitle: 'Mjeseci rođenja u vašoj ekipi',
+  skewChart: 'Igrači po kvartalu rođenja',
+  skewSummary: (early, n) =>
+    `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u prvoj polovini godine.`,
+  skewNote: 'Bez pristranosti očekivali biste otprilike pola.',
+
+  talentTitle: 'Skriveni talenti',
+  talentIntro: 'Ovi igrači najviše napreduju kad se uzme u obzir starost. Dodirnite ime za karticu igrača.',
+  talentNone: 'Niko ne napreduje mnogo: u ovoj ekipi ocjene gotovo ne zavise od starosti.',
+  talentRank: (from, to) => `Mjesto ${from} → ${to}`,
+  monthsYounger: (m) => `${m} ${bsPlural(m, 'mjesec', 'mjeseca', 'mjeseci')} ispod prosječne starosti ekipe`,
+  monthsOlder: (m) => `${m} ${bsPlural(m, 'mjesec', 'mjeseca', 'mjeseci')} iznad prosječne starosti ekipe`,
+  averageAge: 'Starost otprilike na prosjeku ekipe',
+
+  selectionTitle: 'Selekcija: sirovo i pošteno',
+  selectionIntro: 'Izaberite koliko igrača birate. Promijenite prikaz da vidite tačno ko se mijenja.',
+  topN: 'Broj igrača za izbor',
+  viewRaw: 'Sirova ocjena',
+  viewFair: 'Prilagođeno starosti',
+  changes: (k, n) =>
+    k === 0
+      ? `Pošteni prikaz bira istih ${n} igrača.`
+      : `Pošteni prikaz mijenja ${k} od ${n} ${bsPlural(n, 'mjesta', 'mjesta', 'mjesta')}.`,
+  badgeIn: 'Ulazi u poštenom prikazu',
+  badgeOut: 'Izlazi u poštenom prikazu',
+  selected: 'U izboru',
+  notSelected: 'Nije u izboru',
+  colName: 'Ime',
+  colAge: 'Starost',
+  colRaw: 'Sirova ocjena',
+  colFair: 'Poštena ocjena',
+  colRank: 'Mjesto',
+  colStatus: 'Status',
+  ageYM: (y, m) => `${y} g. ${m} mj.`,
+  trend: (slope) => `U ovoj ekipi svaki mjesec starosti vrijedi otprilike ${slope} bodova.`,
+  trendNone: 'U ovoj ekipi stariji igrači nemaju više ocjene — prilagođavanje malo mijenja.',
+  downloadResults: 'Preuzmi rezultate (CSV)',
+  fairExplain:
+    'Poštena ocjena = ocjena igrača u poređenju s onim što je uobičajeno za tačno tu starost u ovoj ekipi (rezidual linearne regresije ocjene na starost u mjesecima), vraćena na vašu originalnu skalu.',
+  openCard: (name) => `Otvori karticu igrača: ${name}`,
+
+  cardTitle: 'Kartica igrača',
+  cardClose: 'Zatvori',
+  cardBorn: (date, quarter) => `Datum rođenja: ${date} (${quarter})`,
+  cardTopForAge: (pct) => `Među najboljih ${pct}% u ekipi za svoju starost.`,
+  cardDeveloping: 'Još se razvija u odnosu na djecu iste starosti.',
+  cardRanks: (raw, fair, n) => `Mjesto po sirovoj ocjeni: ${raw} od ${n}. Mjesto za svoju starost: ${fair} od ${n}.`,
+  cardAdviceTitle: 'Predloženi sljedeći korak',
+  advice: {
+    secondLook: {
+      title: 'Pogledajte još jednom',
+      text: 'Dio zaostatka za starijim saigračima je starost, a ne sposobnost. Zadržite u grupi i ponovo procijenite za 6 mjeseci.',
+    },
+    keep: {
+      title: 'Zadržite',
+      text: 'Odličan rezultat za svoju starost. Nastavite davati izazove.',
+    },
+    checkAgeAdvantage: {
+      title: 'Gledajte dalje od visine i brzine',
+      text: 'Dio ove ocjene može dolaziti od veće starosti. Provjerite vještine koje ne zavise od fizičke zrelosti, poput prvog dodira i odluka.',
+    },
+    reassess: {
+      title: 'Nastavite razvoj',
+      text: 'Ponovo procijenite za 6 mjeseci, s cijelom grupom, mjerama poštenim prema starosti.',
+    },
+  },
+  cardFooter: 'Ova kartica je poziv na razgovor, a ne presuda o djetetu.',
+
+  mondayTitle: 'Šta vaš klub može uraditi već u ponedjeljak',
+  mondayIntro: 'Tri promjene koje ništa ne koštaju.',
+  monday: [
+    {
+      title: 'Procjenjujte po starosti u mjesecima',
+      text: 'Pored svake ocjene upišite starost djeteta u mjesecima i poredite ga s djecom iste starosti — ne s najstarijim u grupi.',
+    },
+    {
+      title: 'Kasno rođene procijenite kasnije',
+      text: 'Prije nego što odbijete dijete rođeno od oktobra do decembra, zakažite drugi pogled za 6 mjeseci. Kasni cvjetovi često sustignu ostale.',
+    },
+    {
+      title: 'Rotirajte ili grupišite selekciju po kvartalu rođenja',
+      text: 'Osigurajte da svaki kvartal rođenja dobije minute i mjesta u ekipi, ili organizujte probe u polugodišnjim grupama da se djeca iz januara i decembra ne porede direktno.',
+    },
+  ],
 }
+
+export const strings: Record<Lang, Strings> = { bs, en }

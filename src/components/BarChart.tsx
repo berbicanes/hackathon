@@ -17,12 +17,12 @@ interface Props {
   expectedLabel?: string
   maxValue?: number
   compact?: boolean
+  /** Formats a 0–1 share for display. */
+  formatShare: (v: number) => string
 }
 
-const pct = (v: number) => `${(v * 100).toFixed(1)}%`
-
 /** Accessible bar chart: plain HTML bars plus a visually hidden data table. */
-export function BarChart({ title, bars, expected, expectedLabel, maxValue, compact }: Props) {
+export function BarChart({ title, bars, expected, expectedLabel, maxValue, compact, formatShare }: Props) {
   const expectedAt = (i: number) => (Array.isArray(expected) ? expected[i] : expected)
   const max =
     maxValue ?? Math.max(...bars.map((b) => b.value), ...bars.map((_, i) => expectedAt(i) ?? 0)) * 1.15
@@ -42,7 +42,7 @@ export function BarChart({ title, bars, expected, expectedLabel, maxValue, compa
             <div className="chart__col" key={b.label}>
               <div className={`chart__bar chart__bar--${b.tone}`} style={{ height: scale(b.value) }} />
               <span className="chart__value" style={{ bottom: scale(b.value) }}>
-                {b.display ?? pct(b.value)}
+                {b.display ?? formatShare(b.value)}
               </span>
               {!single && exp !== undefined && <div className="chart__tick" style={{ bottom: scale(exp) }} />}
             </div>
@@ -69,8 +69,8 @@ export function BarChart({ title, bars, expected, expectedLabel, maxValue, compa
           {bars.map((b, i) => (
             <tr key={b.label}>
               <th scope="row">{b.label}</th>
-              <td>{b.display ?? pct(b.value)}</td>
-              {expectedAt(i) !== undefined && <td>{`${expectedLabel ?? ''} ${pct(expectedAt(i) ?? 0)}`}</td>}
+              <td>{b.display ?? formatShare(b.value)}</td>
+              {expectedAt(i) !== undefined && <td>{`${expectedLabel ?? ''} ${formatShare(expectedAt(i) ?? 0)}`}</td>}
             </tr>
           ))}
         </tbody>

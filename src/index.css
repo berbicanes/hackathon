@@ -641,3 +641,152 @@ tbody th {
     transition: height 0.4s ease;
   }
 }
+
+/* Language switch */
+.segmented--small {
+  margin-bottom: 0;
+}
+
+.segmented--small button {
+  min-height: 40px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+}
+
+/* Call to action */
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--ink);
+  color: #fff;
+}
+
+.cta p {
+  margin: 0;
+  max-width: 60ch;
+  font-size: 1.05rem;
+}
+
+/* Name buttons that open the player card */
+.link-button {
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.link-button:hover {
+  color: var(--early);
+}
+
+/* Player card dialog */
+.player-card {
+  border: 0;
+  border-radius: var(--radius);
+  padding: 0;
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  box-shadow: 0 20px 60px rgb(22 24 29 / 30%);
+  color: var(--ink);
+}
+
+.player-card::backdrop {
+  background: rgb(22 24 29 / 50%);
+}
+
+.player-card__body {
+  padding: clamp(20px, 5vw, 32px);
+}
+
+.player-card__body h2 {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+.player-card__facts {
+  margin: 16px 0;
+}
+
+.advice {
+  background: var(--bg);
+  border-left: 4px solid var(--neutral);
+  border-radius: 0 12px 12px 0;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.advice p {
+  margin: 0;
+}
+
+.advice--secondLook {
+  border-left-color: var(--late);
+}
+
+.advice--keep {
+  border-left-color: var(--early);
+}
+
+.advice__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.advice__title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+/* Monday panel */
+.monday__list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  margin-top: 16px;
+}
+
+.monday__list li {
+  margin: 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.monday__list h3 {
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.monday__list p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.monday__num {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--late);
+  color: #fff;
+  font-family: var(--font-head);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
