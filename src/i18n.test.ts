@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { bsPlural, bsPluralShown, strings } from './i18n'
-import { formatNumber } from './lib/format'
+import { formatNumber, isoToDmy, parseDmy } from './lib/format'
 
 describe('formatNumber', () => {
   it('uses Bosnian and English separators', () => {
@@ -17,6 +17,17 @@ describe('bsPlural', () => {
     expect([1, 2, 4, 5, 11, 12, 21, 22, 25].map(m)).toEqual([
       'mjesec', 'mjeseca', 'mjeseca', 'mjeseci', 'mjeseci', 'mjeseci', 'mjesec', 'mjeseca', 'mjeseci',
     ])
+  })
+})
+
+describe('dd.mm.yyyy dates', () => {
+  it('round-trips and rejects impossible dates', () => {
+    expect(isoToDmy('2026-02-14')).toBe('14.02.2026')
+    expect(parseDmy('14.02.2026')).toBe('2026-02-14')
+    expect(parseDmy('1.3.2026.')).toBe('2026-03-01')
+    expect(parseDmy('31.02.2026')).toBeNull()
+    expect(parseDmy('2026-02-14')).toBeNull()
+    expect(parseDmy('14.02.26')).toBeNull()
   })
 })
 

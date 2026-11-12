@@ -45,8 +45,21 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await page.locator('.squad-table tr.is-gained').first().getByRole('button').click()
   await expect(page.getByText('Suggested next step')).toBeVisible()
 
-  // Privacy page is linked from the footer and has its own address.
   await page.keyboard.press('Escape')
+
+  // In Bosnian the assessment date always reads dd.mm.yyyy, whatever the browser locale.
+  await page.getByRole('button', { name: 'Bosanski' }).click()
+  const date = page.getByLabel(/Datum testiranja/)
+  await expect(date).toHaveValue(/^\d{2}\.\d{2}\.\d{4}$/)
+  await date.fill('31.02.2026')
+  await expect(date).toHaveAttribute('aria-invalid', 'true')
+  await date.fill('15.03.2026')
+  await expect(date).toHaveAttribute('aria-invalid', 'false')
+  await date.blur()
+  await expect(date).toHaveValue('15.03.2026')
+  await page.getByRole('button', { name: 'English' }).click()
+
+  // Privacy page is linked from the footer and has its own address.
   await page.getByRole('contentinfo').getByRole('link', { name: 'Privacy' }).click()
   await expect(page).toHaveURL(/#privacy$/)
   await expect(page.getByRole('heading', { name: 'How to delete your data' })).toBeVisible()

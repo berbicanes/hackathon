@@ -19,3 +19,20 @@ export function formatNumber(value: number, digits: number, sep: Separators): st
   const sign = value < 0 && Number(`${int}.${frac ?? 0}`) !== 0 ? '-' : ''
   return `${sign}${grouped}${frac ? sep.decimal + frac : ''}`
 }
+
+/** ISO day (yyyy-mm-dd) → "dd.mm.yyyy". */
+export function isoToDmy(iso: string): string {
+  const [y, m, d] = iso.split('-')
+  return `${d}.${m}.${y}`
+}
+
+/** "d.m.yyyy" (optional trailing dot, "/" also accepted) → ISO day, or null if not a real date. */
+export function parseDmy(raw: string): string | null {
+  const match = /^(\d{1,2})[./](\d{1,2})[./](\d{4})\.?$/.exec(raw.trim())
+  if (!match) return null
+  const [d, m, y] = [Number(match[1]), Number(match[2]), Number(match[3])]
+  const date = new Date(Date.UTC(y, m - 1, d))
+  const real = date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d
+  if (!real || y < 1990 || y > 2100) return null
+  return date.toISOString().slice(0, 10)
+}

@@ -4,6 +4,7 @@ import { CSV_TEMPLATE, MAX_FILE_BYTES, MAX_ROWS, csvCell, parseSquadCsv, type Pa
 import { SAMPLE_REFERENCE_DATE, sampleSquad } from '../lib/sample'
 import { analyseSquad, compareSelections, hiddenTalents, type AnalysedPlayer, type Player } from '../lib/squad'
 import { BarChart } from './BarChart'
+import { DateField } from './DateField'
 import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
 import { PrintReport } from './PrintReport'
@@ -146,10 +147,15 @@ export function YourSquad({ t }: { t: Strings }) {
           </button>
         </div>
         <p className="help">{t.csvHelp}</p>
-        <div className="field">
-          <label htmlFor="ref-date">{t.assessmentDate}</label>
-          <input id="ref-date" type="date" value={refDate} onChange={(e) => setRefDate(e.target.value)} />
-        </div>
+        <DateField
+          id="ref-date"
+          label={t.assessmentDate}
+          value={refDate}
+          onChange={setRefDate}
+          mode={t.dateInput}
+          hint={t.dateHint}
+          invalidMessage={t.dateInvalid}
+        />
         {message && (
           <p role="alert" className="alert">
             {message}

@@ -924,3 +924,17 @@ tbody th {
 .analysts__part h3 {
   margin: 0 0 8px;
 }
+
+.field__hint {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.field input[aria-invalid='true'] {
+  border-color: var(--late);
+}
+
+.field__error {
+  color: var(--late);
+  font-size: 0.85rem;
+}

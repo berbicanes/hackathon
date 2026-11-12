@@ -127,6 +127,9 @@ export interface Strings {
   csvHelp: string
   syntheticBanner: string
   assessmentDate: string
+  dateInput: 'dmy' | 'native'
+  dateHint: string
+  dateInvalid: string
   fileTooLarge: string
   fileUnreadable: string
   missingColumns: (cols: string) => string
@@ -349,6 +352,9 @@ const en: Strings = {
   syntheticBanner:
     'SYNTHETIC SAMPLE — invented children and scores, for demonstration only. Upload your own CSV to analyse a real squad.',
   assessmentDate: 'Assessment date',
+  dateInput: 'native',
+  dateHint: 'dd.mm.yyyy',
+  dateInvalid: 'Enter a date as dd.mm.yyyy.',
   fileTooLarge: 'That file is too large. Please keep it under 200 KB.',
   fileUnreadable: 'That file could not be read as text.',
   missingColumns: (cols) => `The CSV is missing these columns: ${cols}. Download the template to see the format.`,
@@ -597,6 +603,9 @@ const bs: Strings = {
   syntheticBanner:
     'SINTETIČKI PRIMJER — izmišljena djeca i ocjene, samo za demonstraciju. Učitajte svoj CSV da analizirate stvarnu ekipu.',
   assessmentDate: 'Datum testiranja',
+  dateInput: 'dmy',
+  dateHint: 'dd.mm.gggg',
+  dateInvalid: 'Unesite datum u obliku dd.mm.gggg, npr. 14.02.2026.',
   fileTooLarge: 'Datoteka je prevelika. Neka bude manja od 200 KB.',
   fileUnreadable: 'Datoteka se ne može pročitati kao tekst.',
   missingColumns: (cols) => `CSV nema ove kolone: ${cols}. Preuzmite šablon da vidite format.`,
