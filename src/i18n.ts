@@ -13,6 +13,15 @@ export function bsPlural(n: number, one: string, few: string, many: string): str
   return many
 }
 
+/**
+ * Plural form for a number as displayed, including decimals ("2,2" → few, "2,5" → many).
+ * With decimals the noun agrees with the last digit shown: 2,1 bod · 2,2 boda · 2,5 bodova.
+ */
+export function bsPluralShown(shown: string, one: string, few: string, many: string): string {
+  const digits = shown.replace(/\D/g, '')
+  return bsPlural(Number(digits.slice(-2)), one, few, many)
+}
+
 const enPlural = (n: number, word: string) => `${word}${n === 1 ? '' : 's'}`
 
 const EN_SEP = { decimal: '.', group: ',' }
@@ -457,7 +466,7 @@ const bs: Strings = {
   navLabel: 'Sekcije',
   appName: 'Late Bloomers',
   tagline: 'Pronađite skriveni talenat koji vaša selekcija propušta.',
-  tabBias: 'Ogledalo pristranosti',
+  tabBias: 'Ogledalo pristrasnosti',
   tabSquad: 'Vaša ekipa',
   privacy: 'Podaci o vašoj ekipi nikad ne napuštaju ovaj uređaj. Bez slanja, bez naloga, bez praćenja.',
   footerData: 'Profesionalni podaci: Transfermarkt, preko otvorenog projekta transfermarkt-datasets.',
@@ -570,7 +579,7 @@ const bs: Strings = {
   loading: 'Učitavam analizu…',
   loadError: 'Analiza se nije mogla učitati. Molimo osvježite stranicu.',
   ctaSquad: 'Provjerite svoju ekipu',
-  ctaSquadText: 'Ista pristranost se dešava na svakom probnom treningu U10. Pogledajte je u svojoj ekipi za dvije minute — besplatno i privatno.',
+  ctaSquadText: 'Ista pristrasnost se dešava na svakom probnom treningu U10. Pogledajte je u svojoj ekipi za dvije minute — besplatno i privatno.',
 
   squadTitle: 'Vaša ekipa, pošteno gledano',
   squadIntro:
@@ -601,7 +610,7 @@ const bs: Strings = {
   skewChart: 'Igrači po kvartalu rođenja',
   skewSummary: (early, n) =>
     `${early} od ${n} ${bsPlural(n, 'igrača', 'igrača', 'igrača')} rođeno je u prvoj polovini godine.`,
-  skewNote: 'Bez pristranosti očekivali biste otprilike pola.',
+  skewNote: 'Bez pristrasnosti očekivali biste otprilike pola.',
 
   talentTitle: 'Skriveni talenti',
   talentIntro: 'Ovi igrači najviše napreduju kad se uzme u obzir starost. Dodirnite ime za karticu igrača.',
@@ -631,7 +640,7 @@ const bs: Strings = {
   colRank: 'Mjesto',
   colStatus: 'Status',
   ageYM: (y, m) => `${y} g. ${m} mj.`,
-  trend: (slope) => `U ovoj ekipi svaki mjesec starosti vrijedi otprilike ${slope} bodova.`,
+  trend: (slope) => `U ovoj ekipi svaki mjesec starosti vrijedi otprilike ${slope} ${bsPluralShown(slope, 'bod', 'boda', 'bodova')}.`,
   trendNone: 'U ovoj ekipi stariji igrači nemaju više ocjene — prilagođavanje malo mijenja.',
   downloadResults: 'Preuzmi rezultate (CSV)',
   fairExplain:

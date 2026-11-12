@@ -2,7 +2,7 @@
 
 Live: https://berbicanes.github.io/hackathon/ (opens in Bosnian; switch top right)
 
-Before going on stage: open the site, stay on **Ogledalo pristranosti**, zoom the browser
+Before going on stage: open the site, stay on **Ogledalo pristrasnosti**, zoom the browser
 to ~125%. Have a second tab with the squad tab and sample already loaded as backup.
 
 ## Script

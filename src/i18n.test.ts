@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { bsPlural, strings } from './i18n'
+import { bsPlural, bsPluralShown, strings } from './i18n'
 import { formatNumber } from './lib/format'
 
 describe('formatNumber', () => {
@@ -17,6 +17,16 @@ describe('bsPlural', () => {
     expect([1, 2, 4, 5, 11, 12, 21, 22, 25].map(m)).toEqual([
       'mjesec', 'mjeseca', 'mjeseca', 'mjeseci', 'mjeseci', 'mjeseci', 'mjesec', 'mjeseca', 'mjeseci',
     ])
+  })
+})
+
+describe('bsPluralShown', () => {
+  it('agrees with the last digit shown, including decimals', () => {
+    const b = (s: string) => bsPluralShown(s, 'bod', 'boda', 'bodova')
+    expect(['2,2', '1,8', '2,1', '0,5', '3', '2,0', '1,12', '21'].map(b)).toEqual([
+      'boda', 'bodova', 'bod', 'bodova', 'boda', 'bodova', 'bodova', 'bod',
+    ])
+    expect(strings.bs.trend('2,2')).toContain('2,2 boda.')
   })
 })
 
