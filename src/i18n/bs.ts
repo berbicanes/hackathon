@@ -281,7 +281,7 @@ export const bs: Strings = {
     tieAtLastPlace: (n) => `${n} ${bsPlural(n, 'dijete ima', 'djeteta imaju', 'djece ima')} istu ocjenu na posljednjem mjestu. Redoslijed među njima je abecedni, a ne procjena: odluku donesite sami.`,
     noAgeAdvantage: () => 'U ovoj ekipi starija djeca nemaju bolje ocjene, pa nema zaostatka zbog starosti koji bi trebalo ispraviti i ne predlažemo dodavanje djece. Ako je u ovom testu manji rezultat bolji, promijenite smjer testa u koraku 2.',
   },
-  testedOn: (cases) => `Testirano na ${cases} rubnih slučajeva (male ekipe, izjednačene ocjene, pogrešni datumi, sprint, druge granice generacije, neuredni fajlovi).`,
+  testedOn: (cases) => `Testirano na ${cases} ${bsPlural(cases, 'rubnom slučaju', 'rubna slučaja', 'rubnih slučajeva')} (male ekipe, izjednačene ocjene, pogrešni datumi, sprint, druge granice generacije, neuredni fajlovi).`,
   trendNone: 'U ovoj ekipi stariji igrači nemaju više ocjene — prilagođavanje malo mijenja.',
   downloadResults: 'Preuzmi rezultate (CSV)',
   fairExplain:

@@ -277,7 +277,7 @@ export const en: Strings = {
     tieAtLastPlace: (n) => `${n} children have the same score at the last place. The order between them is alphabetical, not a judgement: decide between them yourself.`,
     noAgeAdvantage: () => 'In this squad older children do not score better, so there is no age disadvantage to correct and we do not suggest adding anyone. If a lower result is better in this test, switch the test direction in step 2.',
   },
-  testedOn: (cases) => `Tested on ${cases} edge cases (tiny squads, ties, wrong dates, sprint times, other cut-off dates, messy files).`,
+  testedOn: (cases) => `Tested on ${cases} edge ${enPlural(cases, 'case')} (tiny squads, ties, wrong dates, sprint times, other cut-off dates, messy files).`,
   trendNone: 'In this squad, older players do not score higher — the adjustment changes little.',
   downloadResults: 'Download results CSV',
   fairExplain:

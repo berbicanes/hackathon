@@ -26,7 +26,8 @@ interface Env {
 
 const ALLOWED_ORIGIN = 'https://berbicanes.github.io'
 const MODEL = 'claude-opus-5-5'
-const MAX_TOKENS = 400
+/** Thinking cannot be switched off on this model and shares this budget with the answer. */
+const MAX_TOKENS = 1000
 const MAX_BODY_BYTES = 2_000
 /** A venue or club often shares one public IP, so the limit is per address, not per person. */
 const REQUESTS_PER_HOUR = 60
@@ -95,6 +96,7 @@ async function explain(request: Request, env: Env): Promise<Response> {
       messages: [{ role: 'user', content: buildUserMessage(payload) }],
     })
     // A declined or cut-off answer is not shown; the web app falls back to its own text.
+    if (message.stop_reason === 'max_tokens') return json(502, { error: 'cut_off' })
     if (message.stop_reason !== 'end_turn') return json(502, { error: 'no_explanation' })
     const text = message.content
       .flatMap((block) => (block.type === 'text' ? [block.text] : []))

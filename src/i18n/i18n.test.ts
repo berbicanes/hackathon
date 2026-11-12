@@ -82,6 +82,14 @@ describe('step and decision wording', () => {
     expect(strings.bs.skewSummary(9, 20, 'sep–feb')).toContain('starijoj polovini generacije (sep–feb)')
     expect(strings.en.skewSummary(9, 20, 'Sep–Feb')).toContain('older half of the age group (Sep–Feb)')
   })
+  it('states how many edge cases were tested, with correct agreement for any number', () => {
+    expect(strings.bs.testedOn(43)).toMatch(/^Testirano na 43 rubna slučaja \(/)
+    expect(strings.bs.testedOn(45)).toMatch(/^Testirano na 45 rubnih slučajeva \(/)
+    expect(strings.bs.testedOn(51)).toMatch(/^Testirano na 51 rubnom slučaju \(/)
+    expect(strings.bs.testedOn(12)).toMatch(/^Testirano na 12 rubnih slučajeva \(/)
+    expect(strings.en.testedOn(43)).toMatch(/^Tested on 43 edge cases \(/)
+    expect(strings.en.testedOn(1)).toMatch(/^Tested on 1 edge case \(/)
+  })
   it('describes the scatter plot in words for screen readers', () => {
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')
