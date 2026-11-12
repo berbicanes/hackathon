@@ -25,7 +25,7 @@ interface Env {
 }
 
 const ALLOWED_ORIGIN = 'https://berbicanes.github.io'
-const MODEL = 'claude-sonnet-5-5'
+const MODEL = 'claude-opus-5-5'
 const MAX_TOKENS = 400
 const MAX_BODY_BYTES = 2_000
 const REQUESTS_PER_HOUR = 20
@@ -87,7 +87,8 @@ async function explain(request: Request, env: Env): Promise<Response> {
     const message = await client.messages.create({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      // A four-sentence explanation needs no deliberation; keep the whole budget for the answer.
+      // A four-sentence explanation needs little deliberation. On this model thinking cannot be
+      // switched off and shares max_tokens with the answer, so effort stays low.
       output_config: { effort: 'low' },
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: buildUserMessage(payload) }],

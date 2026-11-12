@@ -250,7 +250,7 @@ Browser (GitHub Pages, static)                Cloudflare Worker (/worker)       
   rejects anything that is not exactly the schema (unknown fields, text where a number
   belongs), limits each IP to 20 requests an hour (a hashed counter in KV that expires
   after an hour), logs nothing, and calls the Anthropic Messages API with model
-  `claude-sonnet-5-5` and `max_tokens: 400`. The API key is a Worker secret and is never
+  `claude-opus-5-5` and `max_tokens: 400`. The API key is a Worker secret and is never
   in this repository.
 - **The system prompt** (`worker/src/prompt.ts`): 3–4 short sentences in Bosnian or
   English, only the numbers given, never invent, never say a child is bad or should be
