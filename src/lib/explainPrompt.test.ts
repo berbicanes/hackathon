@@ -10,8 +10,12 @@ const group = recommendGroup(analysis.players, 10, analysis.fit)
 describe('explanation prompt: the model explains, it does not decide', () => {
   it('sets the guard rails', () => {
     for (const rule of [
-      '3 to 4 short, plain sentences',
-      '"bs" means Bosnian, "en" means English',
+      '3 to 4 short, simple sentences that a parent',
+      'standard Bosnian (ijekavica',
+      'at most one decimal place',
+      'write 83, not 83.03',
+      'decimal comma (2,2)',
+      'Never mention the names of the JSON fields',
       'Use only the numbers and facts in the JSON',
       'Never invent',
       'Never say or imply that a child is bad',
@@ -21,6 +25,11 @@ describe('explanation prompt: the model explains, it does not decide', () => {
       'you only explain it',
     ]) {
       expect(SYSTEM_PROMPT).toContain(rule)
+    }
+  })
+  it('does not teach the model the internal field names', () => {
+    for (const field of ['agePerMonth', 'agePerMonthLow', 'higherIsBetter', 'adjustedScore', 'monthsYoungerThanAverage']) {
+      expect(SYSTEM_PROMPT).not.toContain(field)
     }
   })
   it('gives the model nothing but the validated numbers', () => {

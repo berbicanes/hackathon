@@ -14,7 +14,7 @@ export interface ExplainSquad {
   /** 95% interval for agePerMonth; null when it cannot be estimated. */
   agePerMonthLow: number | null
   agePerMonthHigh: number | null
-  /** True when the squad has 10+ children and the interval excludes zero. */
+  /** True when the squad has 10+ children and the interval excludes zero (the estimate is reliable). */
   reliable: boolean
   /** Month (1–12) in which the selection year starts. */
   cutoffMonth: number

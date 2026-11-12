@@ -52,6 +52,15 @@ describe('explanation payload: de-identified numbers only', () => {
     expect(child.squad).toMatchObject({ size: 20, places: 10, entrants: 3, borderline: 0, cutoffMonth: 1, higherIsBetter: true, reliable: true })
     expect(buildSquadPayload(analysis, group, 'en').child).toBeUndefined()
   })
+  it('rounds for a parent: whole months, at most one decimal for scores and the age effect', () => {
+    const child = buildChildPayload(analysis, group, ena, 'bs')
+    expect(child.child).toMatchObject({ ageMonths: 141, score: 69, adjustedScore: 83 })
+    expect(child.squad).toMatchObject({ agePerMonth: 2.2, agePerMonthLow: 1.1, agePerMonthHigh: 3.3 })
+    for (const payload of payloads) {
+      const numbers = JSON.stringify(payload).match(/-?\d+\.\d+/g) ?? []
+      for (const n of numbers) expect(n.split('.')[1].length).toBeLessThanOrEqual(Math.abs(Number(n)) < 1 ? 2 : 1)
+    }
+  })
   it('is accepted by the proxy schema, for every child and for the squad', () => {
     for (const payload of payloads) expect(parseExplainRequest(JSON.parse(JSON.stringify(payload)))).not.toBeNull()
   })

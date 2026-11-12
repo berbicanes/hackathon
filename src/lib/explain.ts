@@ -10,16 +10,18 @@ import type { ExplainChild, ExplainRequest, ExplainSquad } from '../../worker/sr
 import { ageAdvantage, type AnalysedPlayer, type GroupRecommendation, type SquadAnalysis } from './squad'
 
 const round = (value: number, digits: number) => Number(value.toFixed(digits))
-const roundOrNull = (value: number | null, digits: number) => (value === null ? null : round(value, digits))
+/** One decimal is enough for an explanation; small values (sprint seconds per month) keep two. */
+const tidy = (value: number) => round(value, Math.abs(value) < 1 ? 2 : 1)
+const tidyOrNull = (value: number | null) => (value === null ? null : tidy(value))
 
 function squadFacts(analysis: SquadAnalysis, group: GroupRecommendation): ExplainSquad {
   const advantage = ageAdvantage(analysis.fit, analysis.higherIsBetter)
   return {
     size: analysis.players.length,
     places: group.keep.length,
-    agePerMonth: round(advantage.perMonth, 2),
-    agePerMonthLow: roundOrNull(advantage.low, 2),
-    agePerMonthHigh: roundOrNull(advantage.high, 2),
+    agePerMonth: tidy(advantage.perMonth),
+    agePerMonthLow: tidyOrNull(advantage.low),
+    agePerMonthHigh: tidyOrNull(advantage.high),
     reliable: analysis.fit.reliable,
     cutoffMonth: analysis.cutoffMonth,
     higherIsBetter: analysis.higherIsBetter,
@@ -41,10 +43,10 @@ export function buildChildPayload(
   language: 'bs' | 'en',
 ): ExplainRequest {
   const child: ExplainChild = {
-    ageMonths: round(player.ageMonths, 1),
+    ageMonths: round(player.ageMonths, 0),
     monthsYoungerThanAverage: Math.round(analysis.meanAgeMonths - player.ageMonths),
-    score: round(player.score, 2),
-    adjustedScore: round(player.fairScore, 2),
+    score: tidy(player.score),
+    adjustedScore: tidy(player.fairScore),
     rawRank: player.rawRank,
     adjustedRank: player.fairRank,
     lateBorn: player.quarter === 4,
