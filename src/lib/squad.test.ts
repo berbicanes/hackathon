@@ -45,7 +45,7 @@ describe('age trend (through analyseSquad)', () => {
   })
   it('handles an empty squad', () => {
     const empty = analyseSquad([], REF)
-    expect(empty.fit).toEqual({ intercept: 0, slope: 0 })
+    expect(empty.fit).toMatchObject({ intercept: 0, slope: 0, reliable: false })
     expect(empty.players).toEqual([])
   })
 })
@@ -123,6 +123,46 @@ describe('compareSelections', () => {
     expect(compareSelections(result.players, 99).raw).toHaveLength(6)
     expect(compareSelections(result.players, 99).gained).toHaveLength(0)
     expect(compareSelections(result.players, -3).raw).toHaveLength(0)
+  })
+})
+
+describe('reliability of the age trend (95% interval for the slope)', () => {
+  it('is reliable for the sample squad, with the estimate inside its interval', () => {
+    const { fit } = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)
+    expect(fit.reliable).toBe(true)
+    expect(fit.slopeLow).toBeGreaterThan(0)
+    expect(fit.slopeLow as number).toBeLessThan(fit.slope)
+    expect(fit.slopeHigh as number).toBeGreaterThan(fit.slope)
+  })
+  it('matches a hand-computed interval', () => {
+    // x = 0..4, y = 1, 3, 2, 5, 4: slope 0.8, SSE 3.6, df 3, se = sqrt(1.2 / 10), t = 3.182.
+    const squad = [1, 3, 2, 5, 4].map((score, i) => ({ name: `P${i}`, birthDate: d(`2014-0${5 - i}-15`), score }))
+    const { fit, players } = analyseSquad(squad, REF)
+    const ages = players.map((p) => p.ageMonths)
+    const meanAge = ages.reduce((a, b) => a + b, 0) / 5
+    const sxx = ages.reduce((a, x) => a + (x - meanAge) ** 2, 0)
+    const sse = players.reduce((a, p) => a + (p.score - (fit.intercept + fit.slope * p.ageMonths)) ** 2, 0)
+    const margin = 3.182 * Math.sqrt(sse / 3 / sxx)
+    expect(fit.slopeLow as number).toBeCloseTo(fit.slope - margin, 6)
+    expect(fit.slopeHigh as number).toBeCloseTo(fit.slope + margin, 6)
+  })
+  it('is not reliable when the interval includes zero', () => {
+    // Twelve children whose scores do not follow age at all.
+    const scores = [50, 62, 48, 70, 55, 66, 49, 71, 53, 64, 51, 68]
+    const squad = scores.map((score, i) => ({ name: `N${i}`, birthDate: d(`2014-${String(i + 1).padStart(2, '0')}-10`), score }))
+    const { fit } = analyseSquad(squad, REF)
+    expect(fit.slopeLow as number).toBeLessThan(0)
+    expect(fit.slopeHigh as number).toBeGreaterThan(0)
+    expect(fit.reliable).toBe(false)
+  })
+  it('is not reliable with fewer than 10 children, even with a perfect trend', () => {
+    const { fit } = analyseSquad(SQUAD, REF)
+    expect(SQUAD.length).toBeLessThan(10)
+    expect(fit.slope).toBeGreaterThan(0)
+    expect(fit.reliable).toBe(false)
+  })
+  it('gives no interval when it cannot be estimated', () => {
+    expect(analyseSquad(squadOf('2014-01-01', '2014-06-01'), REF).fit).toMatchObject({ slopeLow: null, slopeHigh: null, reliable: false })
   })
 })
 

@@ -28,7 +28,30 @@ export interface AnalysedPlayer extends Player {
 
 export interface LinearFit {
   intercept: number
+  /** Score points per month of age. */
   slope: number
+  /** 95% confidence interval for the slope; null when it cannot be estimated (fewer than 3 children or no age spread). */
+  slopeLow: number | null
+  slopeHigh: number | null
+  /**
+   * True when the squad shows a dependable link between age and score: at least
+   * MIN_RELIABLE_SQUAD children and a 95% interval for the slope that excludes zero.
+   */
+  reliable: boolean
+}
+
+/** Below this squad size the age trend is treated as orientation only. */
+export const MIN_RELIABLE_SQUAD = 10
+
+/** Two-sided 95% critical values of Student's t for 1–30 degrees of freedom. */
+const T_975 = [
+  12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228, 2.201, 2.179, 2.16, 2.145, 2.131, 2.12, 2.11,
+  2.101, 2.093, 2.086, 2.08, 2.074, 2.069, 2.064, 2.06, 2.056, 2.052, 2.048, 2.045, 2.042,
+]
+
+function tCritical(df: number): number {
+  // Beyond the table the value approaches 1.96; 2.4 / df matches t to within 0.005 from df = 30 upwards.
+  return df <= T_975.length ? T_975[df - 1] : 1.96 + 2.4 / df
 }
 
 export interface SquadAnalysis {
@@ -63,7 +86,8 @@ function birthQuarter(birthDate: Date): 1 | 2 | 3 | 4 {
 /** Ordinary least squares fit y = intercept + slope * x. Flat line if x has no spread. */
 function linearFit(xs: number[], ys: number[]): LinearFit {
   const n = xs.length
-  if (n === 0) return { intercept: 0, slope: 0 }
+  const unknown = { slopeLow: null, slopeHigh: null, reliable: false }
+  if (n === 0) return { intercept: 0, slope: 0, ...unknown }
   const meanX = xs.reduce((a, b) => a + b, 0) / n
   const meanY = ys.reduce((a, b) => a + b, 0) / n
   let sxx = 0
@@ -73,7 +97,17 @@ function linearFit(xs: number[], ys: number[]): LinearFit {
     sxy += (xs[i] - meanX) * (ys[i] - meanY)
   }
   const slope = sxx === 0 ? 0 : sxy / sxx
-  return { intercept: meanY - slope * meanX, slope }
+  const intercept = meanY - slope * meanX
+  if (n < 3 || sxx === 0) return { intercept, slope, ...unknown }
+
+  // Standard error of the slope from the residual variance, then a t interval with n − 2 degrees of freedom.
+  let sse = 0
+  for (let i = 0; i < n; i++) sse += (ys[i] - (intercept + slope * xs[i])) ** 2
+  const margin = tCritical(n - 2) * Math.sqrt(sse / (n - 2) / sxx)
+  const slopeLow = slope - margin
+  const slopeHigh = slope + margin
+  const excludesZero = slopeLow > 0 || slopeHigh < 0
+  return { intercept, slope, slopeLow, slopeHigh, reliable: n >= MIN_RELIABLE_SQUAD && excludesZero }
 }
 
 function rankBy(players: { id: number; name: string }[], key: (id: number) => number): Map<number, number> {

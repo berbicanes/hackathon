@@ -83,6 +83,8 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(page.locator('.squad-table tr.is-lost')).toHaveCount(0)
   await expect(page.locator('.squad-table')).not.toContainText('Drops out')
 
+  await expect(page.locator('.trend-line')).toHaveText(/^≈ 2\.2 points per month of age, range \d\.\d–\d\.\d\.$/)
+
   // "How it works": one dot per child, the trend line, hidden talents named.
   const scatter = page.locator('figure.scatter')
   await expect(scatter.locator('.scatter__dot')).toHaveCount(20 + 4)
@@ -126,4 +128,14 @@ test('phone: compact stepper, no horizontal scroll on any step', async ({ page }
   await expect(page.locator('.stepper__compact')).toContainText('Korak 3 od 3')
   await expect(page.locator('.squad-table tbody tr')).toHaveCount(20)
   await noOverflow()
+})
+
+test('small uploaded squad: the adjustment is flagged as a rough guide only', async ({ page }) => {
+  await page.goto('./#squad')
+  await page.getByRole('button', { name: 'English' }).click()
+  const csv = 'name,birth_date,score\nA,2014-01-10,70\nB,2014-03-02,64\nC,2014-06-20,71\nD,2014-09-05,60\nE,2014-11-30,66\n'
+  await page.locator('input[type="file"]').setInputFiles({ name: 'squad.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) })
+  await page.getByRole('button', { name: /See the decision/ }).click()
+  await expect(page.locator('.recommend')).toContainText('age does not reliably affect the score')
+  await expect(page.locator('.synthetic')).toHaveCount(0)
 })

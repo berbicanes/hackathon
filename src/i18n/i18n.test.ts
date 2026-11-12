@@ -63,6 +63,12 @@ describe('step and decision wording', () => {
     expect(strings.bs.secondLookTitle).toBe('Drugi pogled — ponovna procjena za 6 mjeseci')
     expect(strings.bs.reportSelection(10)).toContain('10')
   })
+  it('states the age trend with its range, and the reliability notice', () => {
+    expect(strings.bs.trendCi('2,2', '1,4', '3,0', true)).toBe('≈ 2,2 boda po mjesecu, raspon 1,4–3,0.')
+    expect(strings.bs.trendCi('0,5', '-0,4', '1,4', false)).toBe('≈ 0,5 bodova po mjesecu, raspon od -0,4 do 1,4.')
+    expect(strings.en.trendCi('2.2', '1.4', '3.0', true)).toBe('≈ 2.2 points per month of age, range 1.4–3.0.')
+    expect(strings.bs.unreliable).toBe('U vašoj ekipi starost ne utiče pouzdano na ocjenu — prilagodba je samo orijentacija.')
+  })
   it('describes the scatter plot in words for screen readers', () => {
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Iznad linije je 9 od 20')
     expect(strings.bs.scatterSummary(20, 9, 'Ena, Benjamin')).toContain('Ena, Benjamin')

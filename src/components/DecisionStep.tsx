@@ -118,6 +118,10 @@ export function DecisionStep({ t, squad, onBack }: Props) {
       ))}
     </ul>
   )
+  const trendText =
+    fit.slopeLow !== null && fit.slopeHigh !== null
+      ? t.trendCi(t.num(fit.slope, 1), t.num(fit.slopeLow, 1), t.num(fit.slopeHigh, 1), fit.slopeLow >= 0)
+      : ''
   const changePlaces = (delta: number) => setTopN(Math.max(1, Math.min(n, topN + delta)))
 
   return (
@@ -128,7 +132,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
           {t.syntheticBanner}
         </p>
       )}
-      {n < 10 && <p className="alert alert--soft">{n < 4 ? t.tooFew : t.smallSquad}</p>}
+      {n < 4 && <p className="alert alert--soft">{t.tooFew}</p>}
 
       {n >= 4 && (
         <>
@@ -176,7 +180,13 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                 </div>
               )}
             </div>
-            <p className="help">{fit.slope > 0.05 ? t.trend(t.num(fit.slope, 1)) : t.trendNone}</p>
+            {fit.reliable ? (
+              <p className="trend-line">{trendText}</p>
+            ) : (
+              <p className="alert alert--soft" role="note">
+                <strong>{t.unreliable}</strong> {fit.slopeLow !== null && trendText}
+              </p>
+            )}
           </section>
         </>
       )}

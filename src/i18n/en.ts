@@ -175,7 +175,6 @@ export const en: Strings = {
   issueLine: (line, reason) => `line ${line}: ${reason}`,
   truncated: (max) => `Only the first ${max} rows were used.`,
   tooFew: 'Add at least 4 players to compare selections.',
-  smallSquad: 'With fewer than 10 players the age trend is rough — treat results as a prompt, not a verdict.',
 
   skewTitle: 'Your squad’s birth months',
   skewChart: 'How many players were born in each part of the year',
@@ -239,6 +238,9 @@ export const en: Strings = {
   colStatus: 'Status',
   ageYM: (y, m) => `${y}y ${m}m`,
   trend: (slope) => `In this squad, each extra month of age is worth about ${slope} points.`,
+  trendCi: (slope, low, high, plain) =>
+    `≈ ${slope} points per month of age, range ${plain ? `${low}–${high}` : `from ${low} to ${high}`}.`,
+  unreliable: 'In your squad, age does not reliably affect the score — treat the adjustment as a rough guide only.',
   trendNone: 'In this squad, older players do not score higher — the adjustment changes little.',
   downloadResults: 'Download results CSV',
   fairExplain:

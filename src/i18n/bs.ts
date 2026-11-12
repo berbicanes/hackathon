@@ -175,7 +175,6 @@ export const bs: Strings = {
   issueLine: (line, reason) => `red ${line}: ${reason}`,
   truncated: (max) => `Korišteno je samo prvih ${max} redova.`,
   tooFew: 'Dodajte bar 4 igrača da biste poredili selekcije.',
-  smallSquad: 'S manje od 10 igrača trend po starosti je grub — rezultate shvatite kao podsticaj, ne kao presudu.',
 
   skewTitle: 'Mjeseci rođenja u vašoj ekipi',
   skewChart: 'Koliko je igrača rođeno u kojem dijelu godine',
@@ -242,6 +241,9 @@ export const bs: Strings = {
   colStatus: 'Status',
   ageYM: (y, m) => `${y} g. ${m} mj.`,
   trend: (slope) => `U ovoj ekipi svaki mjesec starosti vrijedi otprilike ${slope} ${bsPluralShown(slope, 'bod', 'boda', 'bodova')}.`,
+  trendCi: (slope, low, high, plain) =>
+    `≈ ${slope} ${bsPluralShown(slope, 'bod', 'boda', 'bodova')} po mjesecu, raspon ${plain ? `${low}–${high}` : `od ${low} do ${high}`}.`,
+  unreliable: 'U vašoj ekipi starost ne utiče pouzdano na ocjenu — prilagodba je samo orijentacija.',
   trendNone: 'U ovoj ekipi stariji igrači nemaju više ocjene — prilagođavanje malo mijenja.',
   downloadResults: 'Preuzmi rezultate (CSV)',
   fairExplain:

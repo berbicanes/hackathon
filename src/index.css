@@ -1882,3 +1882,8 @@ td small {
 .compare {
   margin-bottom: 8px;
 }
+
+.trend-line {
+  font-weight: 600;
+  margin: 0;
+}

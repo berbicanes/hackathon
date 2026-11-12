@@ -126,7 +126,6 @@ export interface Strings {
   issueLine: (line: number, reason: string) => string
   truncated: (max: number) => string
   tooFew: string
-  smallSquad: string
 
   skewTitle: string
   skewChart: string
@@ -187,6 +186,9 @@ export interface Strings {
   colStatus: string
   ageYM: (y: number, m: number) => string
   trend: (slope: string) => string
+  /** Estimate with its 95% interval; `plain` is true when both ends are positive. */
+  trendCi: (slope: string, low: string, high: string, plain: boolean) => string
+  unreliable: string
   trendNone: string
   downloadResults: string
   fairExplain: string
