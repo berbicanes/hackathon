@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { overlaps, placeLabels } from './labels'
+import { placeLabels } from './labels'
+
+interface Box {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+const overlaps = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
 
 const bounds = { left: 40, right: 340, top: 2, bottom: 250 }
 

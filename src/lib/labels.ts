@@ -1,6 +1,6 @@
 /** Label placement for the scatter plot: names next to dots, never on top of each other. */
 
-export interface Box {
+interface Box {
   x: number
   y: number
   w: number
@@ -8,7 +8,7 @@ export interface Box {
 }
 
 export const LABEL_HEIGHT = 16
-export const overlaps = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
+const overlaps = (a: Box, b: Box) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
 
 /**
  * Places each name next to its dot without covering another name or any dot. Positions
