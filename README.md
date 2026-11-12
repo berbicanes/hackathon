@@ -187,6 +187,26 @@ served under `/hackathon/` (see `vite.config.ts`).
 - Uploaded files are size- and row-limited and parsed defensively; exported CSV cells are
   protected against spreadsheet formula injection.
 
+## Production readiness
+
+The app is scanned with ProdReady ("check my app"). Findings with a real fix were fixed:
+coverage floor, end-to-end journey, post-deploy smoke check, dependency audit and type
+check in CI, a Privacy page, per-language string files, no console logging, and no
+exports that exist only for tests.
+
+Some rules assume a server, a database or a team. They do not apply here, and nothing
+fake was added to satisfy them:
+
+| Rule | Why it does not apply |
+|---|---|
+| Audit / activity log table | There is no database and no server. The app never writes a record, so there is nothing to audit. |
+| Scheduled job that deletes expired data | Nothing is stored. Squad data lives in the tab's memory and is gone when the tab closes. |
+| Second reader / code review in the history | Solo hackathon project with one author. `CONTRIBUTING.md` asks for pull requests from here on; no reviews were invented. |
+| Data-protection contact address | No personal data is collected, so there is no controller mailbox. The Privacy page gives a contact route (project issues). |
+| Auth, roles, rate limits, migrations, tenant isolation | No accounts, no API, no stored data. |
+
+See also [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 Code: [MIT](LICENSE) © 2026 Anes Berbić. The Transfermarkt-derived data comes from the
