@@ -2094,3 +2094,78 @@ td small {
     font-size: 0.95rem;
   }
 }
+
+/* ---------- Optional AI explanation ---------- */
+.ai {
+  margin-top: 16px;
+}
+
+.ai__ask {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.ai__button {
+  border-style: dashed;
+}
+
+.ai__button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.ai__note {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0;
+  flex: 1 1 220px;
+}
+
+.ai__loading {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.ai__result {
+  border: 1.5px dashed var(--line);
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: var(--bg);
+}
+
+.ai__result--ai {
+  border-color: var(--early);
+  background: var(--early-soft);
+}
+
+.ai__result p {
+  margin: 0 0 8px;
+}
+
+.ai__result p:last-child {
+  margin-bottom: 0;
+}
+
+.ai__badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--early);
+}
+
+.ai__badge--plain {
+  color: var(--muted);
+}
+
+@media print {
+  .ai {
+    display: none !important;
+  }
+}
+
+.ai__button {
+  gap: 6px;
+}

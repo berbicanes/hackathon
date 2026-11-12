@@ -7,7 +7,16 @@ export interface Strings {
   pct: (share: number, digits?: number) => string
   formatDate: (d: Date) => string
   monthsLong: string[]
+  /** Language code sent with an explanation request. */
+  lang: Lang
   langName: string
+  aiButton: string
+  aiNote: string
+  aiLoading: string
+  aiBadge: string
+  aiDisclaimer: string
+  aiFallbackBadge: string
+  aiFallbackNote: string
   langSwitch: string
   skip: string
   navLabel: string

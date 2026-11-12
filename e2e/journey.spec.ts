@@ -87,6 +87,15 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
 
   await expect(page.locator('.trend-line')).toHaveText(/^≈ 2\.2 points per month of age, range \d\.\d–\d\.\d\.\s*$/)
 
+  // Optional AI explanation: clearly labelled, and the app's own text when the AI is unavailable.
+  const ai = page.locator('.recommend .ai')
+  await expect(ai).toContainText('AI explanation — only anonymous numbers are sent, no names.')
+  await ai.getByRole('button', { name: /Explain \(AI\)/ }).click()
+  await expect(ai.locator('.ai__badge')).toHaveText('Explanation without AI')
+  await expect(ai.locator('.ai__result')).toContainText('Widen the group by 3 places: 3 late-born talents.')
+  await expect(ai.locator('.ai__result')).toContainText('≈ 2.2 points per month of age')
+  await expect(ai.locator('.ai__result--ai')).toHaveCount(0)
+
   // "How it works": one dot per child, the trend line, hidden talents named.
   const scatter = page.locator('figure.scatter')
   await expect(scatter.locator('.scatter__dot')).toHaveCount(20 + 4)
@@ -99,6 +108,12 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   for (const name of expected) {
     await page.locator('.recommend .second-list').getByRole('button', { name: new RegExp(name) }).click()
     await expect(page.locator('.advice__title')).toHaveText('Take a second look')
+    if (name === 'Ena') {
+      const cardAi = page.locator('.player-card .ai')
+      await cardAi.getByRole('button', { name: /Explain \(AI\)/ }).click()
+      await expect(cardAi.locator('.ai__badge')).toHaveText('Explanation without AI')
+      await expect(cardAi.locator('.ai__result')).toContainText('6 months younger than the squad average. Rank on raw score: 16 of 20.')
+    }
     await page.keyboard.press('Escape')
   }
   // With 8 places the children right below the line are borderline, and every view follows.

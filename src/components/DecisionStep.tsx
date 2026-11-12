@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import type { Strings } from '../i18n'
 import { csvCell } from '../lib/csv'
+import { buildChildPayload, buildSquadPayload } from '../lib/explain'
 import { ageAdvantage, compareSelections, quarterLabels, recommendGroup, type AnalysedPlayer } from '../lib/squad'
 import { isoDay, type SquadState } from '../useSquad'
+import { AiExplain } from './AiExplain'
 import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
 import { PrintReport } from './PrintReport'
@@ -129,6 +131,10 @@ export function DecisionStep({ t, squad, onBack }: Props) {
     advantage.low !== null && advantage.high !== null
       ? t.trendCi(t.num(advantage.perMonth, digits), t.num(advantage.low, digits), t.num(advantage.high, digits), advantage.low >= 0)
       : ''
+  const headline =
+    group.secondLook.length > 0
+      ? t.expandHeadline(group.secondLook.length - group.borderline.length, group.borderline.length)
+      : t.expandNone
   const changePlaces = (delta: number) => setTopN(Math.max(1, Math.min(n, topN + delta)))
 
   return (
@@ -172,7 +178,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
           <section className="card recommend" aria-labelledby="recommend-title">
             <p className="kicker">{t.recommendKicker}</p>
             <h3 id="recommend-title" className="outcome__title" aria-live="polite">
-              {group.secondLook.length > 0 ? t.expandHeadline(group.secondLook.length - group.borderline.length, group.borderline.length) : t.expandNone}
+              {headline}
             </h3>
             <div className="recommend__grid">
               <div className="outcome__col recommend__keep">
@@ -211,6 +217,12 @@ export function DecisionStep({ t, squad, onBack }: Props) {
                 <strong>{t.unreliable}</strong> {fit.slopeLow !== null && trendText}
               </p>
             )}
+            <AiExplain
+              key={`${topN}-${analysis.cutoffMonth}-${analysis.higherIsBetter}`}
+              t={t}
+              payload={() => buildSquadPayload(analysis, group, t.lang)}
+              fallback={`${group.secondLook.length > 0 ? `${headline}.` : headline} ${t.keepText} ${fit.reliable ? trendText : t.unreliable}`}
+            />
           </section>
         </>
       )}
@@ -339,7 +351,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
         quarterLabels={qLabels}
       />
 
-      <PlayerCard t={t} quarterLabels={qLabels} player={cardPlayer} meanAgeMonths={meanAgeMonths} squadSize={n} secondLook={cardPlayer ? secondLookIds.has(cardPlayer.id) : false} onClose={() => setCardId(null)} />
+      <PlayerCard t={t} quarterLabels={qLabels} player={cardPlayer} meanAgeMonths={meanAgeMonths} squadSize={n} secondLook={cardPlayer ? secondLookIds.has(cardPlayer.id) : false} explainPayload={(p) => buildChildPayload(analysis, group, p, t.lang)} onClose={() => setCardId(null)} />
     </div>
   )
 }
