@@ -57,7 +57,7 @@ export function ScatterPlot({ t, players, fit, highlighted, quarterLabels, highe
 
   if (players.length < 2) return null
 
-  const height = Math.round(Math.min(420, Math.max(300, width * 0.55)))
+  const height = Math.round(Math.min(420, Math.max(270, width * 0.55)))
   const pad = { left: 44, right: 16, top: 28, bottom: 44 }
   const ages = players.map((p) => p.ageMonths)
   const scores = players.map((p) => p.score)

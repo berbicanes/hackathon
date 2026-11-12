@@ -91,14 +91,19 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await expect(scatter.locator('.scatter__legend')).toContainText('expected for this age')
   // One set of highlighted children in every view, in the same order.
   const expected = ['Ena', 'Benjamin', 'Hana']
-  await expect(page.locator('.recommend .chips li button')).toHaveText(expected)
+  await expect(page.locator('.recommend .second__name')).toHaveText(expected)
   await expect(scatter.locator('.scatter__name')).toHaveText(expected)
   await expect(page.locator('.print-report__second')).toHaveText(/^Ena \(.*\), Benjamin \(.*\), Hana \(.*\)$/)
   for (const name of expected) {
-    await page.locator('.recommend .chips').getByRole('button', { name: new RegExp(name) }).click()
+    await page.locator('.recommend .second-list').getByRole('button', { name: new RegExp(name) }).click()
     await expect(page.locator('.advice__title')).toHaveText('Take a second look')
     await page.keyboard.press('Escape')
   }
+  // The full ranking is collapsed until asked for.
+  await expect(page.locator('.squad-table')).toBeHidden()
+  await page.getByText('Show all players (20)').click()
+  await expect(page.locator('.squad-table')).toBeVisible()
+
   // Asja gains rank but is not on the list, so nothing calls her a hidden talent.
   await page.locator('.squad-table').getByRole('button', { name: /Asja/ }).click()
   await expect(page.locator('.advice__title')).not.toHaveText('Take a second look')
@@ -141,6 +146,13 @@ test('phone: compact stepper, no horizontal scroll on any step', async ({ page }
   await expect(page.locator('.stepper__compact')).toContainText('Korak 3 od 3')
   await expect(page.locator('.squad-table tbody tr')).toHaveCount(20)
   await noOverflow()
+  // The decision fits in a short page: no long scroll on a phone.
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(2500)
+  // The Monday actions are one line each; the detail opens on tap.
+  const first = page.locator('.monday__item').first()
+  await expect(first.locator('p')).toBeHidden()
+  await first.locator('summary').click()
+  await expect(first.locator('p')).toBeVisible()
 })
 
 test('small uploaded squad: the adjustment is flagged as a rough guide only', async ({ page }) => {

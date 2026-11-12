@@ -191,9 +191,6 @@ export const bs: Strings = {
   cutoffHelp: 'Djeca rođena odmah nakon tog datuma najstarija su u svojoj generaciji.',
   skewNote: 'Bez pristrasnosti očekivali biste otprilike pola.',
 
-  talentTitle: 'Skriveni talenti',
-  talentIntro: 'Ovi igrači najviše napreduju kad se uzme u obzir starost. Dodirnite dijete da otvorite njegovu karticu.',
-  talentNone: 'Niko ne napreduje mnogo: u ovoj ekipi ocjene gotovo ne zavise od starosti.',
   talentRank: (from, to) => `Mjesto ${from} → ${to}`,
   monthsYounger: (m) => `${m} ${bsPlural(m, 'mjesec', 'mjeseca', 'mjeseci')} ispod prosječne starosti ekipe`,
   monthsOlder: (m) => `${m} ${bsPlural(m, 'mjesec', 'mjeseca', 'mjeseci')} iznad prosječne starosti ekipe`,
@@ -213,12 +210,12 @@ export const bs: Strings = {
   keepText: 'Ostaju svi izabrani po sirovoj ocjeni. Niko ne ispada.',
   secondLookTitle: 'Drugi pogled — ponovna procjena za 6 mjeseci',
   secondLookBadge: 'Drugi pogled',
+  showAll: (n) => `Prikaži sve igrače (${n})`,
   compareNote: 'Ovo je samo poređenje dva načina izbora. Naša preporuka je proširiti grupu, a ne mijenjati djecu.',
   inTitle: 'Ulaze',
   outTitle: 'Izlaze',
   reasonYounger: (range, max) => `mlađi od prosjeka ekipe za ${range} ${bsPlural(max, 'mjesec', 'mjeseca', 'mjeseci')}`,
   reasonOlder: (range, max) => `stariji od prosjeka ekipe za ${range} ${bsPlural(max, 'mjesec', 'mjeseca', 'mjeseci')}`,
-  rankingTitle: 'Cijela rang-lista',
   rankingRaw: 'Poredano po sirovoj ocjeni.',
   rankingFair: 'Poredano po ocjeni za uzrast.',
   finishLine: 'Ponesite ovo na sastanak trenera.',
@@ -287,7 +284,6 @@ export const bs: Strings = {
   cardFooter: 'Ova kartica je poziv na razgovor, a ne presuda o djetetu.',
 
   mondayTitle: 'Šta vaš klub može uraditi već u ponedjeljak',
-  mondayIntro: 'Tri promjene koje ništa ne koštaju.',
   monday: [
     {
       title: 'Procjenjujte po starosti u mjesecima',

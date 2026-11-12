@@ -181,8 +181,18 @@ export function DecisionStep({ t, squad, onBack }: Props) {
               {group.secondLook.length > 0 && (
                 <div className="outcome__col outcome__col--in">
                   <p className="outcome__label">＋ {t.secondLookTitle}</p>
-                  {chips(group.secondLook)}
-                  {youngerRange && <p className="outcome__reason">{t.reasonYounger(youngerRange.text, youngerRange.max)}</p>}
+                  <ul className="second-list">
+                    {group.secondLook.map((p) => (
+                      <li key={p.id}>
+                        <button type="button" className="second" onClick={() => setCardId(p.id)} aria-label={t.openCard(p.name)}>
+                          <span className="second__name">{p.name}</span>
+                          <QuarterBadge q={p.quarter} labels={qLabels} />
+                          <span className="second__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
+                          <span className="second__age">{relAge(p)}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
@@ -204,32 +214,9 @@ export function DecisionStep({ t, squad, onBack }: Props) {
         <ScatterPlot t={t} players={players} fit={fit} highlighted={talents} quarterLabels={qLabels} higherIsBetter={analysis.higherIsBetter} />
       </section>
 
-      <section className="card" aria-labelledby="talent-title">
-        <h3 id="talent-title">{t.talentTitle}</h3>
-        {talents.length === 0 ? (
-          <p className="help">{t.talentNone}</p>
-        ) : (
-          <>
-            <p className="help">{t.talentIntro}</p>
-            <ul className="talent-cards">
-              {talents.map((p) => (
-                <li key={p.id}>
-                  <button type="button" className="talent-card" onClick={() => setCardId(p.id)} aria-label={t.openCard(p.name)}>
-                    <span className="talent-card__name">{p.name}</span>
-                    <QuarterBadge q={p.quarter} labels={qLabels} />
-                    <span className="talent-card__rank">{t.talentRank(p.rawRank, p.fairRank)}</span>
-                    <span className="talent-card__age">{relAge(p)}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </section>
-
       {n >= 4 && (
-        <section className="card" aria-labelledby="ranking-title">
-          <h3 id="ranking-title">{t.rankingTitle}</h3>
+        <details className="card ranking">
+          <summary>{t.showAll(n)}</summary>
           <div className="field field--view">
             <span className="field__label" id="view-label">
               {t.viewLabel}
@@ -310,7 +297,7 @@ export function DecisionStep({ t, squad, onBack }: Props) {
               </tbody>
             </table>
           </div>
-        </section>
+        </details>
       )}
 
       <MondayPanel t={t} />

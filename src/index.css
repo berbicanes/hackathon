@@ -1933,3 +1933,153 @@ td small {
   stroke: var(--ink);
   stroke-width: 1;
 }
+
+/* ---------- Compact decision step ---------- */
+.second-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.second-list li {
+  margin: 0;
+}
+
+.second {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  background: var(--card);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.second:hover {
+  border-color: var(--ink);
+}
+
+.second__name {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.second__rank {
+  font-weight: 600;
+  color: var(--late-ink);
+  font-size: 0.9rem;
+}
+
+.second__age {
+  color: var(--muted);
+  font-size: 0.85rem;
+  flex-basis: 100%;
+}
+
+.ranking > summary {
+  cursor: pointer;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.1rem;
+  min-height: 28px;
+}
+
+.ranking[open] > summary {
+  margin-bottom: 16px;
+}
+
+.monday__list {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.monday__item {
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.monday__item > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 32px;
+  list-style: none;
+}
+
+.monday__item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.monday__item > summary::after {
+  content: '+';
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.monday__item[open] > summary::after {
+  content: '−';
+}
+
+.monday__title {
+  font-weight: 600;
+}
+
+.monday__item p {
+  margin: 8px 0 4px 44px;
+  color: var(--muted);
+}
+
+.monday__num {
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .step-heading__lead {
+    font-size: 1rem;
+  }
+}
+
+.recommend__keep {
+  padding: 12px 16px;
+}
+
+.recommend__keep .outcome__label {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.recommend__keep .outcome__reason {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  /* The header already says "Step 3 of 3". */
+  .step-heading .kicker {
+    display: none;
+  }
+
+  .site-footer {
+    padding-bottom: 24px;
+  }
+}

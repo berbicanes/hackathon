@@ -191,9 +191,6 @@ export const en: Strings = {
   cutoffHelp: 'Children born right after this date are the oldest in their group.',
   skewNote: 'In an unbiased intake you would expect about half.',
 
-  talentTitle: 'Hidden talents',
-  talentIntro: 'These players rise most once age is taken into account. Tap a child to open their player card.',
-  talentNone: 'Nobody moves up much: in this squad, scores barely depend on age.',
   talentRank: (from, to) => `Rank ${from} → ${to}`,
   monthsYounger: (m) => `${m} ${enPlural(m, 'month')} younger than the squad average`,
   monthsOlder: (m) => `${m} ${enPlural(m, 'month')} older than the squad average`,
@@ -213,12 +210,12 @@ export const en: Strings = {
   keepText: 'Everyone selected on the raw score stays. Nobody is dropped.',
   secondLookTitle: 'Second look — reassess in 6 months',
   secondLookBadge: 'Second look',
+  showAll: (n) => `Show all players (${n})`,
   compareNote: 'This is only a comparison of two ways of choosing. Our recommendation is to widen the group, not to swap children.',
   inTitle: 'Come in',
   outTitle: 'Drop out',
   reasonYounger: (range, max) => `${range} ${enPlural(max, 'month')} younger than the squad average`,
   reasonOlder: (range, max) => `${range} ${enPlural(max, 'month')} older than the squad average`,
-  rankingTitle: 'Full ranking',
   rankingRaw: 'Ordered by raw score.',
   rankingFair: 'Ordered by score for their age.',
   finishLine: 'Take it to the coaching meeting.',
@@ -285,7 +282,6 @@ export const en: Strings = {
   cardFooter: 'This card is a prompt for a conversation, not a verdict on a child.',
 
   mondayTitle: 'What your club can do on Monday',
-  mondayIntro: 'Three changes that cost nothing.',
   monday: [
     {
       title: 'Assess by age in months',

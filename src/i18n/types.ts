@@ -140,9 +140,6 @@ export interface Strings {
   cutoffHelp: string
   skewNote: string
 
-  talentTitle: string
-  talentIntro: string
-  talentNone: string
   talentRank: (from: number, to: number) => string
   monthsYounger: (m: number) => string
   monthsOlder: (m: number) => string
@@ -161,12 +158,12 @@ export interface Strings {
   keepText: string
   secondLookTitle: string
   secondLookBadge: string
+  showAll: (n: number) => string
   compareNote: string
   inTitle: string
   outTitle: string
   reasonYounger: (range: string, max: number) => string
   reasonOlder: (range: string, max: number) => string
-  rankingTitle: string
   rankingRaw: string
   rankingFair: string
   finishLine: string
@@ -213,7 +210,6 @@ export interface Strings {
   cardFooter: string
 
   mondayTitle: string
-  mondayIntro: string
   monday: { title: string; text: string }[]
 
   printButton: string
