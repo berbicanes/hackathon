@@ -17,15 +17,17 @@ to ~125%. Have a second tab with the squad tab and sample already loaded as back
 
 - Point at the big number: **32% of active under-21 pros are born January–March.**
   By days in the calendar it should be about 25%. Only **18%** are born October–December.
-- "So a kid born in the first three months is **1.8×** as likely to make it as a kid born
-  in the last three."
+- "So Q1-born players are **1.8×** as common as Q4-born among under-21 pros."
+  (Say "as common", not "as likely to make it": we count who is in the pro pool, we don't
+  follow children over time.)
 - Toggle *All players*: same picture across **50,100** players.
 - Stats row: n = 5,538, chi-square, **p ≈ 10⁻⁵⁰**. Expected line is weighted by days per
   month, not a flat 25%.
 - Scroll to the underdog table: "We also checked whether the late-born players who survive
   are better. Within the same age band, never pooled. At 18–21: **no difference**, and we
   show that. At 22–25 the late-born are worth more: **€700k vs €600k median**,
-  p = 0.0007. Small effect. A clue, not proof."
+  p = 0.0007. We tested three age bands, so the bar is 0.017, not 0.05: 22–25 clears it,
+  26–29 (p = 0.03) does not, so we don't claim it. Small effect. A clue, not proof."
 
 **1:00 – 2:10 · Your squad (for the coach)**
 
@@ -72,6 +74,15 @@ here Q1 is 32% vs Q4 18%. That gap is far beyond any birth seasonality.
 It's imperfect, we say so. We use it only for the underdog check, always within the same
 age band, with a rank test (Mann-Whitney) so a few superstar values can't drive it. And we
 report the null result at 18–21.
+
+**You ran three tests. Multiple comparisons?**
+Yes: three age bands, so the Bonferroni threshold is 0.05 ÷ 3 = 0.017. The 22–25 result
+(p = 0.0007) holds. The 26–29 result (p = 0.03) does not, and the table says so.
+
+**"1.8×" what, exactly?**
+Q1-born players are 1.8× as common as Q4-born among under-21 pros. It's a count of who is
+in the pool today, adjusted for days per quarter. It is not a child's individual odds of
+turning pro; we'd need to follow birth cohorts for that.
 
 **Isn't this dataset biased itself?**
 It's professionals with a Transfermarkt profile, mostly Europe.

@@ -29,6 +29,7 @@ interface UnderdogRow {
   p_value: number
   prob_q4_greater: number
   significant_at_05: boolean
+  significant_bonferroni: boolean
 }
 
 interface CutoffRow {
@@ -47,6 +48,7 @@ export interface RaeData {
   under_21: Distribution
   cutoff_robustness: { rows: CutoffRow[] }
   underdog: UnderdogRow[]
+  underdog_tests: { n_tests: number; bonferroni_threshold: number }
 }
 
 type Group = 'under_21' | 'all_players'
@@ -59,7 +61,8 @@ function isRaeData(x: unknown): x is RaeData {
     d?.all_players?.quarter_share &&
       d?.under_21?.quarter_share &&
       Array.isArray(d?.cutoff_robustness?.rows) &&
-      Array.isArray(d?.underdog),
+      Array.isArray(d?.underdog) &&
+      typeof d?.underdog_tests?.bonferroni_threshold === 'number',
   )
 }
 
@@ -102,6 +105,7 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
   /** Three-month range label, e.g. cut-off month 9 → "Sep–Nov" (offset 0) or "Jun–Aug" (offset 9). */
   const monthRange = (cutoffMonth: number, offset: number) =>
     `${t.months[(cutoffMonth - 1 + offset) % 12]}–${t.months[(cutoffMonth + 1 + offset) % 12]}`
+  const bonferroni = t.num(data.underdog_tests.bonferroni_threshold, 3)
   const monthBars: Bar[] = dist.month_share.map((v, i) => ({
     label: t.months[i],
     value: v,
@@ -235,6 +239,7 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
                 <th scope="col">{t.underdogMedianQ4}</th>
                 <th scope="col">{t.underdogProb}</th>
                 <th scope="col">{t.underdogP}</th>
+                <th scope="col">{t.underdogBonfCol(bonferroni)}</th>
               </tr>
             </thead>
             <tbody>
@@ -250,15 +255,23 @@ export function BiasMirror({ t, onGoToSquad }: { t: Strings; onGoToSquad: () => 
                   <td>{t.pct(r.prob_q4_greater, 1)}</td>
                   <td>
                     {formatP(r.p_value, t.decimal)}{' '}
-                    <span className={`pill ${r.significant_at_05 ? 'pill--late' : ''}`}>
+                    <span className={`pill ${r.significant_bonferroni ? 'pill--late' : ''}`}>
                       {r.significant_at_05 ? t.underdogVerdictYes : t.underdogVerdictNo}
                     </span>
+                  </td>
+                  <td>
+                    {r.significant_bonferroni
+                      ? `✓ ${t.underdogBonfYes}`
+                      : r.significant_at_05
+                        ? `✗ ${t.underdogBonfNo}`
+                        : t.underdogBonfNull}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <p className="help">{t.underdogBonfNote(data.underdog_tests.n_tests, bonferroni)}</p>
         <p className="note">{t.underdogSummary}</p>
       </section>
 

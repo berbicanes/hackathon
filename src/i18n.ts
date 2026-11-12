@@ -64,6 +64,11 @@ export interface Strings {
   underdogP: string
   underdogVerdictYes: string
   underdogVerdictNo: string
+  underdogBonfCol: (threshold: string) => string
+  underdogBonfYes: string
+  underdogBonfNo: string
+  underdogBonfNull: string
+  underdogBonfNote: (tests: number, threshold: string) => string
   underdogSummary: string
   cutoffTitle: string
   cutoffIntro: string
@@ -206,7 +211,7 @@ const en: Strings = {
   biasKicker: (n) => `The evidence · ${n} professional players`,
   biasHeadline: 'of active under-21 professionals were born January–March.',
   biasSub: (expected, q4, ratio) =>
-    `By days in the calendar you would expect ${expected}. Only ${q4} were born October–December — a January-to-March child is ${ratio}× as likely to make it as an October-to-December child.`,
+    `By days in the calendar you would expect ${expected} for January–March (Q1). Only ${q4} were born October–December (Q4). Q1-born players are ${ratio}× as common as Q4-born among under-21 pros.`,
   chartTitle: 'Share of players by birth quarter',
   expectedLine: 'Expected 25% (share of days in the quarter)',
   expectedMonth: 'Expected (share of days in the month)',
@@ -222,7 +227,7 @@ const en: Strings = {
   statSample: 'Sample size',
   statChi: 'Chi-square (df 3)',
   statP: 'p-value',
-  statRatio: 'Q1 : Q4 likelihood',
+  statRatio: 'Q1 : Q4 ratio',
   underdogTitle: 'Do late-born players who survive turn out better?',
   underdogIntro:
     'The "underdog" check compares current market value of Q1- and Q4-born active players within the same age band, so older players never inflate one side.',
@@ -233,8 +238,14 @@ const en: Strings = {
   underdogP: 'p-value',
   underdogVerdictYes: 'Q4 higher',
   underdogVerdictNo: 'No clear difference',
+  underdogBonfCol: (threshold) => `Holds after correction (p < ${threshold})?`,
+  underdogBonfYes: 'Yes, still holds',
+  underdogBonfNo: 'No, does not hold',
+  underdogBonfNull: 'No difference to begin with',
+  underdogBonfNote: (tests, threshold) =>
+    `${tests} age bands were tested, so one of them could pass 0.05 by luck. The Bonferroni-corrected threshold is ${threshold} (0.05 ÷ ${tests}).`,
   underdogSummary:
-    'Honest reading: at 18–21 there is no difference. From 22 onward, the late-born players who made it are worth slightly more — consistent with the idea that they had to be better to survive selection. The effect is small; it is a clue, not proof.',
+    'Honest reading: at 18–21 there is no difference. At 22–25 the late-born players who made it are worth slightly more, and that result holds after correcting for the three tests — consistent with the idea that they had to be better to survive selection. At 26–29 the small edge does not hold after correction, so we do not claim it. The effect is small; it is a clue, not proof.',
   cutoffTitle: 'Does the cut-off date change the picture?',
   cutoffIntro:
     'Not every country groups children by calendar year. England and Wales use 1 September and Japan 2 April (counted here from 1 April), so January–December quarters are the wrong ruler for them. We re-ran the under-21 test without those countries, and measured England and Japan against their own cut-off. “Oldest quarter” is the three months right after the cut-off, “youngest quarter” the three months before it. Country means citizenship in Transfermarkt.',
@@ -417,7 +428,7 @@ const bs: Strings = {
   biasKicker: (n) => `Dokazi · ${n} profesionalnih igrača`,
   biasHeadline: 'aktivnih profesionalaca mlađih od 21 godine rođeno je u januaru, februaru ili martu.',
   biasSub: (expected, q4, ratio) =>
-    `Prema broju dana u godini očekivali biste ${expected}. Samo ${q4} rođeno je od oktobra do decembra — dijete rođeno u januaru–martu ima ${ratio}× veće šanse da uspije od djeteta rođenog u oktobru–decembru.`,
+    `Prema broju dana u godini očekivali biste ${expected} za januar–mart (K1). Samo ${q4} rođeno je od oktobra do decembra (K4). Među profesionalcima mlađim od 21 godine igrači rođeni u K1 su ${ratio}× brojniji od rođenih u K4.`,
   chartTitle: 'Udio igrača po kvartalu rođenja',
   expectedLine: 'Očekivano 25% (udio dana u kvartalu)',
   expectedMonth: 'Očekivano (udio dana u mjesecu)',
@@ -433,7 +444,7 @@ const bs: Strings = {
   statSample: 'Veličina uzorka',
   statChi: 'Hi-kvadrat (df 3)',
   statP: 'p-vrijednost',
-  statRatio: 'Šansa K1 : K4',
+  statRatio: 'Omjer K1 : K4',
   underdogTitle: 'Jesu li kasno rođeni koji opstanu na kraju bolji?',
   underdogIntro:
     'Provjera „autsajdera“ poredi trenutnu tržišnu vrijednost aktivnih igrača rođenih u K1 i K4 unutar iste starosne grupe, tako da stariji igrači nikad ne naduvaju jednu stranu.',
@@ -444,8 +455,14 @@ const bs: Strings = {
   underdogP: 'p-vrijednost',
   underdogVerdictYes: 'K4 viši',
   underdogVerdictNo: 'Nema jasne razlike',
+  underdogBonfCol: (threshold) => `Vrijedi i nakon korekcije (p < ${threshold})?`,
+  underdogBonfYes: 'Da, i dalje vrijedi',
+  underdogBonfNo: 'Ne, ne vrijedi',
+  underdogBonfNull: 'Razlike nema ni prije korekcije',
+  underdogBonfNote: (tests, threshold) =>
+    `Testirane su ${tests} starosne grupe, pa bi jedna od njih mogla proći prag 0,05 pukom srećom. Prag s Bonferroni korekcijom je ${threshold} (0,05 ÷ ${tests}).`,
   underdogSummary:
-    'Iskreno tumačenje: sa 18–21 godina nema razlike. Od 22. godine kasno rođeni koji su uspjeli vrijede malo više — što se slaže s idejom da su morali biti bolji da prežive selekciju. Efekat je mali; to je trag, ne dokaz.',
+    'Iskreno tumačenje: sa 18–21 godina nema razlike. U grupi 22–25 kasno rođeni koji su uspjeli vrijede malo više i taj rezultat vrijedi i nakon korekcije za tri testa — što se slaže s idejom da su morali biti bolji da prežive selekciju. U grupi 26–29 mala prednost ne vrijedi nakon korekcije, pa je ne tvrdimo. Efekat je mali; to je trag, ne dokaz.',
   cutoffTitle: 'Mijenja li datum granice sliku?',
   cutoffIntro:
     'Ne grupišu sve zemlje djecu po kalendarskoj godini. Engleska i Vels koriste 1. septembar, a Japan 2. april (ovdje računato od 1. aprila), pa su kvartali januar–decembar za njih pogrešno mjerilo. Ponovili smo test za mlađe od 21 bez tih zemalja, a Englesku i Japan izmjerili prema njihovoj vlastitoj granici. „Najstariji kvartal“ su tri mjeseca odmah nakon granice, a „najmlađi kvartal“ tri mjeseca prije nje. Zemlja znači državljanstvo na Transfermarktu.',

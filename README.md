@@ -33,16 +33,19 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
 | | Result |
 |---|---|
 | Active under-21 professionals born Jan–Mar | **32.3%** (expected 24.7% by days), Oct–Dec only **18.4%** (n = 5,538, χ² = 234.9, p ≈ 1 × 10⁻⁵⁰) |
-| Relative likelihood, Jan–Mar vs Oct–Dec born | **1.8×** |
+| Q1 vs Q4 among under-21 pros | Q1-born players are **1.8×** as common as Q4-born among under-21 pros (day-adjusted ratio 1.79) |
 | All 50,100 players | Q1 32.5% vs Q4 18.2%, χ² = 2,374, p < 10⁻³⁰⁰ |
 | Under-21, **excluding England** (1 Sept cut-off) | Q1 32.3% vs Q4 18.1%, ratio **1.81×** (n = 5,363, χ² = 233.8, p ≈ 2 × 10⁻⁵⁰): the headline holds |
 | Under-21, excluding England, Wales and Japan | Q1 32.8% vs Q4 18.1%, ratio 1.84× (n = 5,213, p ≈ 1 × 10⁻⁵²) |
 | **England under-21, 1 Sept cut-off** | Sep–Nov 28.6% vs Jun–Aug 18.9%, ratio 1.53×, but n = 175 and **p = 0.065: not significant on its own** |
 | England, all 1,762 players, 1 Sept cut-off | Sep–Nov 33.0% vs Jun–Aug 15.9%, ratio 2.10×, p ≈ 8 × 10⁻²⁹ |
 | Japan under-21, 1 April cut-off | Apr–Jun 37.2% vs Jan–Mar 15.3%, ratio 2.41× (n = 137, p = 0.0008) |
-| "Underdog" check, age 22–25 | Q4-born players are worth more: median €700k vs €600k (Mann-Whitney p = 0.0007) |
-| "Underdog" check, age 26–29 | Small Q4 edge (p = 0.03) |
+| "Underdog" check, age 22–25 | Q4-born players are worth more: median €700k vs €600k (Mann-Whitney p = 0.0007). **Holds** after Bonferroni correction |
+| "Underdog" check, age 26–29 | Small Q4 edge (p = 0.029), same median €800k. **Does not hold** after Bonferroni correction, so not claimed |
 | "Underdog" check, age 18–21 | **No difference** (p = 0.96) |
+
+Three age bands were tested for the underdog check, so the Bonferroni-corrected threshold
+is 0.05 ÷ 3 = 0.017. Only the 22–25 result passes it.
 
 ## Method
 
@@ -62,10 +65,14 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
   so calendar quarters are the wrong ruler for them. The script re-runs the under-21 test
   without England, and without all three, and tests England and Japan separately with
   quarters counted from their own cut-off month. Country = `country_of_citizenship`.
-- **Q1:Q4 likelihood ratio** = (observed / expected share for Q1) ÷ (same for Q4).
+- **Q1:Q4 ratio** = (observed / expected share for Q1) ÷ (same for Q4): how much more
+  common Q1-born players are than Q4-born ones in the sample, adjusted for the number of
+  days in each quarter. It describes who is in the professional pool; it is not an
+  individual child's probability of becoming a professional.
 - **Underdog check**: current market value of Q1- vs Q4-born active players, compared
   **within** age bands 18–21, 22–25 and 26–29 (never pooled, so age never drives the
-  comparison) with a two-sided Mann-Whitney U test. Null results are reported.
+  comparison) with a two-sided Mann-Whitney U test. Null results are reported. Because three
+  bands are tested, each result is also judged against the Bonferroni threshold 0.017.
 - The script uses only the Python standard library. The chi-square p-value comes from the
   regularised incomplete gamma function, checked against textbook critical values.
 
@@ -106,7 +113,8 @@ From `scripts/analyze.py` on the July 2026 snapshot (ages on 1 July 2026):
   players it is not statistically significant (p = 0.065). The skew is clear only across
   all 1,762 English players in the data (2.10×, p ≈ 8 × 10⁻²⁹), which includes older and
   retired players. Wales has too few under-21 players (13) to test.
-- Market value is an imperfect proxy for ability; the underdog effect is small.
+- Market value is an imperfect proxy for ability; the underdog effect is small, and only
+  the 22–25 band survives correction for testing three age bands.
 - The squad adjustment is a linear trend estimated from the squad itself. With fewer than
   about 10 players it is noisy, and the app says so. It is a prompt to take a second look,
   not a verdict on any child.
