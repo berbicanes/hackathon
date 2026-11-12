@@ -5,7 +5,7 @@
 import type { AnalysedPlayer } from './squad'
 
 export type Advice =
-  /** Younger than average and held back by age: the core "late bloomer" case. */
+  /** On the squad's second-look list: would be selected (or is too close to call) once age is taken into account. */
   | 'secondLook'
   /** Strong for their age whatever their birth month. */
   | 'keep'
@@ -29,12 +29,21 @@ export interface PlayerSummary {
 const AGE_GAP_MONTHS = 3
 const STRONG_PERCENTILE = 80
 
-export function summarisePlayer(player: AnalysedPlayer, meanAgeMonths: number, squadSize: number): PlayerSummary {
+/**
+ * `inSecondLook` comes from the squad recommendation (`recommendGroup`): the "take a second
+ * look" advice is given to exactly the children on that list, so every view agrees.
+ */
+export function summarisePlayer(
+  player: AnalysedPlayer,
+  meanAgeMonths: number,
+  squadSize: number,
+  inSecondLook = false,
+): PlayerSummary {
   const monthsYounger = Math.round(meanAgeMonths - player.ageMonths)
   const topPercentForAge = Math.max(1, 100 - player.agePercentile)
 
   let advice: Advice = 'reassess'
-  if (monthsYounger >= AGE_GAP_MONTHS && player.rankGain > 0) advice = 'secondLook'
+  if (inSecondLook) advice = 'secondLook'
   else if (player.agePercentile >= STRONG_PERCENTILE) advice = 'keep'
   else if (monthsYounger <= -AGE_GAP_MONTHS && player.rankGain < 0) advice = 'checkAgeAdvantage'
 

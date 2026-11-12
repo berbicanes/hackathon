@@ -241,11 +241,3 @@ export function recommendGroup(players: AnalysedPlayer[], topN: number): GroupRe
   const diff = compareSelections(players, topN)
   return { keep: diff.raw, secondLook: diff.gained, size: diff.raw.length + diff.gained.length }
 }
-
-/** Players who climb the most once age is accounted for (only real gains). */
-export function hiddenTalents(players: AnalysedPlayer[], limit = 3): AnalysedPlayer[] {
-  return players
-    .filter((p) => p.rankGain > 0)
-    .sort((a, b) => b.rankGain - a.rankGain || a.fairRank - b.fairRank)
-    .slice(0, limit)
-}

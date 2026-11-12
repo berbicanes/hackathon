@@ -89,7 +89,20 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   const scatter = page.locator('figure.scatter')
   await expect(scatter.locator('.scatter__dot')).toHaveCount(20 + 4)
   await expect(scatter.locator('.scatter__legend')).toContainText('expected for this age')
-  await expect(scatter.locator('.scatter__name').first()).toHaveText('Ena')
+  // One set of highlighted children in every view, in the same order.
+  const expected = ['Ena', 'Benjamin', 'Hana']
+  await expect(page.locator('.recommend .chips li button')).toHaveText(expected)
+  await expect(scatter.locator('.scatter__name')).toHaveText(expected)
+  await expect(page.locator('.print-report__second')).toHaveText(/^Ena \(.*\), Benjamin \(.*\), Hana \(.*\)$/)
+  for (const name of expected) {
+    await page.locator('.recommend .chips').getByRole('button', { name: new RegExp(name) }).click()
+    await expect(page.locator('.advice__title')).toHaveText('Take a second look')
+    await page.keyboard.press('Escape')
+  }
+  // Asja gains rank but is not on the list, so nothing calls her a hidden talent.
+  await page.locator('.squad-table').getByRole('button', { name: /Asja/ }).click()
+  await expect(page.locator('.advice__title')).not.toHaveText('Take a second look')
+  await page.keyboard.press('Escape')
   await expect(scatter.getByRole('img')).toHaveAccessibleDescription(/are above the line/)
 
   // Switching to the age-adjusted view changes who is selected.
@@ -169,3 +182,24 @@ test('selection year from 1 September: badges and the squad chart follow the cut
   await expect(page.locator('.squad-table')).not.toContainText('Oct–Dec')
   await expect(page.locator('.scatter__legend')).toContainText('Sep–Nov · early-born')
 })
+
+for (const width of [390, 1366]) {
+  test(`scatter names never overlap each other or leave the chart at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('./#squad')
+    await page.getByRole('button', { name: /primjer/i }).click()
+    await page.goto('./#decision')
+    const boxes = await page.locator('.scatter__name').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()))
+    const plot = await page.locator('figure.scatter svg[role="img"]').evaluate((e) => e.getBoundingClientRect().toJSON())
+    expect(boxes.length).toBeGreaterThan(0)
+    for (let i = 0; i < boxes.length; i++) {
+      expect(boxes[i].left).toBeGreaterThanOrEqual(plot.left)
+      expect(boxes[i].right).toBeLessThanOrEqual(plot.right)
+      for (let j = i + 1; j < boxes.length; j++) {
+        const apart =
+          boxes[i].right <= boxes[j].left || boxes[j].right <= boxes[i].left || boxes[i].bottom <= boxes[j].top || boxes[j].bottom <= boxes[i].top
+        expect(apart, `${i} and ${j} overlap`).toBe(true)
+      }
+    }
+  })
+}

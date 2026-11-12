@@ -7,14 +7,15 @@ interface Props {
   players: AnalysedPlayer[]
   quarterCounts: [number, number, number, number]
   diff: SelectionDiff
-  talents: AnalysedPlayer[]
+  /** The second-look list: the same children, in the same order, as on screen. */
+  secondLook: AnalysedPlayer[]
   slope: number
   synthetic: boolean
   quarterLabels: string[]
 }
 
 /** One-page printable summary; hidden on screen, the only thing shown when printing. */
-export function PrintReport({ t, reference, players, quarterCounts, diff, talents, slope, synthetic, quarterLabels }: Props) {
+export function PrintReport({ t, reference, players, quarterCounts, diff, secondLook, slope, synthetic, quarterLabels }: Props) {
   const n = players.length
   const names = (list: AnalysedPlayer[]) =>
     list.length ? list.map((p) => `${p.name} (${quarterLabels[p.quarter - 1]})`).join(', ') : t.reportNone
@@ -44,10 +45,7 @@ export function PrintReport({ t, reference, players, quarterCounts, diff, talent
         <strong>{t.keepTitle(diff.raw.length)}.</strong> {t.keepText}
       </p>
       <p>
-        <strong>{t.secondLookTitle}:</strong> {names(diff.gained)}
-      </p>
-      <p>
-        <strong>{t.reportTalents}:</strong> {names(talents)}
+        <strong>{t.secondLookTitle}:</strong> <span className="print-report__second">{names(secondLook)}</span>
       </p>
 
       <h2>{t.mondayTitle}</h2>

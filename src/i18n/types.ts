@@ -222,7 +222,6 @@ export interface Strings {
   reportSkew: string
   reportSelection: (n: number) => string
   reportNone: string
-  reportTalents: string
   reportSynthetic: string
   reportFooter: string
 }

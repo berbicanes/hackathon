@@ -306,7 +306,6 @@ export const en: Strings = {
   reportSkew: 'When the players in this squad were born',
   reportSelection: (n) => `Top ${n}: widen the group instead of cutting`,
   reportNone: 'No changes.',
-  reportTalents: 'Take a second look at',
   reportSynthetic: 'Synthetic sample data — not real children.',
   reportFooter: 'Made with Late Bloomers. Data was processed only on this device. A prompt for a conversation, not a verdict on any child.',
 }

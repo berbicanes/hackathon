@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Strings } from '../i18n'
+import { LABEL_HEIGHT, placeLabels } from '../lib/labels'
 import type { AnalysedPlayer, LinearFit } from '../lib/squad'
 
 interface Props {
@@ -83,15 +84,12 @@ export function ScatterPlot({ t, players, fit, highlighted, quarterLabels, highe
   const labelY = y(lineAt(maxAge))
   const labelBelow = labelY < pad.top + 24
   const wide = width >= 480
-  // Name labels are spread out vertically so that neighbouring children stay readable.
-  const nameLabels = [...highlighted]
-    .sort((a, b) => y(a.score) - y(b.score))
-    .reduce<{ p: AnalysedPlayer; labelY: number }[]>((placed, p) => {
-      const wanted = y(p.score) - r - 2
-      const previous = placed[placed.length - 1]
-      placed.push({ p, labelY: previous ? Math.max(wanted, previous.labelY + 15) : wanted })
-      return placed
-    }, [])
+  const nameLabels = placeLabels(
+    highlighted.map((p) => ({ id: p.id, name: p.name, x: x(p.ageMonths), y: y(p.score) })),
+    players.map((p) => ({ x: x(p.ageMonths), y: y(p.score) })),
+    { left: pad.left + 2, right: width - pad.right, top: 2, bottom: height - pad.bottom - 2 },
+    r,
+  )
 
   return (
     <figure className="scatter">
@@ -132,15 +130,14 @@ export function ScatterPlot({ t, players, fit, highlighted, quarterLabels, highe
           {players.map((p) => (
             <Marker key={p.id} q={p.quarter} x={x(p.ageMonths)} y={y(p.score)} r={highlightedIds.has(p.id) ? r + 1.5 : r} />
           ))}
-          {nameLabels.map(({ p, labelY: ly }) => {
-            const px = x(p.ageMonths)
-            const nearRight = px > width - 90
-            return (
-              <text key={p.id} className="scatter__name" x={px + (nearRight ? -r - 6 : r + 6)} y={ly} textAnchor={nearRight ? 'end' : 'start'}>
-                {p.name}
+          {nameLabels.map((l) => (
+            <g key={l.id}>
+              {l.leader && <line className="scatter__leader" x1={l.dotX} y1={l.dotY} x2={l.anchorX} y2={l.anchorY} />}
+              <text className="scatter__name" x={l.box.x + 3} y={l.box.y + LABEL_HEIGHT - 4}>
+                {l.name}
               </text>
-            )
-          })}
+            </g>
+          ))}
         </svg>
       </div>
       <ul className="scatter__legend" aria-hidden="true">

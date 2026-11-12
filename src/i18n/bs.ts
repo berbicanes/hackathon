@@ -308,7 +308,6 @@ export const bs: Strings = {
   reportSkew: 'Kada su rođeni igrači u ovoj ekipi',
   reportSelection: (n) => `Najboljih ${n}: proširite grupu umjesto da odbijate`,
   reportNone: 'Nema promjena.',
-  reportTalents: 'Pogledajte još jednom',
   reportSynthetic: 'Sintetički primjer — nisu stvarna djeca.',
   reportFooter: 'Napravljeno pomoću Late Bloomers. Podaci su obrađeni samo na ovom uređaju. Poziv na razgovor, a ne presuda o djetetu.',
 }

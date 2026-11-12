@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { Strings } from '../i18n'
 import { csvCell } from '../lib/csv'
-import { ageAdvantage, compareSelections, hiddenTalents, quarterLabels, recommendGroup, type AnalysedPlayer } from '../lib/squad'
+import { ageAdvantage, compareSelections, quarterLabels, recommendGroup, type AnalysedPlayer } from '../lib/squad'
 import { isoDay, type SquadState } from '../useSquad'
 import { MondayPanel } from './MondayPanel'
 import { PlayerCard } from './PlayerCard'
@@ -51,10 +51,11 @@ export function DecisionStep({ t, squad, onBack }: Props) {
   const qLabels = quarterLabels(t.months, analysis.cutoffMonth)
   const n = players.length
   const diff = compareSelections(players, topN)
-  const talents = hiddenTalents(players, 3)
   const gainedIds = new Set(diff.gained.map((p) => p.id))
   const lostIds = new Set(diff.lost.map((p) => p.id))
   const group = recommendGroup(players, topN)
+  // One list for every view: recommendation, talent cards, chart labels, player cards and the printed report.
+  const talents = group.secondLook
   const secondLookIds = new Set(group.secondLook.map((p) => p.id))
   const selectedIds = new Set((view === 'fair' ? diff.fair : diff.raw).map((p) => p.id))
   const ordered = [...players].sort((a, b) => (view === 'fair' ? a.fairRank - b.fairRank : a.rawRank - b.rawRank))
@@ -337,13 +338,13 @@ export function DecisionStep({ t, squad, onBack }: Props) {
         players={players}
         quarterCounts={quarterCounts}
         diff={diff}
-        talents={talents}
+        secondLook={talents}
         slope={fit.slope}
         synthetic={synthetic}
         quarterLabels={qLabels}
       />
 
-      <PlayerCard t={t} quarterLabels={qLabels} player={cardPlayer} meanAgeMonths={meanAgeMonths} squadSize={n} onClose={() => setCardId(null)} />
+      <PlayerCard t={t} quarterLabels={qLabels} player={cardPlayer} meanAgeMonths={meanAgeMonths} squadSize={n} secondLook={cardPlayer ? secondLookIds.has(cardPlayer.id) : false} onClose={() => setCardId(null)} />
     </div>
   )
 }

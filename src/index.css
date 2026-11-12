@@ -1928,3 +1928,8 @@ td small {
     padding: 8px 10px;
   }
 }
+
+.scatter__leader {
+  stroke: var(--ink);
+  stroke-width: 1;
+}

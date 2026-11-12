@@ -3,7 +3,6 @@ import {
   ageAdvantage,
   analyseSquad,
   compareSelections,
-  hiddenTalents,
   olderHalfLabel,
   quarterLabels,
   recommendGroup,
@@ -280,15 +279,20 @@ describe('recommendGroup (second look, not swap)', () => {
   })
 })
 
-describe('hiddenTalents', () => {
-  it('returns only players who climb, biggest gain first', () => {
-    const result = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)
-    const talents = hiddenTalents(result.players, 3)
-    expect(talents.length).toBeGreaterThan(0)
-    talents.forEach((p) => expect(p.rankGain).toBeGreaterThan(0))
-    for (let i = 1; i < talents.length; i++) {
-      expect(talents[i - 1].rankGain).toBeGreaterThanOrEqual(talents[i].rankGain)
-    }
+describe('one set of highlighted children', () => {
+  it('is the second-look list, in age-adjusted rank order, and only children outside the raw top N', () => {
+    const { players } = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)
+    const group = recommendGroup(players, 10)
+    expect(group.secondLook.map((p) => p.name)).toEqual(['Ena', 'Benjamin', 'Hana'])
+    const ranks = group.secondLook.map((p) => p.fairRank)
+    expect(ranks).toEqual([...ranks].sort((a, b) => a - b))
+    group.secondLook.forEach((p) => expect(p.rawRank).toBeGreaterThan(10))
+  })
+  it('does not highlight a child who gains rank but stays outside the list (Asja)', () => {
+    const { players } = analyseSquad(sampleSquad(), SAMPLE_REFERENCE_DATE)
+    const asja = players.find((p) => p.name === 'Asja')
+    expect(asja?.rankGain).toBeGreaterThan(0)
+    expect(recommendGroup(players, 10).secondLook.some((p) => p.name === 'Asja')).toBe(false)
   })
 })
 

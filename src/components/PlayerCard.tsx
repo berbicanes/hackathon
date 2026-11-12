@@ -9,11 +9,13 @@ interface Props {
   player: AnalysedPlayer | null
   meanAgeMonths: number
   squadSize: number
+  /** True when this child is on the squad's second-look list. */
+  secondLook: boolean
   onClose: () => void
 }
 
 /** Plain-language card for one child, shown in a native modal dialog. */
-export function PlayerCard({ t, quarterLabels, player, meanAgeMonths, squadSize, onClose }: Props) {
+export function PlayerCard({ t, quarterLabels, player, meanAgeMonths, squadSize, secondLook, onClose }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export function PlayerCard({ t, quarterLabels, player, meanAgeMonths, squadSize,
     if (!player && dialog.open) dialog.close()
   }, [player])
 
-  const summary = player ? summarisePlayer(player, meanAgeMonths, squadSize) : null
+  const summary = player ? summarisePlayer(player, meanAgeMonths, squadSize, secondLook) : null
   const advice = summary ? t.advice[summary.advice] : null
   const born = player ? t.formatDate(player.birthDate) : ''
 
