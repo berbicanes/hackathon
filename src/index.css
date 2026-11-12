@@ -857,3 +857,16 @@ tbody th {
 .row-label {
   min-width: 12rem;
 }
+
+/* Privacy page */
+.privacy-page {
+  max-width: 720px;
+}
+
+.privacy-page h3 {
+  margin: 20px 0 4px;
+}
+
+.site-footer a {
+  color: inherit;
+}

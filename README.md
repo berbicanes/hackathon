@@ -176,6 +176,9 @@ served under `/hackathon/` (see `vite.config.ts`).
 
 ## Privacy and security
 
+- The app has a short **Privacy page** in both languages (footer link, or
+  `/hackathon/#privacy`). It also discloses the two outside services involved: GitHub
+  Pages hosting and Google Fonts.
 - No server, no cookies, no tracking. Squad files are read with the browser File API and
   analysed in memory.
 - A strict Content-Security-Policy allows scripts only from the site itself.

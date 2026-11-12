@@ -38,5 +38,13 @@ test('coach journey: evidence, sample squad, fair selection, player card', async
   await page.locator('.squad-table tr.is-gained').first().getByRole('button').click()
   await expect(page.getByText('Suggested next step')).toBeVisible()
 
+  // Privacy page is linked from the footer and has its own address.
+  await page.keyboard.press('Escape')
+  await page.getByRole('contentinfo').getByRole('link', { name: 'Privacy' }).click()
+  await expect(page).toHaveURL(/#privacy$/)
+  await expect(page.getByRole('heading', { name: 'How to delete your data' })).toBeVisible()
+  await page.getByRole('button', { name: 'Bosanski' }).click()
+  await expect(page.getByRole('heading', { name: 'Privatnost' })).toBeVisible()
+
   expect(errors).toEqual([])
 })

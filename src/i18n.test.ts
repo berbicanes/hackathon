@@ -24,7 +24,7 @@ describe('translations', () => {
   it('have the same keys and list lengths in both languages', () => {
     const { bs, en } = strings
     expect(Object.keys(bs).sort()).toEqual(Object.keys(en).sort())
-    for (const key of ['quarterLabels', 'months', 'monthsLong', 'method', 'limits', 'monday'] as const) {
+    for (const key of ['quarterLabels', 'months', 'monthsLong', 'method', 'limits', 'monday', 'privacySections'] as const) {
       expect(bs[key].length).toBe(en[key].length)
     }
   })

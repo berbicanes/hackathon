@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { BiasMirror } from './components/BiasMirror'
+import { Privacy } from './components/Privacy'
 import { YourSquad } from './components/YourSquad'
 import { LANGS, strings, type Lang } from './i18n'
 
-type Tab = 'bias' | 'squad'
+type Tab = 'bias' | 'squad' | 'privacy'
+
+const PRIVACY_HASH = '#privacy'
 
 const LANG_KEY = 'late-bloomers-lang'
 
@@ -18,7 +21,7 @@ function initialLang(): Lang {
 }
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('bias')
+  const [tab, setTabState] = useState<Tab>(() => (window.location.hash === PRIVACY_HASH ? 'privacy' : 'bias'))
   const [lang, setLang] = useState<Lang>(initialLang)
   const t = strings[lang]
 
@@ -30,6 +33,26 @@ export default function App() {
       // Not critical: the choice just will not be remembered.
     }
   }, [lang])
+
+  // The privacy page has its own address (#privacy) so it can be linked to directly.
+  const setTab = (next: Tab) => {
+    setTabState(next)
+    const hash = next === 'privacy' ? PRIVACY_HASH : ''
+    if (window.location.hash !== hash) {
+      window.history.replaceState(null, '', hash || window.location.pathname + window.location.search)
+    }
+  }
+
+  useEffect(() => {
+    const onHash = () => {
+      if (window.location.hash === PRIVACY_HASH) {
+        setTabState('privacy')
+        window.scrollTo({ top: 0 })
+      }
+    }
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
 
   const goToSquad = () => {
     setTab('squad')
@@ -76,7 +99,9 @@ export default function App() {
       </header>
 
       <main id="main" className="container">
-        {tab === 'bias' ? <BiasMirror t={t} onGoToSquad={goToSquad} /> : <YourSquad t={t} />}
+        {tab === 'bias' && <BiasMirror t={t} onGoToSquad={goToSquad} />}
+        {tab === 'squad' && <YourSquad t={t} />}
+        {tab === 'privacy' && <Privacy t={t} onBack={() => setTab('bias')} />}
       </main>
 
       <footer className="container site-footer">
@@ -84,6 +109,9 @@ export default function App() {
           <span aria-hidden="true">🔒</span> {t.privacy}
         </p>
         <p>{t.footerData}</p>
+        <p>
+          <a href={PRIVACY_HASH}>{t.privacyLink}</a>
+        </p>
       </footer>
     </>
   )

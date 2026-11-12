@@ -35,6 +35,14 @@ export interface Strings {
   tabSquad: string
   privacy: string
   footerData: string
+  privacyLink: string
+  privacyTitle: string
+  privacyLead: string
+  privacySections: { title: string; text: string }[]
+  privacyContactTitle: string
+  privacyContactText: string
+  privacyUpdated: string
+  privacyBack: string
 
   biasKicker: (n: string) => string
   biasHeadline: string
@@ -207,6 +215,35 @@ const en: Strings = {
   tabSquad: 'Your squad',
   privacy: 'Your squad data never leaves this device. No uploads, no accounts, no tracking.',
   footerData: 'Professional data: Transfermarkt via the open transfermarkt-datasets project.',
+  privacyLink: 'Privacy',
+  privacyTitle: 'Privacy',
+  privacyLead: 'Late Bloomers collects no data. Your squad file is processed only in your browser and is never sent anywhere.',
+  privacySections: [
+    {
+      title: 'What we collect',
+      text: 'Nothing. There are no accounts, no forms that send data, no analytics, and no server or database behind this site.',
+    },
+    {
+      title: 'Your squad files',
+      text: 'A CSV you upload is read by your browser and analysed in memory on your device. Names, birth dates and scores are never uploaded, stored or shared. The results CSV and the printed report are created on your device as well.',
+    },
+    {
+      title: 'Cookies and tracking',
+      text: 'No cookies, no tracking, no advertising. The only thing saved is your language choice, kept in your browser’s local storage and never sent to anyone.',
+    },
+    {
+      title: 'Other services',
+      text: 'The site is hosted on GitHub Pages and loads its fonts from Google Fonts. As with any website, those providers see technical request data such as your IP address when the page loads. They never receive your squad file or anything you type.',
+    },
+    {
+      title: 'How to delete your data',
+      text: 'Close or reload the tab. The squad data existed only in that tab’s memory and is gone. To also remove the saved language choice, clear this site’s data in your browser settings.',
+    },
+  ],
+  privacyContactTitle: 'Contact',
+  privacyContactText: 'Questions about privacy? Open an issue on the project page:',
+  privacyUpdated: 'Last updated: 12 November 2026.',
+  privacyBack: 'Back',
 
   biasKicker: (n) => `The evidence · ${n} professional players`,
   biasHeadline: 'of active under-21 professionals were born January–March.',
@@ -424,6 +461,35 @@ const bs: Strings = {
   tabSquad: 'Vaša ekipa',
   privacy: 'Podaci o vašoj ekipi nikad ne napuštaju ovaj uređaj. Bez slanja, bez naloga, bez praćenja.',
   footerData: 'Profesionalni podaci: Transfermarkt, preko otvorenog projekta transfermarkt-datasets.',
+  privacyLink: 'Privatnost',
+  privacyTitle: 'Privatnost',
+  privacyLead: 'Late Bloomers ne prikuplja nikakve podatke. Fajl vaše ekipe obrađuje se samo u vašem pregledniku i nikad se nigdje ne šalje.',
+  privacySections: [
+    {
+      title: 'Šta prikupljamo',
+      text: 'Ništa. Nema korisničkih naloga, nema obrazaca koji šalju podatke, nema analitike, a iza ove stranice nema ni servera ni baze podataka.',
+    },
+    {
+      title: 'Fajlovi vaše ekipe',
+      text: 'CSV koji učitate čita vaš preglednik i analizira ga u memoriji vašeg uređaja. Imena, datumi rođenja i ocjene se nikad ne šalju, ne čuvaju i ne dijele. CSV s rezultatima i štampani izvještaj također nastaju na vašem uređaju.',
+    },
+    {
+      title: 'Kolačići i praćenje',
+      text: 'Nema kolačića, nema praćenja, nema reklama. Jedino što se pamti je vaš izbor jezika, sačuvan u lokalnoj memoriji vašeg preglednika, i on se nikome ne šalje.',
+    },
+    {
+      title: 'Druge usluge',
+      text: 'Stranica je smještena na GitHub Pages, a fontove učitava s Google Fonts. Kao i kod svake web-stranice, ti pružaoci pri učitavanju vide tehničke podatke o zahtjevu, poput vaše IP adrese. Nikad ne dobijaju fajl vaše ekipe niti bilo šta što unesete.',
+    },
+    {
+      title: 'Kako obrisati podatke',
+      text: 'Zatvorite ili osvježite karticu. Podaci o ekipi postojali su samo u memoriji te kartice i više ih nema. Ako želite ukloniti i sačuvani izbor jezika, obrišite podatke ove stranice u postavkama preglednika.',
+    },
+  ],
+  privacyContactTitle: 'Kontakt',
+  privacyContactText: 'Imate pitanje o privatnosti? Otvorite prijavu (issue) na stranici projekta:',
+  privacyUpdated: 'Posljednja izmjena: 12. novembar 2026.',
+  privacyBack: 'Nazad',
 
   biasKicker: (n) => `Dokazi · ${n} profesionalnih igrača`,
   biasHeadline: 'aktivnih profesionalaca mlađih od 21 godine rođeno je u januaru, februaru ili martu.',
