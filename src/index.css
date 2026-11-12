@@ -8,6 +8,8 @@
   --early-soft: #e6edfc;
   --late: #c2560e;
   --late-soft: #fbeee4;
+  /* Darker orange for text on tinted backgrounds (5.4:1 on --bg). */
+  --late-ink: #a8480b;
   --neutral: #8a909b;
   --neutral-soft: #eceee9;
   --radius: 18px;
@@ -608,7 +610,7 @@ tbody th {
 .talents__rank {
   font-family: var(--font-head);
   font-weight: 700;
-  color: var(--late);
+  color: var(--late-ink);
   font-size: 1.1rem;
 }
 

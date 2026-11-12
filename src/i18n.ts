@@ -85,6 +85,7 @@ const en = {
   smallSquad: 'With fewer than 10 players the age trend is rough — treat results as a prompt, not a verdict.',
 
   skewTitle: 'Your squad’s birth months',
+  skewChart: 'Players per birth quarter',
   skewSummary: (early: number, n: number) => `${early} of ${n} players were born in the first half of the year.`,
   skewNote: 'In an unbiased intake you would expect about half.',
   countLabel: 'players',

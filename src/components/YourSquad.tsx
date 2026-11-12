@@ -220,7 +220,7 @@ function SquadResults({ t, analysis, topN, setTopN, view, setView, onDownload }:
           <p className="big-line">{t.skewSummary(firstHalf, n)}</p>
           <p className="help">{t.skewNote}</p>
           <BarChart
-            title={t.skewTitle}
+            title={t.skewChart}
             bars={quarterCounts.map((c, i) => ({
               label: t.quarterLabels[i],
               value: n ? c / n : 0,

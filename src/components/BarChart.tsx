@@ -62,7 +62,8 @@ export function BarChart({ title, bars, expected, expectedLabel, maxValue, compa
           <span className="chart__legend-line" /> {expectedLabel}
         </p>
       )}
-      <table className="sr-only">
+      <div className="sr-only">
+        <table>
         <caption>{title}</caption>
         <tbody>
           {bars.map((b, i) => (
@@ -73,7 +74,8 @@ export function BarChart({ title, bars, expected, expectedLabel, maxValue, compa
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </figure>
   )
 }
